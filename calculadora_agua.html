@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calcula Tu Agua — Ahorra agua, ahorra dinero</title>
+  <meta name="description"
+    content="Calcula tu consumo de agua, descubre cuánto puedes ahorrar y conoce los subsidios disponibles para familias en Chile. calculatuagua.cl">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --pri: #0E7490;
+      --pri-light: #06B6D4;
+      --pri-dark: #155E75;
+      --pri-50: #ECFEFF;
+      --pri-100: #CFFAFE;
+      --pri-200: #A5F3FC;
+      --accent: #F59E0B;
+      --accent-dark: #D97706;
+      --accent-50: #FFFBEB;
+      --green: #059669;
+      --green-50: #ECFDF5;
+      --green-light: #10B981;
+      --red: #DC2626;
+      --red-50: #FEF2F2;
+      --yellow: #EAB308;
+      --gray-50: #F8FAFC;
+      --gray-100: #F1F5F9;
+      --gray-200: #E2E8F0;
+      --gray-300: #CBD5E1;
+      --gray-400: #94A3B8;
+      --gray-500: #64748B;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1E293B;
+      --gray-900: #0F172A;
+      --bg: #F0F9FF;
+      --card: #fff;
+      --border: #E2E8F0;
+      --r: 14px;
+      --r-lg: 20px;
+      --sh: 0 1px 3px rgba(0, 0, 0, .08);
+      --sh-md: 0 4px 12px rgba(0, 0, 0, .08);
+      --sh-lg: 0 10px 30px rgba(0, 0, 0, .1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--gray-800);
+      font-size: 15px;
+      line-height: 1.6;
+      overflow-x: hidden
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none
+    }
+
+    a {
+      color: var(--pri);
+      text-decoration: none;
+      font-weight: 600
+    }
+
+    a:hover {
+      text-decoration: underline
+    }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #0C4A6E 0%, #0E7490 40%, #06B6D4 100%);
+      color: #fff;
+      padding: 3rem 2rem 5rem;
+      position: relative;
+      overflow: hidden;
+      text-align: center
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60%;
+      right: -20%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(255, 255, 255, .08) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: float 8s ease-in-out infinite
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -60%;
+      left: -15%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(6, 182, 212, .2) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: float 10s ease-in-out infinite reverse
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0) scale(1)
+      }
+
+      50% {
+        transform: translateY(-30px) scale(1.05)
+      }
+    }
+
+    .hero-logo {
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 4px;
+      position: relative;
+      z-index: 1
+    }
+
+    .hero-logo .drop {
+      display: inline-block;
+      animation: drip 3s ease-in-out infinite
+    }
+
+    @keyframes drip {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-6px)
+      }
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      opacity: .85;
+      font-weight: 400;
+      position: relative;
+      z-index: 1;
+      max-width: 500px;
+      margin: 0 auto
+    }
+
+    .hero-badge {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 5px 14px;
+      background: rgba(255, 255, 255, .15);
+      backdrop-filter: blur(8px);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid rgba(255, 255, 255, .2);
+      position: relative;
+      z-index: 1
+    }
+
+    .wave-bottom {
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      z-index: 2
+    }
+
+    .wave-bottom svg {
+      display: block;
+      width: 100%;
+      height: 60px
+    }
+
+    /* CONTAINER */
+    .container {
+      max-width: 800px;
+      margin: -30px auto 0;
+      padding: 0 1rem 3rem;
+      position: relative;
+      z-index: 3
+    }
+
+    /* PAGES */
+    .page {
+      display: none;
+      animation: pageIn .5s ease
+    }
+
+    .page.active {
+      display: block
+    }
+
+    @keyframes pageIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* SECTION */
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      margin: 1.75rem 0 .75rem;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .section-label .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--pri-light)
+    }
+
+    /* CARD */
+    .card {
+      background: var(--card);
+      border-radius: var(--r-lg);
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--sh);
+      transition: box-shadow .3s
+    }
+
+    .card:hover {
+      box-shadow: var(--sh-md)
+    }
+
+    .card-header {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--gray-800);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    /* REGION */
+    .region-select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--r);
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--card);
+      color: var(--gray-800);
+      cursor: pointer;
+      transition: all .2s;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%2394A3B8'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center
+    }
+
+    .region-select:focus {
+      outline: none;
+      border-color: var(--pri-light);
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, .15)
+    }
+
+    /* PEOPLE */
+    .people-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .pnum {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--r);
+      border: 2px solid var(--border);
+      background: var(--card);
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray-600);
+      transition: all .2s;
+      box-shadow: var(--sh)
+    }
+
+    .pnum:hover {
+      border-color: var(--pri-light);
+      color: var(--pri);
+      transform: translateY(-2px);
+      box-shadow: var(--sh-md)
+    }
+
+    .pnum:focus-visible {
+      outline: 3px solid var(--pri-light);
+      outline-offset: 2px
+    }
+
+    .pnum.active {
+      background: linear-gradient(135deg, var(--pri), var(--pri-light));
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(14, 116, 144, .35)
+    }
+
+    /* ACTIVITY */
+    .act-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--gray-100)
+    }
+
+    .act-row:last-child {
+      border-bottom: none
+    }
+
+    .semaphore {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      transition: all .3s
+    }
+
+    .semaphore.g {
+      background: #10B981;
+      box-shadow: 0 0 8px rgba(16, 185, 129, .5)
+    }
+
+    .semaphore.y {
+      background: #EAB308;
+      box-shadow: 0 0 8px rgba(234, 179, 8, .5)
+    }
+
+    .semaphore.r {
+      background: #EF4444;
+      box-shadow: 0 0 8px rgba(239, 68, 68, .5)
+    }
+
+    .act-info {
+      flex: 1;
+      min-width: 0
+    }
+
+    .act-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-800);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap
+    }
+
+    .act-desc {
+      font-size: 12px;
+      color: var(--gray-400)
+    }
+
+    .tag {
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em
+    }
+
+    .tag-p {
+      background: var(--pri-50);
+      color: var(--pri)
+    }
+
+    .tag-h {
+      background: var(--accent-50);
+      color: var(--accent-dark)
+    }
+
+    .act-ctrl {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0
+    }
+
+    .pm-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: var(--card);
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray-500);
+      transition: all .15s
+    }
+
+    .pm-btn:hover {
+      background: var(--pri-50);
+      border-color: var(--pri-light);
+      color: var(--pri)
+    }
+
+    .pm-btn:active {
+      transform: scale(.9)
+    }
+
+    input[type=range] {
+      width: 80px;
+      accent-color: var(--pri-light);
+      cursor: pointer
+    }
+
+    .act-val {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gray-700);
+      min-width: 60px;
+      text-align: right
+    }
+
+    /* CTA */
+    .cta-wrap {
+      text-align: center;
+      margin: 2rem 0 1rem
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 40px;
+      background: linear-gradient(135deg, var(--pri), var(--pri-light));
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 60px;
+      box-shadow: 0 6px 24px rgba(14, 116, 144, .35);
+      transition: all .3s;
+      position: relative;
+      overflow: hidden
+    }
+
+    .cta-btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, .2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width .5s, height .5s
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 36px rgba(14, 116, 144, .4)
+    }
+
+    .cta-btn:hover::after {
+      width: 300px;
+      height: 300px
+    }
+
+    .cta-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 16px rgba(14, 116, 144, .3)
+    }
+
+    .cta-icon {
+      font-size: 22px
+    }
+
+    /* ── RESULTS PAGE ── */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: var(--r);
+      border: 1.5px solid var(--border);
+      background: var(--card);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-600);
+      margin-bottom: 1rem;
+      transition: all .2s
+    }
+
+    .back-btn:hover {
+      border-color: var(--pri-light);
+      color: var(--pri);
+      background: var(--pri-50)
+    }
+
+    /* STAT HERO */
+    .stats-hero {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 1.5rem
+    }
+
+    .stat-card {
+      background: var(--card);
+      border-radius: var(--r-lg);
+      padding: 1.25rem;
+      border: 1px solid var(--border);
+      box-shadow: var(--sh);
+      text-align: center;
+      transition: transform .2s
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--sh-md)
+    }
+
+    .stat-card .sc-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 6px
+    }
+
+    .stat-card .sc-val {
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1
+    }
+
+    .stat-card .sc-unit {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-400);
+      margin-left: 2px
+    }
+
+    .stat-card.blue {
+      background: linear-gradient(135deg, #ECFEFF, #CFFAFE);
+      border-color: #A5F3FC
+    }
+
+    .stat-card.blue .sc-label {
+      color: var(--pri-dark)
+    }
+
+    .stat-card.blue .sc-val {
+      color: var(--pri-dark)
+    }
+
+    .stat-card.green {
+      background: linear-gradient(135deg, #ECFDF5, #D1FAE5);
+      border-color: #A7F3D0
+    }
+
+    .stat-card.green .sc-label,
+    .stat-card.green .sc-val {
+      color: #065F46
+    }
+
+    .stat-card.amber {
+      background: linear-gradient(135deg, #FFFBEB, #FEF3C7);
+      border-color: #FDE68A
+    }
+
+    .stat-card.amber .sc-label,
+    .stat-card.amber .sc-val {
+      color: #92400E
+    }
+
+    .stat-card.red {
+      background: linear-gradient(135deg, #FEF2F2, #FEE2E2);
+      border-color: #FECACA
+    }
+
+    .stat-card.red .sc-label,
+    .stat-card.red .sc-val {
+      color: #991B1B
+    }
+
+    /* TRAMO */
+    .tramo-track {
+      height: 12px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #A5F3FC 0%, #A5F3FC 33%, #FDE68A 33%, #FDE68A 66%, #FECACA 66%);
+      position: relative;
+      margin: 10px 0 4px
+    }
+
+    .tramo-dot {
+      position: absolute;
+      top: 50%;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--pri);
+      border: 3px solid #fff;
+      box-shadow: var(--sh-md);
+      transform: translate(-50%, -50%);
+      transition: left .5s
+    }
+
+    .tramo-lbls {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--gray-400);
+      font-weight: 500
+    }
+
+    /* AVG BAR */
+    .avg-bar-track {
+      height: 24px;
+      background: var(--gray-100);
+      border-radius: 12px;
+      position: relative;
+      margin: 10px 0 22px;
+      overflow: visible
+    }
+
+    .avg-fill {
+      height: 100%;
+      border-radius: 12px;
+      transition: width .6s
+    }
+
+    .avg-pin {
+      position: absolute;
+      top: -6px;
+      width: 4px;
+      height: 36px;
+      background: var(--gray-700);
+      border-radius: 2px;
+      transform: translateX(-50%);
+      z-index: 2
+    }
+
+    .avg-pin-lbl {
+      position: absolute;
+      top: 38px;
+      transform: translateX(-50%);
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--gray-500);
+      white-space: nowrap
+    }
+
+    /* COMPARE TABLE */
+    .cmp-tbl {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 13px
+    }
+
+    .cmp-tbl th {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--gray-400);
+      padding: 10px;
+      text-align: left;
+      border-bottom: 2px solid var(--border)
+    }
+
+    .cmp-tbl th:nth-child(n+3) {
+      text-align: right
+    }
+
+    .cmp-tbl td {
+      padding: 10px;
+      border-bottom: 1px solid var(--gray-100)
+    }
+
+    .cmp-tbl td:nth-child(n+3) {
+      text-align: right;
+      font-weight: 700
+    }
+
+    .cmp-tbl .saved {
+      color: var(--green)
+    }
+
+    .cmp-tbl tr:last-child td {
+      border-bottom: none;
+      font-weight: 800;
+      background: var(--green-50)
+    }
+
+    /* SUBSIDY */
+    .sub-card {
+      background: linear-gradient(135deg, #EDE9FE, #E0E7FF);
+      border: 1px solid #C7D2FE;
+      border-radius: var(--r-lg);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--sh)
+    }
+
+    .sub-card h3 {
+      font-size: 17px;
+      font-weight: 800;
+      color: #3730A3;
+      margin-bottom: 6px
+    }
+
+    .sub-card .sub-p {
+      font-size: 13px;
+      color: #4338CA;
+      line-height: 1.6;
+      margin-bottom: 12px
+    }
+
+    .sub-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px
+    }
+
+    .sub-stat {
+      background: rgba(255, 255, 255, .6);
+      backdrop-filter: blur(4px);
+      border-radius: var(--r);
+      padding: 10px 12px
+    }
+
+    .sub-stat .sl {
+      font-size: 10px;
+      font-weight: 600;
+      color: #6366F1;
+      text-transform: uppercase;
+      letter-spacing: .04em
+    }
+
+    .sub-stat .sv {
+      font-size: 18px;
+      font-weight: 800;
+      color: #312E81
+    }
+
+    .sub-alert {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: var(--r);
+      font-size: 12px;
+      line-height: 1.5;
+      font-weight: 500
+    }
+
+    .sub-alert.ok {
+      background: rgba(16, 185, 129, .1);
+      color: #065F46;
+      border: 1px solid rgba(16, 185, 129, .25)
+    }
+
+    .sub-alert.warn {
+      background: rgba(234, 179, 8, .1);
+      color: #854D0E;
+      border: 1px solid rgba(234, 179, 8, .25)
+    }
+
+    .sub-alert.danger {
+      background: rgba(239, 68, 68, .08);
+      color: #991B1B;
+      border: 1px solid rgba(239, 68, 68, .15)
+    }
+
+    /* SAVINGS */
+    .save-hero {
+      background: linear-gradient(135deg, #ECFDF5, #D1FAE5);
+      border: 1px solid #A7F3D0;
+      border-radius: var(--r-lg);
+      padding: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      box-shadow: var(--sh)
+    }
+
+    .save-hero .sh-lbl {
+      font-size: 11px;
+      font-weight: 600;
+      color: #065F46;
+      text-transform: uppercase;
+      letter-spacing: .04em
+    }
+
+    .save-hero .sh-val {
+      font-size: 22px;
+      font-weight: 900;
+      color: #065F46
+    }
+
+    .save-hero .sh-extra {
+      font-size: 11px;
+      color: #059669;
+      margin-top: 4px;
+      line-height: 1.5
+    }
+
+    /* TIPS */
+    .tip {
+      display: flex;
+      gap: 10px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-100);
+      align-items: flex-start
+    }
+
+    .tip:last-child {
+      border-bottom: none
+    }
+
+    .tip-ico {
+      font-size: 20px;
+      flex-shrink: 0
+    }
+
+    .tip p {
+      font-size: 13px;
+      color: var(--gray-600);
+      line-height: 1.55
+    }
+
+    .tip p strong {
+      color: var(--gray-800);
+      font-weight: 700
+    }
+
+    .tip-badge {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: var(--green-50);
+      color: var(--green);
+      font-weight: 700;
+      margin-left: 4px
+    }
+
+    /* PROGRAMS */
+    .prog {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 14px;
+      margin-bottom: 8px;
+      box-shadow: var(--sh);
+      transition: transform .2s
+    }
+
+    .prog:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--sh-md)
+    }
+
+    .prog h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gray-800)
+    }
+
+    .prog p {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-top: 3px;
+      line-height: 1.55
+    }
+
+    /* ACTIONS */
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 1.5rem
+    }
+
+    .abtn {
+      padding: 13px 22px;
+      border-radius: var(--r);
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all .2s
+    }
+
+    .abtn:active {
+      transform: scale(.97)
+    }
+
+    .abtn-pri {
+      background: linear-gradient(135deg, var(--pri), var(--pri-light));
+      color: #fff;
+      box-shadow: 0 3px 12px rgba(14, 116, 144, .3)
+    }
+
+    .abtn-pri:hover {
+      box-shadow: 0 6px 20px rgba(14, 116, 144, .4);
+      transform: translateY(-2px)
+    }
+
+    .abtn-wa {
+      background: #25D366;
+      color: #fff;
+      box-shadow: 0 3px 12px rgba(37, 211, 102, .3)
+    }
+
+    .abtn-wa:hover {
+      background: #1EBE5D
+    }
+
+    .abtn-out {
+      border: 1.5px solid var(--border);
+      color: var(--gray-500);
+      background: var(--card)
+    }
+
+    .abtn-out:hover {
+      border-color: var(--pri-light);
+      color: var(--pri)
+    }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: var(--gray-400);
+      margin-top: 2.5rem;
+      line-height: 1.7;
+      padding-bottom: 1rem
+    }
+
+    .footer strong {
+      color: var(--gray-500)
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--gray-800);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: var(--r);
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: var(--sh-lg);
+      transition: transform .4s cubic-bezier(.34, 1.56, .64, 1);
+      z-index: 100
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0)
+    }
+
+    /* TOOLTIP */
+    .tt-wrap {
+      position: relative;
+      cursor: help;
+      border-bottom: 1px dashed var(--gray-300)
+    }
+
+    .tt-wrap .tt-box {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gray-800);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 400;
+      padding: 8px 12px;
+      border-radius: 10px;
+      width: 220px;
+      line-height: 1.5;
+      z-index: 10;
+      box-shadow: var(--sh-lg)
+    }
+
+    .tt-wrap:hover .tt-box,
+    .tt-wrap:focus .tt-box {
+      display: block
+    }
+
+    @media(max-width:640px) {
+      .hero {
+        padding: 2rem 1.25rem 4rem
+      }
+
+      .hero-logo {
+        font-size: 32px
+      }
+
+      .stats-hero,
+      .sub-grid {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .stat-card .sc-val {
+        font-size: 22px
+      }
+
+      input[type=range] {
+        width: 60px
+      }
+
+      .save-hero {
+        grid-template-columns: 1fr
+      }
+
+      .actions {
+        flex-direction: column
+      }
+
+      .abtn {
+        justify-content: center
+      }
+
+      .cmp-tbl {
+        font-size: 11px
+      }
+
+      .cmp-tbl td,
+      .cmp-tbl th {
+        padding: 7px 6px
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <div class="hero" id="heroSection">
+    <div class="hero-logo"><span class="drop">💧</span> Calcula Tu Agua</div>
+    <p class="hero-sub">Descubre cuánto gastas en agua, cuánto puedes ahorrar y qué subsidios tienes disponibles</p>
+    <div class="hero-badge" id="heroBadge">calculatuagua.cl — Herramienta gratuita para familias chilenas</div>
+    <div class="wave-bottom">
+      <svg viewBox="0 0 1440 60" preserveAspectRatio="none">
+        <path d="M0,30 C360,60 720,0 1080,30 C1260,45 1380,30 1440,30 L1440,60 L0,60 Z" fill="#F0F9FF" />
+      </svg>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- ═══ PAGE 1: INPUT ═══ -->
+    <div class="page active" id="pageInput">
+
+      <div class="section-label"><span class="dot"></span> Tu empresa de agua</div>
+      <div class="card">
+        <div class="card-header">📍 Empresa sanitaria</div>
+        <select id="companySelect" class="region-select" aria-label="Empresa sanitaria"></select>
+      </div>
+
+      <div class="section-label"><span class="dot"></span> ¿Cuántas personas viven en tu hogar?</div>
+      <div class="card">
+        <div class="people-row" id="peopleRow" role="group" aria-label="Número de personas"></div>
+      </div>
+
+      <div class="section-label"><span class="dot"></span> Ajusta tus hábitos de consumo</div>
+      <div class="card" id="activityList"></div>
+
+      <div class="cta-wrap">
+        <button class="cta-btn" id="calcBtn" onclick="showResults()">
+          <span class="cta-icon">📊</span> Calcular mi consumo
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══ PAGE 2: RESULTS ═══ -->
+    <div class="page" id="pageResults">
+
+      <button class="back-btn" onclick="goBack()">← Volver a editar</button>
+
+      <div class="section-label"><span class="dot"></span> Tu consumo mensual</div>
+      <div class="stats-hero" id="mainStats"></div>
+
+      <div class="card" id="tramoCard">
+        <div class="card-header">📶 Tramo tarifario</div>
+        <div class="tramo-track">
+          <div class="tramo-dot" id="tramoDot"></div>
+        </div>
+        <div class="tramo-lbls"><span id="tL1"></span><span id="tLabel"
+            style="font-weight:700;color:var(--gray-700)"></span><span id="tL3"></span></div>
+      </div>
+
+      <div class="card" id="avgCard">
+        <div class="card-header">📊 Comparación con el promedio chileno</div>
+        <div id="avgContent"></div>
+      </div>
+
+      <div class="section-label"><span class="dot"></span> Subsidio de agua potable</div>
+      <div class="sub-card" id="subCard"></div>
+
+      <div class="section-label"><span class="dot"></span> Detalle: tu consumo vs. eficiente</div>
+      <div class="card" style="padding:0;overflow:auto">
+        <table class="cmp-tbl" id="cmpTable"></table>
+      </div>
+
+      <div class="section-label"><span class="dot"></span> Si adoptas hábitos eficientes</div>
+      <div class="stats-hero" id="effStats"></div>
+      <div class="save-hero" id="saveBanner"></div>
+
+      <div class="section-label"><span class="dot"></span> Consejos personalizados para ti</div>
+      <div class="card" id="tipsList"></div>
+
+      <div class="section-label"><span class="dot"></span> Programas de apoyo</div>
+      <div id="progList"></div>
+
+      <div class="actions" id="actBar"></div>
+    </div>
+
+    <div class="footer">
+      <strong>Calcula Tu Agua</strong> — calculatuagua.cl<br>
+      Tarifas referenciales basadas en resoluciones tarifarias vigentes 2025.<br>
+      Cálculo referencial. No reemplaza la boleta oficial.
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const CO = [
+      { id: 'andinas', n: 'Aguas Andinas (RM Santiago)', f: 3500, t1: 680, t2: 980, t3: 1450 },
+      { id: 'esval', n: 'ESVAL (Valparaíso)', f: 3200, t1: 720, t2: 1040, t3: 1560 },
+      { id: 'essbio', n: 'ESSBIO (Biobío)', f: 3000, t1: 650, t2: 940, t3: 1400 },
+      { id: 'nuevosur', n: 'Nuevosur (Maule)', f: 2900, t1: 630, t2: 910, t3: 1360 },
+      { id: 'altiplano', n: 'Aguas del Altiplano (Norte)', f: 2800, t1: 590, t2: 850, t3: 1270 },
+      { id: 'araucania', n: 'Aguas Araucanía (Araucanía)', f: 3100, t1: 660, t2: 950, t3: 1420 },
+      { id: 'magallanes', n: 'Aguas Magallanes (Magallanes)', f: 3300, t1: 700, t2: 1010, t3: 1500 },
+    ];
+    const AC = [
+      { id: 'shower', lb: 'Ducha', ic: '🚿', ds: 'minutos por persona / día', mn: 0, mx: 20, st: 1, df: 8, u: 'min', lpu: 10, ev: 5, el: null, pp: true, tip: 'Reducir la ducha de 8 a 5 min ahorra ~30 litros por persona al día.', th: [5, 12] },
+      { id: 'toilet', lb: 'Descarga de WC', ic: '🚽', ds: 'veces por persona / día', mn: 1, mx: 12, st: 1, df: 5, u: 'veces', lpu: 8, ev: 5, el: 4, pp: true, tip: 'Un WC con doble descarga (3L/6L) puede reducir 50% del consumo del baño.', th: [4, 8] },
+      { id: 'teeth', lb: 'Cepillado de dientes', ic: '🪥', ds: 'veces por persona / día', mn: 0, mx: 6, st: 1, df: 3, u: 'veces', lpu: 6, ev: 3, el: 1, pp: true, tip: 'Cerrar la llave mientras te cepillas ahorra hasta 5 litros por cepillado.', th: [2, 4] },
+      { id: 'dishes', lb: 'Lavado de platos', ic: '🍽️', ds: 'veces al día (hogar)', mn: 0, mx: 6, st: 1, df: 2, u: 'veces', lpu: 15, ev: 2, el: 5, pp: false, tip: 'Llenar un recipiente reduce de 15 a 5 litros por lavada.', th: [2, 4] },
+      { id: 'laundry', lb: 'Lavadora', ic: '👕', ds: 'cargas por semana', mn: 0, mx: 14, st: 1, df: 3, u: 'cargas', lpu: 65, ev: 2, el: null, pp: false, wk: true, tip: 'Usa carga completa y programa corto. Evita lavadas parciales.', th: [3, 7] },
+      { id: 'cook', lb: 'Cocinar, beber y otros', ic: '🍳', ds: 'litros estimados / día (hogar)', mn: 2, mx: 30, st: 1, df: 8, u: 'L', lpu: 1, ev: 6, el: null, pp: false, tip: 'Reutiliza el agua de cocción de verduras para regar plantas.', th: [8, 15] },
+      { id: 'garden', lb: 'Riego de jardín / huerto', ic: '🌱', ds: 'veces por semana', mn: 0, mx: 7, st: 1, df: 0, u: 'veces', lpu: 30, ev: 0, el: 20, pp: false, wk: true, tip: 'Riega temprano o al atardecer. Usa agua reutilizada.', th: [2, 5] },
+    ];
+    const SUB_T = [{ l: 'RSH 0–40%', p: 85 }, { l: 'RSH 41–70%', p: 50 }, { l: 'RSH 71–90%', p: 25 }];
+    const SUB_MAX = 13, SUB_MAX_SSO = 15, AVG_PP = 3.8;
+    let ppl = 4, cIdx = 0; const V = {}; AC.forEach(a => V[a.id] = a.df);
+
+    function gc() { return CO[cIdx] }
+    function tariff(m3) { const c = gc(); let v = 0; if (m3 <= 15) v = m3 * c.t1; else if (m3 <= 30) v = 15 * c.t1 + (m3 - 15) * c.t2; else v = 15 * c.t1 + 15 * c.t2 + (m3 - 30) * c.t3; return Math.round(c.f + v) }
+    function aD(a, eff) { const val = eff ? a.ev : V[a.id], lit = eff && a.el !== null ? a.el : a.lpu, raw = a.wk ? (val * lit / 7) : (val * lit); return raw * (a.pp ? ppl : 1) }
+    function tD(eff) { return Math.round(AC.reduce((s, a) => s + aD(a, eff), 0)) }
+    function fm(n) { return Math.round(n).toLocaleString('es-CL') }
+    function fD(n) { return parseFloat(n.toFixed(1)) }
+    function sC(a) { const v = V[a.id]; return v <= a.th[0] ? 'g' : v <= a.th[1] ? 'y' : 'r' }
+    function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500) }
+    function equivs(amt) { const r = []; const b = Math.round(amt / 2300), bu = Math.round(amt / 795), re = Math.round(amt / 5000); if (b > 0) r.push('🍞 ' + b + ' kg de pan'); if (bu > 0) r.push('🚌 ' + bu + ' pasajes de micro'); if (re > 0) r.push('📱 ' + re + ' recarga(s) de celular'); return r }
+
+    // BUILD INPUT PAGE
+    function buildCompany() { const s = document.getElementById('companySelect'); s.innerHTML = CO.map((c, i) => `<option value="${i}">${c.n}</option>`).join(''); s.onchange = e => { cIdx = +e.target.value } }
+    function buildPeople() { const r = document.getElementById('peopleRow'); r.innerHTML = '';[1, 2, 3, 4, 5, 6, 7, 8].forEach(n => { const b = document.createElement('button'); b.className = 'pnum' + (n === ppl ? ' active' : ''); b.textContent = n; b.setAttribute('aria-label', n + ' personas'); b.setAttribute('aria-pressed', n === ppl); b.onclick = () => { ppl = n; buildPeople() }; r.appendChild(b) }) }
+    function buildActs() {
+      const l = document.getElementById('activityList'); l.innerHTML = ''; AC.forEach(a => {
+        const v = V[a.id], row = document.createElement('div'); row.className = 'act-row'; row.innerHTML = `<div class="semaphore ${sC(a)}"></div><div class="act-info"><div class="act-name">${a.ic} ${a.lb} <span class="tag ${a.pp ? 'tag-p' : 'tag-h'}">${a.pp ? '× persona' : 'hogar'}</span></div><div class="act-desc">${a.ds}</div></div><div class="act-ctrl"><button class="pm-btn" aria-label="Disminuir ${a.lb}" data-id="${a.id}" data-d="-1">−</button><input type="range" min="${a.mn}" max="${a.mx}" step="${a.st}" value="${v}" id="sl_${a.id}" aria-label="${a.lb}"><button class="pm-btn" aria-label="Aumentar ${a.lb}" data-id="${a.id}" data-d="1">+</button><div class="act-val" id="vl_${a.id}">${v} ${a.u}</div></div>`; l.appendChild(row);
+        const sl = document.getElementById('sl_' + a.id); sl.oninput = e => { V[a.id] = +e.target.value; document.getElementById('vl_' + a.id).textContent = e.target.value + ' ' + a.u; row.querySelector('.semaphore').className = 'semaphore ' + sC(a) };
+        row.querySelectorAll('.pm-btn').forEach(b => b.onclick = () => { const d = +b.dataset.d, nv = Math.max(a.mn, Math.min(a.mx, V[a.id] + d * a.st)); V[a.id] = nv; sl.value = nv; document.getElementById('vl_' + a.id).textContent = nv + ' ' + a.u; row.querySelector('.semaphore').className = 'semaphore ' + sC(a) })
+      })
+    }
+
+    // SHOW RESULTS
+    function showResults() {
+      document.getElementById('pageInput').classList.remove('active');
+      document.getElementById('pageResults').classList.add('active');
+      document.getElementById('heroSection').style.display = 'none';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      renderResults();
+    }
+    function goBack() {
+      document.getElementById('pageResults').classList.remove('active');
+      document.getElementById('pageInput').classList.add('active');
+      document.getElementById('heroSection').style.display = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderResults() {
+      const ld = tD(false), m3 = fD(ld * 30 / 1000), cost = tariff(m3);
+      const le = tD(true), m3e = fD(le * 30 / 1000), ce = tariff(m3e);
+      const save = Math.max(0, cost - ce), sY = save * 12, m3s = fD(Math.max(0, m3 - m3e)), c = gc();
+
+      // Hero stats
+      let cls = m3 <= 15 ? 'blue' : m3 <= 30 ? 'amber' : 'red';
+      document.getElementById('mainStats').innerHTML = `
+    <div class="stat-card"><div class="sc-label">Litros / día</div><div class="sc-val">${fm(ld)}<span class="sc-unit">L</span></div></div>
+    <div class="stat-card"><div class="sc-label"><span class="tt-wrap">M³ / mes<span class="tt-box">Un metro cúbico (m³) = 1.000 litros ≈ 66 baldes de 15L</span></span></div><div class="sc-val">${m3.toFixed(1)}<span class="sc-unit">m³</span></div></div>
+    <div class="stat-card ${cls}"><div class="sc-label">Costo mensual</div><div class="sc-val">$${fm(cost)}</div></div>`;
+
+      // Tramo
+      const pct = Math.min(100, m3 / 45 * 100);
+      document.getElementById('tramoDot').style.left = pct + '%';
+      let lbl; if (m3 > 30) lbl = `Tramo 3 — $${fm(c.t3)}/m³`; else if (m3 > 15) lbl = `Tramo 2 — $${fm(c.t2)}/m³`; else lbl = `Tramo 1 — $${fm(c.t1)}/m³`;
+      document.getElementById('tLabel').textContent = lbl;
+      document.getElementById('tL1').textContent = `Tramo 1 ($${fm(c.t1)})`;
+      document.getElementById('tL3').textContent = `Tramo 3 ($${fm(c.t3)})`;
+
+      // Average
+      const avg = fD(AVG_PP * ppl), mxB = Math.max(m3, avg, 30) * 1.2, uP = Math.min(100, m3 / mxB * 100), aP = Math.min(100, avg / mxB * 100);
+      const dif = m3 - avg, difT = dif > 0 ? `<span style="color:var(--red)">⚠️ Consumes <strong>${fD(Math.abs(dif))} m³ más</strong> que el promedio</span>` : `<span style="color:var(--green)">✅ Consumes <strong>${fD(Math.abs(dif))} m³ menos</strong> que el promedio</span>`;
+      document.getElementById('avgContent').innerHTML = `
+    <div style="font-size:13px;color:var(--gray-500);margin-bottom:4px">Promedio para ${ppl} personas: <strong>${avg} m³/mes</strong></div>
+    <div class="avg-bar-track"><div class="avg-fill" style="width:${uP}%;background:${dif > 0 ? 'var(--red)' : 'var(--green)'}"></div><div class="avg-pin" style="left:${aP}%"><div class="avg-pin-lbl">Promedio ${avg} m³</div></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--gray-400)"><span>Tu consumo: ${m3.toFixed(1)} m³</span><span>${difT}</span></div>`;
+
+      // Subsidy
+      const sCostStd = tariff(Math.min(m3, SUB_MAX)), sh = SUB_T.map(t => `<div class="sub-stat"><div class="sl">${t.l} (${t.p}%)</div><div class="sv">−$${fm(Math.round(sCostStd * t.p / 100))}/mes</div></div>`).join('');
+      const oS = m3 > SUB_MAX, oSSO = m3 > SUB_MAX_SSO;
+      let aH = ''; if (oSSO) aH = `<div class="sub-alert danger">⚠️ <strong>Tu consumo (${m3.toFixed(1)} m³) supera los ${SUB_MAX_SSO} m³</strong> (tope máximo Chile Seguridades y Oportunidades). Los ${fD(m3 - SUB_MAX_SSO)} m³ extra se cobran a tarifa completa.</div>`;
+      else if (oS) aH = `<div class="sub-alert warn">⚠️ <strong>Tu consumo (${m3.toFixed(1)} m³) supera los ${SUB_MAX} m³ del SAP estándar.</strong> Si participas en Chile Seguridades y Oportunidades, tu tope es ${SUB_MAX_SSO} m³ y aún estarías cubierto.</div>`;
+      else aH = `<div class="sub-alert ok">✅ Tu consumo (${m3.toFixed(1)} m³) está dentro del límite de ${SUB_MAX} m³ subsidiables.</div>`;
+      document.getElementById('subCard').innerHTML = `<h3>🏛️ Subsidio al Pago de Agua (SAP)</h3><p class="sub-p">Si tu hogar está en el <strong>Registro Social de Hogares (RSH)</strong>, puedes recibir un descuento mensual. SAP estándar cubre hasta <strong>${SUB_MAX} m³/mes</strong>. Chile Seguridades y Oportunidades: hasta <strong>${SUB_MAX_SSO} m³/mes</strong> (hasta 100%).</p><div class="sub-grid">${sh}<div class="sub-stat"><div class="sl">Tu costo sin subsidio</div><div class="sv">$${fm(cost)}/mes</div></div></div>${aH}`;
+
+      // Compare table
+      let tH = `<thead><tr><th>Actividad</th><th>Tu consumo</th><th>Eficiente</th><th>Ahorro/día</th></tr></thead><tbody>`;
+      let tC = 0, tE = 0; AC.forEach(a => { const cu = aD(a, false), ef = aD(a, true), d = Math.max(0, cu - ef); tC += cu; tE += ef; tH += `<tr><td>${a.ic} ${a.lb}</td><td>${fm(Math.round(cu))} L</td><td>${fm(Math.round(ef))} L</td><td class="saved">${d > 0 ? '−' + fm(Math.round(d)) + ' L' : '—'}</td></tr>` });
+      tH += `<tr><td><strong>Total diario</strong></td><td><strong>${fm(Math.round(tC))} L</strong></td><td><strong>${fm(Math.round(tE))} L</strong></td><td class="saved"><strong>−${fm(Math.round(Math.max(0, tC - tE)))} L</strong></td></tr></tbody>`;
+      document.getElementById('cmpTable').innerHTML = tH;
+
+      // Efficient stats
+      document.getElementById('effStats').innerHTML = `
+    <div class="stat-card"><div class="sc-label">Litros/día (eficiente)</div><div class="sc-val">${fm(le)}<span class="sc-unit">L</span></div></div>
+    <div class="stat-card"><div class="sc-label">M³/mes (eficiente)</div><div class="sc-val">${m3e.toFixed(1)}<span class="sc-unit">m³</span></div></div>
+    <div class="stat-card green"><div class="sc-label">Ahorro mensual</div><div class="sc-val">$${fm(save)}</div></div>`;
+
+      // Save banner
+      const eq = equivs(sY), eqH = eq.length ? `<div class="sh-extra">${eq.join(' · ')}</div>` : '';
+      document.getElementById('saveBanner').innerHTML = `<div><div class="sh-lbl">Ahorro anual</div><div class="sh-val">$${fm(sY)} CLP</div>${eqH}</div><div><div class="sh-lbl">Agua ahorrada al año</div><div class="sh-val">${(m3s * 12).toFixed(1)} m³</div><div class="sh-extra">💧 ${fm(Math.round(m3s * 12 * 1000))} litros menos</div></div><div><div class="sh-lbl">En 5 años ahorras</div><div class="sh-val">$${fm(sY * 5)} CLP</div></div>`;
+
+      // Tips
+      const tl = document.getElementById('tipsList'); tl.innerHTML = '';
+      const ranked = AC.map(a => ({ a, d: aD(a, false) - aD(a, true) })).filter(x => x.d > 0).sort((a, b) => b.d - a.d);
+      if (!ranked.length) {
+        tl.innerHTML = '<div class="tip"><div class="tip-ico">🎉</div><p><strong>¡Excelente!</strong> Tus hábitos ya son muy eficientes.</p></div>';
+      } else ranked.forEach(({ a, d }) => { const div = document.createElement('div'); div.className = 'tip'; div.innerHTML = `<div class="tip-ico">${a.ic}</div><p><strong>${a.lb}:</strong> ${a.tip}<span class="tip-badge">Ahorra ${fm(Math.round(d * 30))} L/mes</span></p>`; tl.appendChild(div) });
+
+      // Programs
+      document.getElementById('progList').innerHTML = `
+    <div class="prog"><h4>🏛️ Subsidio SAP</h4><p>Cubre hasta el 85% de tu boleta si estás en el RSH. Aplica hasta 13 m³/mes (15 m³ en Chile Seg. y Oportunidades). <a href="https://www.chileatiende.gob.cl" target="_blank">Más info →</a></p></div>
+    <div class="prog"><h4>🔧 Revisión de medidor</h4><p>Solicita una <strong>revisión gratuita</strong> a tu empresa sanitaria si sospechas que marca de más. Plazo legal: 10 días hábiles.</p></div>
+    <div class="prog"><h4>🏘️ Kit de ahorro municipal</h4><p>Algunas municipalidades entregan <strong>aireadores y reductores de flujo</strong> sin costo. Consulta en tu municipio.</p></div>
+    <div class="prog"><h4>📞 Convenio de pago</h4><p>Si tienes deuda, solicita un <strong>convenio en cuotas</strong> con tu empresa sanitaria, sin corte del servicio.</p></div>`;
+
+      // Actions
+      document.getElementById('actBar').innerHTML = `
+    <button class="abtn abtn-pri" onclick="saveScen()">💾 Guardar</button>
+    <button class="abtn abtn-wa" onclick="shareWA()">📲 WhatsApp</button>
+    <button class="abtn abtn-out" onclick="loadScen()">📂 Cargar</button>
+    <button class="abtn abtn-out" onclick="resetAll()">🔄 Restablecer</button>`;
+    }
+
+    // ACTIONS
+    function saveScen() { localStorage.setItem('cta_data', JSON.stringify({ ppl, cIdx, V: { ...V }, ts: Date.now() })); toast('✅ Escenario guardado') }
+    function loadScen() { const r = localStorage.getItem('cta_data'); if (!r) { toast('⚠️ No hay guardado'); return } try { const d = JSON.parse(r); ppl = d.ppl || 4; cIdx = d.cIdx || 0; Object.assign(V, d.V || {}); document.getElementById('companySelect').value = cIdx; buildPeople(); buildActs(); toast('📂 Cargado'); goBack() } catch (e) { toast('❌ Error') } }
+    function resetAll() { AC.forEach(a => V[a.id] = a.df); ppl = 4; cIdx = 0; document.getElementById('companySelect').value = 0; buildPeople(); buildActs(); toast('🔄 Restablecido'); goBack() }
+    function shareWA() { const ld = tD(false), m3 = fD(ld * 30 / 1000), cost = tariff(m3), le = tD(true), m3e = fD(le * 30 / 1000), ce = tariff(m3e), save = Math.max(0, cost - ce); const msg = `💧 *Calcula Tu Agua — Mi consumo*\n\n👥 ${ppl} personas\n📊 Consumo: ${m3.toFixed(1)} m³/mes ($${fm(cost)})\n✅ Eficiente: ${m3e.toFixed(1)} m³/mes ($${fm(ce)})\n💰 Ahorro mensual: $${fm(save)}\n💰 Ahorro anual: $${fm(save * 12)}\n\n¡Calcula el tuyo en calculatuagua.cl! 🌊`; window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank') }
+
+    // INIT
+    buildCompany(); buildPeople(); buildActs();
+    const sv = localStorage.getItem('cta_data');
+    if (sv) { try { const d = JSON.parse(sv); ppl = d.ppl || 4; cIdx = d.cIdx || 0; if (d.V) Object.assign(V, d.V); document.getElementById('companySelect').value = cIdx; buildPeople(); buildActs() } catch (e) { } }
+  </script>
+</body>
+
+</html>
