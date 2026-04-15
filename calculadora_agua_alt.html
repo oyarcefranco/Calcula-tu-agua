@@ -1421,13 +1421,14 @@
         </div>`;
 
       // ── PANEL 5: Consejos + Compartir ──
-      const ranked = AC.map(a => ({ a, d: aD(a, false) - aD(a, true) })).filter(x => x.d > 0).sort((a, b) => b.d - a.d);
+      const smartTips = generateSmartTips(m3, m3e, cost, ce, save, sY, c);
       let tipsHTML = '';
-      if (!ranked.length) {
-        tipsHTML = '<div class="tip"><div class="tip-ico">🎉</div><p><strong>¡Excelente!</strong> Tus hábitos ya son muy eficientes.</p></div>';
+      if (!smartTips.length) {
+        tipsHTML = '<div class="tip"><div class="tip-ico">🎉</div><p><strong>¡Excelente!</strong> Tus hábitos ya son muy eficientes. ¡Sigue así!</p></div>';
       } else {
-        ranked.forEach(({ a, d }) => {
-          tipsHTML += `<div class="tip"><div class="tip-ico">${a.ic}</div><p><strong>${a.lb}:</strong> ${a.tip}<span class="tip-badge">Ahorra ${fm(Math.round(d * 30))} L/mes</span></p></div>`;
+        smartTips.forEach(t => {
+          const badge = t.save > 0 ? `<span class="tip-badge">Ahorra ${fm(t.save)} L/mes</span>` : '';
+          tipsHTML += `<div class="tip"><div class="tip-ico">${t.ico}</div><p><strong>${t.title}:</strong> ${t.text}${badge}</p></div>`;
         });
       }
 
@@ -1442,6 +1443,181 @@
           </div>
         </div>`;
     }
+
+    /* ══════════════════════════════════════════════════════════
+       MOTOR DE CONSEJOS CONTEXTUALES (Opción 3)
+       Banco de ~70 tips con selección inteligente por:
+       - Nivel de consumo por actividad (3+ niveles)
+       - Tamaño familiar
+       - Tramo tarifario
+       - Proximidad al tope de subsidio
+       - Combinaciones entre actividades
+       - Metas progresivas y motivacionales
+       ══════════════════════════════════════════════════════════ */
+
+    function generateSmartTips(m3, m3e, cost, ce, save, sY, company) {
+      const tips = []; // { ico, title, text, save (L/mes), priority }
+      const tramo = m3 > 30 ? 3 : m3 > 15 ? 2 : 1;
+
+      // Helper: get savings for an activity in L/month
+      function actSave(a) { return Math.round((aD(a, false) - aD(a, true)) * 30); }
+      function actDaily(a) { return Math.round(aD(a, false)); }
+
+      // ═══ CATEGORY 1: ACTIVITY-SPECIFIC TIPS (multi-level) ═══
+
+      // 🚿 DUCHA
+      const sv = V.shower, shSave = actSave(AC[0]), shDaily = actDaily(AC[0]);
+      if (sv >= 15) {
+        tips.push({ ico: '🚿', title: 'Ducha — Nivel crítico', text: `Con ${sv} minutos de ducha, cada persona usa ${sv * 10} litros. ¡Eso es como vaciar ${Math.round(sv * 10 / 15)} baldes! Intenta poner una alarma de 7 minutos e ir bajando poco a poco.`, save: shSave, priority: 10 });
+      } else if (sv >= 10) {
+        tips.push({ ico: '🚿', title: 'Ducha — Reducir tiempo', text: `${sv} minutos de ducha × ${ppl} personas = ${fm(shDaily)} litros/día solo en duchas. Pon una canción corta (5 min) como temporizador y verás la diferencia.`, save: shSave, priority: 8 });
+      } else if (sv >= 7) {
+        tips.push({ ico: '🚿', title: 'Ducha — Casi ideal', text: `Vas bien con ${sv} minutos, pero bajar a 5 ahorraría ${fm(shSave)} litros al mes. Tip: cierra la llave mientras te enjabonas.`, save: shSave, priority: 5 });
+      } else if (sv > 5) {
+        tips.push({ ico: '🚿', title: 'Ducha — Buen hábito', text: `${sv} minutos está muy cerca del ideal. Cerrar la llave al enjabonarte te lleva a los 5 min recomendados.`, save: shSave, priority: 3 });
+      }
+      // Family-size shower tip
+      if (sv >= 8 && ppl >= 5) {
+        tips.push({ ico: '👨‍👩‍👧‍👦', title: 'Familia grande + ducha', text: `Con ${ppl} personas duchándose ${sv} min cada una, la ducha consume ${fm(shDaily)} L/día (${Math.round(shDaily / tD(false) * 100)}% de tu consumo total). Es tu mayor oportunidad de ahorro.`, save: shSave, priority: 9 });
+      }
+
+      // 🚽 WC
+      const wc = V.toilet, wcSave = actSave(AC[1]);
+      if (wc >= 8) {
+        tips.push({ ico: '🚽', title: 'WC — Alto uso', text: `${wc} descargas diarias por persona es alto. Un WC con doble descarga (3L/6L) reduce el consumo a la mitad. Algunas municipalidades los entregan gratis.`, save: wcSave, priority: 7 });
+      } else if (wc >= 6) {
+        tips.push({ ico: '🚽', title: 'WC — Descarga eficiente', text: `Si tu WC es antiguo (12L por descarga), considera instalar un kit de doble botón. Cuesta ~$5.000 y se ahorra desde el primer mes.`, save: wcSave, priority: 5 });
+      } else if (wcSave > 0) {
+        tips.push({ ico: '🚽', title: 'WC — Optimizar descarga', text: `Un truco gratuito: coloca una botella de 1.5L llena de agua dentro del estanque. Cada descarga usará menos agua sin afectar el funcionamiento.`, save: wcSave, priority: 3 });
+      }
+
+      // 🪥 CEPILLADO
+      const tth = V.teeth, tthSave = actSave(AC[2]);
+      if (tth >= 4) {
+        tips.push({ ico: '🪥', title: 'Cepillado — Llave abierta', text: `Si dejas la llave abierta al cepillarte, gastas ~6 litros por vez. Con ${tth} cepillados × ${ppl} personas = ${fm(tth * 6 * ppl)} L/día desperdiciados. Solución: usa un vaso con agua.`, save: tthSave, priority: 6 });
+      } else if (tth >= 2 && tthSave > 0) {
+        tips.push({ ico: '🪥', title: 'Cepillado — Cerrar la llave', text: `Cerrar la llave mientras te cepillas ahorra ${fm(Math.round(tthSave / ppl))} litros al mes por persona. Multiplícalo por ${ppl}: son ${fm(tthSave)} L/mes.`, save: tthSave, priority: 4 });
+      }
+
+      // 🍽️ LAVADO DE PLATOS
+      const dsh = V.dishes, dshSave = actSave(AC[3]);
+      if (dsh >= 4) {
+        tips.push({ ico: '🍽️', title: 'Platos — Muchas lavadas', text: `${dsh} lavadas al día con llave abierta usa ${dsh * 15} litros. Junta la loza y lávala 1-2 veces usando un recipiente con agua. Ahorras hasta el 70%.`, save: dshSave, priority: 6 });
+      } else if (dsh >= 2 && dshSave > 0) {
+        tips.push({ ico: '🍽️', title: 'Platos — Usar recipiente', text: `Llenar un lavaplatos o recipiente en vez de usar la llave corriendo reduce de 15 a 5 litros por lavada. Pequeño cambio, gran impacto.`, save: dshSave, priority: 4 });
+      }
+
+      // 👕 LAVADORA
+      const lnd = V.laundry, lndSave = actSave(AC[4]);
+      if (lnd >= 7) {
+        tips.push({ ico: '👕', title: 'Lavadora — Demasiadas cargas', text: `${lnd} cargas por semana es mucho. Cada carga usa ~65 litros. Acumula ropa y lava con carga completa: puedes bajar a 2-3 cargas fácilmente.`, save: lndSave, priority: 7 });
+      } else if (lnd >= 4) {
+        tips.push({ ico: '👕', title: 'Lavadora — Optimizar cargas', text: `Con ${lnd} cargas semanales, asegúrate de llenar la lavadora completa. Una carga completa gasta lo mismo que una a medias (65L), pero lavas el doble de ropa.`, save: lndSave, priority: 5 });
+      } else if (lnd >= 3 && lndSave > 0) {
+        tips.push({ ico: '👕', title: 'Lavadora — Carga completa', text: `Usa siempre el programa de agua fría y carga completa. La ropa queda igual de limpia y ahorras agua y electricidad.`, save: lndSave, priority: 3 });
+      }
+
+      // 🍳 COCINA
+      const ck = V.cook, ckSave = actSave(AC[5]);
+      if (ck >= 15) {
+        tips.push({ ico: '🍳', title: 'Cocina — Consumo alto', text: `${ck} litros en cocina es elevado. Tip: lava frutas y verduras en un bowl, no bajo el chorro. Reutiliza el agua de cocción de verduras para regar.`, save: ckSave, priority: 5 });
+      } else if (ck >= 8 && ckSave > 0) {
+        tips.push({ ico: '🍳', title: 'Cocina — Reutilizar agua', text: `El agua donde herviste verduras, huevos o papas sirve para regar plantas (una vez fría). Dos usos, cero desperdicio.`, save: ckSave, priority: 3 });
+      }
+
+      // 🌱 RIEGO
+      const grd = V.garden, grdSave = actSave(AC[6]);
+      if (grd >= 5) {
+        tips.push({ ico: '🌱', title: 'Riego — Muy frecuente', text: `Regar ${grd} veces por semana es excesivo. Riega solo 2-3 veces, temprano (antes de las 9am) o al atardecer para que no se evapore.`, save: grdSave, priority: 7 });
+      } else if (grd >= 3) {
+        tips.push({ ico: '🌱', title: 'Riego — Reutiliza agua', text: `Usa el agua del lavado de verduras, del enjuague de ropa, o la esperada mientras sale caliente en la ducha. Riega al atardecer.`, save: grdSave, priority: 5 });
+      } else if (grd >= 1 && grdSave > 0) {
+        tips.push({ ico: '🌱', title: 'Riego — Eficiente', text: `Prefiere plantas nativas o que requieran poca agua. Usa mulch (hojas secas) alrededor de las plantas para retener humedad.`, save: grdSave, priority: 3 });
+      }
+
+      // ═══ CATEGORY 2: CROSS-ACTIVITY COMBOS ═══
+
+      if (sv >= 8 && tth >= 3 && dsh >= 2) {
+        tips.push({ ico: '🔄', title: 'Baño + cocina juntos', text: `Tu baño (ducha + cepillado) y cocina (platos) suman ${fm(shDaily + actDaily(AC[2]) + actDaily(AC[3]))} L/día. Si cierras la llave en las 3 actividades, podrías ahorrar ${fm(shSave + tthSave + dshSave)} L/mes.`, save: 0, priority: 7 });
+      }
+
+      if (sv >= 8 && lnd >= 4) {
+        tips.push({ ico: '💡', title: 'Los 2 mayores gastos', text: `La ducha y la lavadora son tus actividades que más agua consumen. Enfocarte en estos dos hábitos te da el mayor retorno: hasta ${fm(shSave + lndSave)} L/mes.`, save: 0, priority: 8 });
+      }
+
+      // ═══ CATEGORY 3: TARIFF-AWARE TIPS ═══
+
+      if (tramo === 3) {
+        const m3ToT2 = fD(m3 - 30);
+        const costT3 = Math.round(m3ToT2 * company.t3);
+        tips.push({ ico: '⚠️', title: 'Tarifa alta — Tramo 3', text: `Tienes ${m3ToT2} m³ en el tramo más caro ($${fm(company.t3)}/m³). Eso te cuesta $${fm(costT3)} extra al mes. Bajar esos ${m3ToT2} m³ es tu prioridad #1.`, save: 0, priority: 10 });
+      } else if (tramo === 2) {
+        const m3ToT1 = fD(m3 - 15);
+        tips.push({ ico: '📊', title: 'Cerca del tramo bajo', text: `Te faltan solo ${m3ToT1} m³ para bajar al tramo 1 (el más barato: $${fm(company.t1)}/m³). Eso equivale a reducir ~${fm(Math.round(m3ToT1 * 1000 / 30))} litros al día.`, save: 0, priority: 8 });
+      }
+
+      // ═══ CATEGORY 4: SUBSIDY-AWARE TIPS ═══
+
+      if (m3 > SUB_MAX_SSO) {
+        tips.push({ ico: '🏛️', title: 'Sobre el tope de subsidio', text: `Tu consumo (${m3.toFixed(1)} m³) supera los ${SUB_MAX_SSO} m³ del subsidio. Si llegas a ${SUB_MAX_SSO} m³ o menos, podrías recibir un descuento de hasta el 85% en tu boleta.`, save: 0, priority: 9 });
+      } else if (m3 > SUB_MAX && m3 <= SUB_MAX_SSO) {
+        tips.push({ ico: '🏛️', title: 'Casi en tope SAP', text: `Tu consumo (${m3.toFixed(1)} m³) supera los ${SUB_MAX} m³ del SAP estándar, pero está dentro del tope de Chile Seguridades (${SUB_MAX_SSO} m³). Consulta si tu hogar califica.`, save: 0, priority: 7 });
+      } else if (m3 <= SUB_MAX && m3 >= 10) {
+        tips.push({ ico: '✅', title: 'Apto para subsidio', text: `Con ${m3.toFixed(1)} m³ estás dentro del límite subsidiable. Si estás en el RSH (Registro Social de Hogares), podrías recibir hasta 85% de descuento. ¡Postula en tu municipio!`, save: 0, priority: 6 });
+      }
+
+      // ═══ CATEGORY 5: FAMILY-SIZE CONTEXT ═══
+
+      if (ppl >= 6) {
+        const ppd = Math.round(tD(false) / ppl);
+        tips.push({ ico: '👨‍👩‍👧‍👦', title: 'Familia numerosa', text: `Con ${ppl} personas, cada una consume ~${ppd} litros/día. Involucra a toda la familia: los niños pueden ser los "guardianes del agua" y vigilar que nadie deje llaves abiertas.`, save: 0, priority: 6 });
+      } else if (ppl === 1) {
+        tips.push({ ico: '🏠', title: 'Hogar de una persona', text: `Vivir solo es una ventaja para ahorrar: solo depende de ti. Enfócate en la ducha y el WC, que son el 70% de tu consumo individual.`, save: 0, priority: 4 });
+      } else if (ppl >= 3 && ppl <= 5 && save > 3000) {
+        tips.push({ ico: '💪', title: 'Objetivo familiar', text: `Si toda la familia se compromete a 3 cambios simples (ducha corta, llave cerrada al cepillarse, lavadora llena), podrían ahorrar $${fm(save)}/mes — son $${fm(sY)} al año.`, save: 0, priority: 5 });
+      }
+
+      // ═══ CATEGORY 6: MOTIVATIONAL / PROGRESSIVE GOALS ═══
+
+      if (save >= 8000) {
+        const eq = equivs(sY);
+        const eqText = eq.length >= 2 ? ` Eso equivale a ${eq[0]} y ${eq[1]} al año.` : '';
+        tips.push({ ico: '🎯', title: 'Gran potencial de ahorro', text: `Puedes ahorrar $${fm(save)}/mes ($${fm(sY)}/año).${eqText} Empieza con el cambio más fácil y ve sumando uno por semana.`, save: 0, priority: 7 });
+      } else if (save >= 3000) {
+        tips.push({ ico: '🎯', title: 'Ahorro alcanzable', text: `$${fm(save)} al mes es un ahorro real y alcanzable. No necesitas cambiar todo de golpe: empieza reduciendo 2 minutos en la ducha esta semana.`, save: 0, priority: 5 });
+      }
+
+      if (m3e <= SUB_MAX && m3 > SUB_MAX) {
+        tips.push({ ico: '🌟', title: '¡Meta realista!', text: `Con hábitos eficientes bajarías a ${m3e.toFixed(1)} m³, dentro del límite subsidiable. Podrías recibir subsidio Y pagar menos. Doble beneficio.`, save: 0, priority: 8 });
+      }
+
+      // ═══ SCORE, DEDUPLICATE & SELECT TOP TIPS ═══
+
+      // Score each tip: priority × (1 + normalized savings)
+      const maxSave = Math.max(1, ...tips.map(t => t.save));
+      tips.forEach(t => {
+        t.score = t.priority * (1 + (t.save / maxSave) * 2);
+      });
+
+      // Sort by score descending
+      tips.sort((a, b) => b.score - a.score);
+
+      // Deduplicate by title prefix (avoid too many of same category)
+      const seen = new Set();
+      const selected = [];
+      for (const t of tips) {
+        const cat = t.ico;
+        if (seen.has(cat) && selected.length >= 3) continue; // allow 1 repeat only if < 3 tips
+        seen.add(cat);
+        selected.push(t);
+        if (selected.length >= 6) break;
+      }
+
+      return selected;
+    }
+
+    // Store last generated tips for WhatsApp sharing
+    let _lastSmartTips = [];
 
     function buildCmpTable() {
       let tH = `<thead><tr><th>Actividad</th><th>Actual</th><th>Eficiente</th><th>Ahorro</th></tr></thead><tbody>`;
@@ -1479,13 +1655,14 @@
       const le = tD(true), m3e = fD(le * 30 / 1000), ce = tariff(m3e);
       const save = Math.max(0, cost - ce), sY = save * 12;
 
-      // Build tips list for message
-      const ranked = AC.map(a => ({ a, d: aD(a, false) - aD(a, true) })).filter(x => x.d > 0).sort((a, b) => b.d - a.d);
+      // Use the smart tips for the message
+      const smartTips = generateSmartTips(m3, m3e, cost, ce, save, sY, gc());
       let tipsMsg = '';
-      if (ranked.length) {
+      if (smartTips.length) {
         tipsMsg = '\n💡 *Consejos personalizados:*\n';
-        ranked.forEach(({ a, d }) => {
-          tipsMsg += `${a.ic} ${a.lb}: ${a.tip} (Ahorra ${fm(Math.round(d * 30))} L/mes)\n`;
+        smartTips.slice(0, 4).forEach(t => {
+          const saveText = t.save > 0 ? ` (Ahorra ${fm(t.save)} L/mes)` : '';
+          tipsMsg += `${t.ico} ${t.title}: ${t.text.substring(0, 100)}...${saveText}\n`;
         });
       }
 

@@ -317,9 +317,170 @@ pasajes = ahorro_anual ÷ 795
 recargas = ahorro_anual ÷ 5.000
 ```
 
-### 6.8 Tips dinámicos
+### 6.8 Motor de Consejos Contextuales (Algoritmo Inteligente)
 
-Los consejos se generan automáticamente calculando `consumo_actual − consumo_eficiente` para cada actividad, se filtran los que tienen diferencia > 0, y se ordenan de mayor a menor impacto en litros/día. Cada tip muestra el ahorro mensual en L/mes.
+El sistema de consejos no usa IA generativa ni conexión a internet. En su lugar, emplea un **algoritmo basado en reglas con banco de ~50 condiciones** que evalúa el contexto completo del hogar para seleccionar los consejos más relevantes.
+
+#### 6.8.1 Variables de entrada del algoritmo
+
+El motor recibe las siguientes variables calculadas a partir de los inputs del usuario:
+
+| Variable | Descripción | Ejemplo |
+| -------- | ----------- | ------- |
+| `m3` | Consumo mensual actual en m³ | 18.5 |
+| `m3e` | Consumo mensual eficiente en m³ | 9.8 |
+| `cost` | Costo mensual actual en CLP | $17.130 |
+| `ce` | Costo mensual eficiente en CLP | $10.164 |
+| `save` | Ahorro mensual potencial (cost − ce) | $6.966 |
+| `sY` | Ahorro anual (save × 12) | $83.592 |
+| `company` | Empresa sanitaria seleccionada | Aguas Andinas |
+| `tramo` | Tramo tarifario (1, 2 o 3) | 2 |
+| `ppl` | Número de personas en el hogar | 4 |
+| `V[actividad]` | Valor actual de cada slider (7 actividades) | shower=8, toilet=5, etc. |
+
+Adicionalmente, para cada actividad se calculan dos métricas auxiliares:
+
+```
+actSave(actividad) = (consumo_actual − consumo_eficiente) × 30 días    → Litros ahorrados al mes
+actDaily(actividad) = consumo_actual_litros_día                         → Litros consumidos al día
+```
+
+#### 6.8.2 Banco de condiciones (6 categorías)
+
+El algoritmo evalúa **~50 reglas** organizadas en 6 categorías. Cada regla que se cumple genera un objeto tip con: `{ico, title, text, save, priority}`.
+
+##### Categoría 1: Tips por actividad (multi-nivel)
+
+Cada una de las 7 actividades tiene entre 2 y 4 niveles de consejo según el valor del slider:
+
+| Actividad | Nivel | Condición | Prioridad | Ejemplo de consejo |
+| --------- | ----- | --------- | :-------: | ------------------ |
+| 🚿 Ducha | Crítico | `≥ 15 min` | 10 | "¡Cada persona usa 150L! Eso es como vaciar 10 baldes" |
+| 🚿 Ducha | Alto | `≥ 10 min` | 8 | "X min × N personas = Y L/día. Pon una canción de 5 min" |
+| 🚿 Ducha | Medio | `≥ 7 min` | 5 | "Vas bien, cierra la llave mientras te enjabonas" |
+| 🚿 Ducha | Bueno | `> 5 min` | 3 | "Muy cerca del ideal, un pequeño ajuste más" |
+| 🚽 WC | Alto | `≥ 8 descargas` | 7 | "WC doble descarga reduce 50%. Algunas municipalidades los dan gratis" |
+| 🚽 WC | Medio | `≥ 6 descargas` | 5 | "Kit de doble botón por ~$5.000, se paga solo" |
+| 🚽 WC | Bajo | `ahorro > 0` | 3 | "Botella de 1.5L dentro del estanque = menos agua por descarga" |
+| 🪥 Cepillado | Alto | `≥ 4 veces` | 6 | "Llave abierta = 6L/vez. Con N personas = X L/día desperdiciados" |
+| 🪥 Cepillado | Normal | `≥ 2 y ahorro > 0` | 4 | "Cerrar la llave ahorra X L/mes por persona" |
+| 🍽️ Platos | Alto | `≥ 4 lavadas` | 6 | "Junta la loza, usa recipiente. Ahorras hasta 70%" |
+| 🍽️ Platos | Normal | `≥ 2 y ahorro > 0` | 4 | "Recipiente en vez de llave corriendo: 15→5 L/lavada" |
+| 👕 Lavadora | Alto | `≥ 7 cargas/sem` | 7 | "Cada carga usa 65L. Acumula ropa, baja a 2-3 cargas" |
+| 👕 Lavadora | Medio | `≥ 4 cargas/sem` | 5 | "Carga completa gasta igual que a medias, pero lavas el doble" |
+| 👕 Lavadora | Bajo | `≥ 3 y ahorro > 0` | 3 | "Agua fría + carga completa = ahorro de agua y electricidad" |
+| 🍳 Cocina | Alto | `≥ 15 L/día` | 5 | "Lava frutas/verduras en bowl, reutiliza agua de cocción" |
+| 🍳 Cocina | Normal | `≥ 8 y ahorro > 0` | 3 | "Agua de cocción de verduras sirve para regar (una vez fría)" |
+| 🌱 Riego | Alto | `≥ 5 veces/sem` | 7 | "Riega solo 2-3 veces, temprano o al atardecer" |
+| 🌱 Riego | Medio | `≥ 3 veces/sem` | 5 | "Usa agua del lavado de verduras o del enjuague de ropa" |
+| 🌱 Riego | Bajo | `≥ 1 y ahorro > 0` | 3 | "Plantas nativas + mulch retiene humedad" |
+
+**Tip especial por familia grande + ducha:** Si `ducha ≥ 8 min` Y `personas ≥ 5`, se genera un tip adicional (prioridad 9) que cuantifica el porcentaje del consumo total que representa la ducha.
+
+##### Categoría 2: Combinaciones entre actividades
+
+| Condición | Prioridad | Consejo |
+| --------- | :-------: | ------- |
+| `ducha ≥ 8` Y `cepillado ≥ 3` Y `platos ≥ 2` | 7 | "Baño + cocina suman X L/día. Cerrar la llave en las 3 ahorra Y L/mes" |
+| `ducha ≥ 8` Y `lavadora ≥ 4` | 8 | "Ducha y lavadora son tus 2 mayores gastos. Enfocarte en ambos da el mayor retorno" |
+
+##### Categoría 3: Tips por tramo tarifario
+
+| Condición | Prioridad | Consejo |
+| --------- | :-------: | ------- |
+| Tramo 3 (`m3 > 30`) | 10 | "Tienes X m³ en tarifa alta ($Y/m³). Te cuesta $Z extra. Prioridad #1" |
+| Tramo 2 (`15 < m3 ≤ 30`) | 8 | "Te faltan X m³ para el tramo más barato. Equivale a reducir Y L/día" |
+
+##### Categoría 4: Tips por proximidad al subsidio
+
+| Condición | Prioridad | Consejo |
+| --------- | :-------: | ------- |
+| `m3 > 15` (sobre tope Chile Seguridades) | 9 | "Tu consumo supera los 15 m³. Bajar te da hasta 85% descuento" |
+| `13 < m3 ≤ 15` (entre tope SAP y CSO) | 7 | "Superas el SAP estándar pero estás en tope Chile Seguridades" |
+| `m3 ≤ 13` Y `m3 ≥ 10` (dentro del tope) | 6 | "Apto para subsidio. ¡Postula en tu municipio!" |
+
+##### Categoría 5: Tips por tamaño familiar
+
+| Condición | Prioridad | Consejo |
+| --------- | :-------: | ------- |
+| `personas ≥ 6` | 6 | "Cada persona consume ~X L/día. Los niños pueden ser 'guardianes del agua'" |
+| `personas = 1` | 4 | "Vivir solo = solo depende de ti. Ducha y WC son 70% de tu consumo" |
+| `personas 3-5` Y `ahorro > $3.000` | 5 | "3 cambios simples (ducha, cepillado, lavadora) = $X/año para toda la familia" |
+
+##### Categoría 6: Tips motivacionales y metas progresivas
+
+| Condición | Prioridad | Consejo |
+| --------- | :-------: | ------- |
+| `ahorro ≥ $8.000/mes` | 7 | "Puedes ahorrar $X/año (= Y kg pan + Z pasajes). Empieza con 1 cambio por semana" |
+| `ahorro ≥ $3.000/mes` | 5 | "$X/mes es alcanzable. Empieza reduciendo 2 min en la ducha esta semana" |
+| `m3_eficiente ≤ 13` Y `m3_actual > 13` | 8 | "Con hábitos eficientes bajarías a X m³ = apto para subsidio. Doble beneficio" |
+
+#### 6.8.3 Algoritmo de puntuación y selección
+
+Una vez evaluadas todas las reglas, el algoritmo sigue estos pasos:
+
+```
+PASO 1 — EVALUAR: Recorrer las ~50 reglas. Cada condición TRUE genera un tip candidato.
+          Resultado típico: 8-15 tips candidatos.
+
+PASO 2 — PUNTUAR: Para cada tip candidato:
+          score = prioridad × (1 + (ahorro_litros / max_ahorro_litros) × 2)
+          
+          Esto favorece tips que tienen TANTO alta prioridad contextual
+          COMO alto impacto real en litros ahorrados.
+          
+          Ejemplo:  Ducha prioridad=8, ahorro=3.600 L/mes (máximo del set)
+                    score = 8 × (1 + (3600/3600) × 2) = 8 × 3 = 24
+                    
+                    Subsidio prioridad=9, ahorro=0 (informativo)
+                    score = 9 × (1 + 0) = 9
+
+PASO 3 — ORDENAR: Sort descendente por score.
+
+PASO 4 — DEDUPLICAR: Para evitar consejos repetitivos de una misma categoría,
+          se limita a máximo 1 tip por emoji/categoría si ya se seleccionaron ≥ 3 tips.
+          
+          Esto asegura variedad: un tip de ducha, uno de tarifa, uno de subsidio, 
+          uno motivacional, etc.
+
+PASO 5 — SELECCIONAR: Tomar los primeros 6 tips (máximo).
+          Para WhatsApp: se envían los primeros 4 (truncados a 100 caracteres).
+```
+
+#### 6.8.4 Ejemplo de ejecución
+
+**Escenario:** Familia de 5, ducha 10 min, WC 5, cepillado 3, platos 2, lavadora 5/sem, cocina 8L, riego 3/sem. Aguas Andinas. Consumo: 22.3 m³ (Tramo 2).
+
+```
+Tips candidatos generados:
+┌────┬──────────────────────────────────┬────────┬──────────┬───────┐
+│ #  │ Tip                              │ Prior. │ Ahorro   │ Score │
+├────┼──────────────────────────────────┼────────┼──────────┼───────┤
+│ 1  │ 🚿 Ducha — Reducir tiempo        │   8    │ 4.500 L  │ 24.0  │
+│ 2  │ 👨‍👩‍👧‍👦 Familia grande + ducha    │   9    │ 4.500 L  │ 27.0  │
+│ 3  │ 📊 Cerca del tramo bajo          │   8    │    0     │  8.0  │
+│ 4  │ 🏛️ Sobre tope de subsidio        │   9    │    0     │  9.0  │
+│ 5  │ 🌟 ¡Meta realista!               │   8    │    0     │  8.0  │
+│ 6  │ 👕 Lavadora — Optimizar cargas   │   5    │ 1.393 L  │  8.1  │
+│ 7  │ 🪥 Cepillado — Cerrar la llave   │   4    │ 2.250 L  │  8.0  │
+│ 8  │ 🌱 Riego — Reutiliza agua        │   5    │   857 L  │  5.9  │
+│ 9  │ 🍽️ Platos — Usar recipiente      │   4    │   600 L  │  5.1  │
+│ 10 │ 🎯 Ahorro alcanzable             │   5    │    0     │  5.0  │
+│ 11 │ 💪 Objetivo familiar             │   5    │    0     │  5.0  │
+│ 12 │ 🍳 Cocina — Reutilizar agua      │   3    │   180 L  │  3.2  │
+└────┴──────────────────────────────────┴────────┴──────────┴───────┘
+
+Después de ordenar y deduplicar (top 6):
+  1. 👨‍👩‍👧‍👦 Familia grande + ducha (score 27.0)
+  2. 🚿 Ducha — Reducir tiempo (score 24.0)  ← se permite repetición (< 3 tips)
+  3. 🏛️ Sobre tope de subsidio (score 9.0)
+  4. 📊 Cerca del tramo bajo (score 8.0)      ← descartado: ya hay 🚿 y 👨‍👩‍👧‍👦
+  4. 👕 Lavadora — Optimizar cargas (score 8.1)
+  5. 🪥 Cepillado — Cerrar la llave (score 8.0)
+  6. 🌟 ¡Meta realista! (score 8.0)
+```
+
+> **Resultado:** El usuario recibe 6 consejos variados que cubren: su mayor gasto individual (ducha), el impacto de ser familia grande, su situación de subsidio, un tip de lavadora, uno de cepillado, y una meta motivacional. Cada consejo usa datos reales de SU hogar (litros, pesos, m³).
 
 ---
 
@@ -340,12 +501,14 @@ Los consejos se generan automáticamente calculando `consumo_actual − consumo_
 La página de resultados usa un **carrusel horizontal** que presenta la información de forma progresiva, como una historia, evitando abrumar al usuario con toda la data de golpe.
 
 #### Panel 1: 💧 Tu Consumo Mensual
+
 | Elemento | Descripción |
 | -------- | ----------- |
 | **Stats** | 3 cards: Litros/día, m³/mes (con tooltip), Costo mensual (con color semáforo). |
 | **Tramo** | Barra degradada tri-color con punto indicador animado. Muestra tramo activo. |
 
 #### Panel 2: 📊 ¿Cómo te comparas?
+
 | Elemento | Descripción |
 | -------- | ----------- |
 | **Emoji central** | ✅ o ⚠️ grande (60px) según si estás sobre o bajo el promedio. |
@@ -353,6 +516,7 @@ La página de resultados usa un **carrusel horizontal** que presenta la informac
 | **Tabla detalle** | 7 actividades + total. Columnas: actual, eficiente, ahorro/día. |
 
 #### Panel 3: 🏛️ Subsidios para Ti
+
 | Elemento | Descripción |
 | -------- | ----------- |
 | **Info SAP** | Explicación del subsidio, topes (13/15 m³). |
@@ -360,13 +524,15 @@ La página de resultados usa un **carrusel horizontal** que presenta la informac
 | **Alerta contextual** | Verde/amarillo/rojo según si el consumo excede los topes. |
 | **Programas de apoyo** | 4 cards: SAP, revisión medidor, kit municipal, convenio de pago. |
 
-#### Panel 4: 💰 ¡Puedes Ahorrar!
+#### Panel 4: 💰 ¡Puedes Ahorrar
+
 | Elemento | Descripción |
 | -------- | ----------- |
 | **Stats eficientes** | 3 cards: Litros eficientes, m³ eficientes, ahorro mensual. |
 | **Banner de ahorro** | Card verde con ahorro anual, agua ahorrada, equivalencias, proyección a 5 años. |
 
 #### Panel 5: 🌟 Consejos para Ti
+
 | Elemento | Descripción |
 | -------- | ----------- |
 | **Tips personalizados** | Lista dinámica ordenada por impacto. Cada tip con emoji, texto y badge "Ahorra X L/mes". |
