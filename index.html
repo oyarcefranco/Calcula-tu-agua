@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="estilos_branding.css">
+  <link rel="icon" type="image/png" href="logo.png">
 </head>
 
 <body>
@@ -39,7 +40,10 @@
     <div class="page" id="pageOnboarding">
       <div class="card card-featured stagger" style="margin-top: 2rem;">
         <div class="panel-header">
-          <span class="panel-emoji">👋</span>
+          <span class="panel-emoji">
+            <img src="logo.png" alt="" style="height: 48px; width: auto; object-fit: contain; vertical-align: middle;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+            <span style="display: none;">👋</span>
+          </span>
           <div class="panel-title" style="font-size: 20px; font-weight: 900; color: var(--pri-dark);">¡Bienvenido a Calcula Tu Agua!</div>
           <div class="panel-subtitle" style="font-size: 13.5px; color: var(--gray-500); margin-top: 4px;">Dinos un poco sobre ti para personalizar tus consejos y adaptar tu experiencia</div>
         </div>
@@ -138,6 +142,7 @@
       <div class="carousel-wrapper">
         <div class="carousel-topbar">
           <button class="carousel-back" onclick="goBack()">← Volver a editar</button>
+          <img src="logo.png" alt="" style="height: 28px; width: auto; object-fit: contain;" onerror="this.style.display='none';">
           <div class="carousel-counter" id="carouselCounter">1 / 5</div>
         </div>
 
@@ -147,7 +152,10 @@
             <div class="panel active" id="panel-0">
               <div class="panel-inner">
                 <div class="panel-header">
-                  <span class="panel-emoji">💧</span>
+                  <span class="panel-emoji">
+                    <img src="logo.png" alt="" style="height: 48px; width: auto; object-fit: contain; vertical-align: middle;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                    <span style="display: none;">💧</span>
+                  </span>
                   <div class="panel-title">Tu Consumo Mensual</div>
                   <div class="panel-subtitle">Así es como usas el agua cada mes</div>
                 </div>
@@ -258,7 +266,7 @@
     </div>
 
     <div class="footer">
-      <strong>💧 Calcula Tu Agua</strong> — calculatuagua.cl<br>
+      <strong><img src="logo.png" alt="" style="height: 1.2em; vertical-align: middle; margin-right: 4px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">💧</span>Calcula Tu Agua</strong> — calculatuagua.cl<br>
       Tarifas basadas en los decretos oficiales de la SISS.<br>
       Este cálculo es referencial. No reemplaza a tu boleta oficial de cobro.
     </div>
