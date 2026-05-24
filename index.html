@@ -97,22 +97,22 @@
           <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 14.5px; font-weight: 500; color: var(--gray-700);">
             <input type="checkbox" id="chkSewer" style="margin-top: 4px; width: 18px; height: 18px; accent-color: var(--pri); cursor: pointer;">
             <div>
-              <strong>Incluir alcantarillado y tratamiento servido</strong>
-              <div style="font-size: 12px; color: var(--gray-400); font-weight: 400;">Aplica el recargo de recolección y tratamiento de aguas servidas de la empresa sanitaria</div>
+              <strong>💧 Incluir agua sucia (Alcantarillado)</strong>
+              <div style="font-size: 12px; color: var(--gray-400); font-weight: 400;">Activa esto si también te cobran por retirar y limpiar el agua usada en el hogar</div>
             </div>
           </label>
           <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 14.5px; font-weight: 500; color: var(--gray-700);">
             <input type="checkbox" id="chkIva" style="margin-top: 4px; width: 18px; height: 18px; accent-color: var(--pri); cursor: pointer;">
             <div>
-              <strong>Incluir IVA (19%)</strong>
-              <div style="font-size: 12px; color: var(--gray-400); font-weight: 400;">Agrega el Impuesto al Valor Agregado al total de la boleta simulada</div>
+              <strong>🧾 Incluir IVA (19%)</strong>
+              <div style="font-size: 12px; color: var(--gray-400); font-weight: 400;">Agrega el impuesto obligatorio (IVA) para ver el precio total real a pagar</div>
             </div>
           </label>
           <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 14.5px; font-weight: 500; color: var(--gray-700);">
             <input type="checkbox" id="chkSummer" style="margin-top: 4px; width: 18px; height: 18px; accent-color: var(--pri); cursor: pointer;">
             <div>
-              <strong>Período tarifario de Verano (Tarifa de Sobreconsumo)</strong>
-              <div style="font-size: 12px; color: var(--gray-400); font-weight: 400;">Aplica un 50% de recargo sobre el consumo mensual que exceda los 40 m³</div>
+              <strong>☀️ Recargo de Verano (Sobreconsumo)</strong>
+              <div style="font-size: 12px; color: var(--gray-400); font-weight: 400;">Activa esto si estás en los meses de verano y tu consumo supera los 40 m³ al mes</div>
             </div>
           </label>
         </div>
@@ -259,8 +259,8 @@
 
     <div class="footer">
       <strong>💧 Calcula Tu Agua</strong> — calculatuagua.cl<br>
-      Tarifas de agua y alcantarillado basadas en decretos tarifarios de la SISS.<br>
-      Cálculo referencial USS. No reemplaza la boleta oficial del distribuidor.
+      Tarifas basadas en los decretos oficiales de la SISS.<br>
+      Este cálculo es referencial. No reemplaza a tu boleta oficial de cobro.
     </div>
   </div>
 
@@ -2025,12 +2025,12 @@
     };
 
     const AC = [
-      { id: 'shower', lb: 'Ducha', ic: '🚿', ds: 'minutos por persona / día', mn: 0, mx: 20, st: 1, df: 8, u: 'min', lpu: 10, ev: 5, el: null, pp: true, tip: 'Reducir la ducha de 8 a 5 min ahorra ~30 litros por persona al día.', th: [5, 12] },
-      { id: 'toilet', lb: 'Descarga de WC', ic: '🚽', ds: 'veces por persona / día', mn: 1, mx: 12, st: 1, df: 5, u: 'veces', lpu: 8, ev: 5, el: 4, pp: true, tip: 'Un WC con doble descarga (3L/6L) puede reducir 50% del consumo del baño.', th: [4, 8] },
-      { id: 'teeth', lb: 'Cepillado de dientes', ic: '🪥', ds: 'veces por persona / día', mn: 0, mx: 6, st: 1, df: 3, u: 'veces', lpu: 6, ev: 3, el: 1, pp: true, tip: 'Cerrar la llave mientras te cepillas ahorra hasta 5 litros por cepillado.', th: [2, 4] },
-      { id: 'dishes', lb: 'Lavado de platos', ic: '🍽️', ds: 'veces al día (hogar)', mn: 0, mx: 6, st: 1, df: 2, u: 'veces', lpu: 15, ev: 2, el: 5, pp: false, tip: 'Llenar un recipiente reduce de 15 a 5 litros por lavada.', th: [2, 4] },
-      { id: 'laundry', lb: 'Lavadora', ic: '👕', ds: 'cargas por semana', mn: 0, mx: 14, st: 1, df: 3, u: 'cargas', lpu: 65, ev: 2, el: null, pp: false, wk: true, tip: 'Usa carga completa y programa corto. Evita lavadas parciales.', th: [3, 7] },
-      { id: 'cook', lb: 'Cocinar, beber y otros', ic: '🍳', ds: 'litros estimados / día (hogar)', mn: 2, mx: 30, st: 1, df: 8, u: 'L', lpu: 1, ev: 6, el: null, pp: false, tip: 'Reutiliza el agua de cocción de verduras para regar plantas.', th: [8, 15] },
+      { id: 'shower', lb: 'Ducha', ic: '🚿', ds: 'minutos por persona / día', mn: 0, mx: 20, st: 1, df: 0, u: 'min', lpu: 10, ev: 5, el: null, pp: true, tip: 'Reducir la ducha de 8 a 5 min ahorra ~30 litros por persona al día.', th: [5, 12] },
+      { id: 'toilet', lb: 'Descarga de WC', ic: '🚽', ds: 'veces por persona / día', mn: 0, mx: 12, st: 1, df: 0, u: 'veces', lpu: 8, ev: 5, el: 4, pp: true, tip: 'Un WC con doble descarga (3L/6L) puede reducir 50% del consumo del baño.', th: [4, 8] },
+      { id: 'teeth', lb: 'Cepillado de dientes', ic: '🪥', ds: 'veces por persona / día', mn: 0, mx: 6, st: 1, df: 0, u: 'veces', lpu: 6, ev: 3, el: 1, pp: true, tip: 'Cerrar la llave mientras te cepillas ahorra hasta 5 litros por cepillado.', th: [2, 4] },
+      { id: 'dishes', lb: 'Lavado de platos', ic: '🍽️', ds: 'veces al día (hogar)', mn: 0, mx: 6, st: 1, df: 0, u: 'veces', lpu: 15, ev: 2, el: 5, pp: false, tip: 'Llenar un recipiente reduce de 15 a 5 litros por lavada.', th: [2, 4] },
+      { id: 'laundry', lb: 'Lavadora', ic: '👕', ds: 'cargas por semana', mn: 0, mx: 14, st: 1, df: 0, u: 'cargas', lpu: 65, ev: 2, el: null, pp: false, wk: true, tip: 'Usa carga completa y programa corto. Evita lavadas parciales.', th: [3, 7] },
+      { id: 'cook', lb: 'Cocinar, beber y otros', ic: '🍳', ds: 'litros estimados / día (hogar)', mn: 0, mx: 30, st: 1, df: 0, u: 'L', lpu: 1, ev: 6, el: null, pp: false, tip: 'Reutiliza el agua de cocción de verduras para regar plantas.', th: [8, 15] },
       { id: 'garden', lb: 'Riego de jardín / huerto', ic: '🌱', ds: 'veces por semana', mn: 0, mx: 7, st: 1, df: 0, u: 'veces', lpu: 30, ev: 0, el: 20, pp: false, wk: true, tip: 'Riega temprano o al atardecer. Usa agua reutilizada.', th: [2, 5] },
     ];
     const SUB_T = [{ l: 'RSH 0–40%', p: 85 }, { l: 'RSH 41–70%', p: 50 }, { l: 'RSH 71–90%', p: 25 }];
@@ -2135,7 +2135,7 @@
     function tD(eff) { return Math.round(AC.reduce((s, a) => s + aD(a, eff), 0)) }
     function fm(n) { return Math.round(n).toLocaleString('es-CL') }
     function fD(n) { return parseFloat(n.toFixed(1)) }
-    function sC(a) { const v = V[a.id]; return v <= a.th[0] ? 'g' : v <= a.th[1] ? 'y' : 'r' }
+    function sC(a) { const v = V[a.id]; return v <= a.th[0] ? 'vol-low' : v <= a.th[1] ? 'vol-med' : 'vol-high' }
     function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500) }
     
     function equivs(amt) {
@@ -2521,13 +2521,13 @@
       if (profile === 'fearful') {
         noticeHtml = `
           <div style="background: #fee2e2; border: 1.5px solid #fca5a5; color: #991b1b; border-radius: var(--r); padding: 12px; margin-bottom: 1rem; font-size: 13.5px; line-height: 1.5;">
-            🛡️ <strong>Nota de Seguridad:</strong> Tus datos de consumo se procesan localmente. No los enviamos a ningún servidor. Las tarifas se basan en resoluciones oficiales vigentes de la SISS.
+            🔒 <strong>Tu privacidad importa:</strong> Todo el cálculo se hace directamente en tu teléfono. Ningún dato sale de aquí. Las tarifas son las oficiales de la SISS.
           </div>
         `;
       } else if (profile === 'careful') {
         noticeHtml = `
           <div style="background: #f3e8ff; border: 1.5px solid #d8b4fe; color: #6b21a8; border-radius: var(--r); padding: 12px; margin-bottom: 1rem; font-size: 13.5px; line-height: 1.5;">
-            🔍 <strong>Transparencia:</strong> Los cálculos usan las tarifas vigentes oficiales de la SISS. Haz clic en "Ver Fórmulas" en los resultados para revisar el desglose matemático.
+            🔍 <strong>Cálculos transparentes:</strong> Usamos las tarifas reales oficiales de la SISS. Puedes hacer clic en "Ver Fórmulas" al final para ver cómo se calcula paso a paso.
           </div>
         `;
       }
@@ -2582,7 +2582,7 @@
       if (userProfile === 'careful') {
         carefulMetodologiaBtn = `
           <div style="margin-top: 12px; text-align: center;">
-            <button onclick="showFormulaModal()" class="carousel-back" style="font-size: 12.5px; padding: 8px 14px; width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: 1.5px solid var(--border); border-radius: var(--r); background: var(--card); font-weight: 700; color: var(--gray-700);">🔍 Ver Fórmulas y Metodología de Cálculo</button>
+            <button onclick="showFormulaModal()" class="carousel-back" style="font-size: 12.5px; padding: 8px 14px; width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: 1.5px solid var(--border); border-radius: var(--r); background: var(--card); font-weight: 700; color: var(--gray-700);">🔍 Ver Fórmulas y Explicación del Cobro</button>
           </div>
         `;
       }
@@ -3235,18 +3235,18 @@ ${tipsMsg}
     <div style="background: #fff; border-radius: var(--r-lg); max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; border: 1.5px solid var(--border); padding: 1.75rem; box-shadow: var(--sh-lg); position: relative;">
       <button onclick="closeFormulaModal()" style="position: absolute; top: 16px; right: 16px; font-size: 20px; color: var(--gray-400); font-weight: 700; background: none; border: none; cursor: pointer;">×</button>
       <div style="font-size: 18px; font-weight: 900; color: var(--pri-dark); border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-        <span>🔍 Fórmulas y Metodología</span>
+        <span>🔍 ¿Cómo se calcula tu cuenta?</span>
       </div>
       <div style="font-size: 13.5px; line-height: 1.6; color: var(--gray-700); display: flex; flex-direction: column; gap: 10px;">
-        <p>Los cálculos realizados en esta aplicación siguen rigurosamente el esquema de cobro fijado por los decretos de la <strong>Superintendencia de Servicios Sanitarios (SISS)</strong>:</p>
+        <p>Esta calculadora sigue las fórmulas oficiales de la <strong>Superintendencia de Servicios Sanitarios (SISS)</strong> para simular el cobro de tu boleta de agua:</p>
         <div style="background: var(--gray-50); padding: 10px; border-radius: var(--r); font-family: monospace; font-size: 12px; border: 1px solid var(--gray-200); text-align: center;">
-          Total = (Fijo + AP + Alcantarillado) * (1 + IVA%)
+          Total a pagar = (Cargo Fijo + Consumo de Agua + Alcantarillado) * (1 + IVA)
         </div>
-        <p><strong>1. Cargo Fijo:</strong> Cobro mensual constante por la lectura del medidor y mantención de la red.</p>
-        <p><strong>2. Consumo AP (Agua Potable):</strong> Volumen total en m³ facturado a tarifa normal (t1), o tarifa de verano punta base (t2) si corresponde.</p>
-        <p><strong>3. Sobreconsumo de Verano (si aplica):</strong> Volumen excedente sobre los 40 m³/mes facturado a la tarifa de sobreconsumo punta (t3).</p>
-        <p><strong>4. Alcantarillado y Saneamiento (si aplica):</strong> Volumen total en m³ facturado a la tarifa variable de la empresa sanitaria ($/m³).</p>
-        <p><strong>5. IVA (si aplica):</strong> Impuesto de 19% aplicado sobre el subtotal neto.</p>
+        <p><strong>1. Cargo Fijo:</strong> Un valor fijo al mes por administración y lectura del medidor, sin importar cuánta agua consumas.</p>
+        <p><strong>2. Consumo de Agua:</strong> La cantidad de agua limpia que usas (medida en metros cúbicos) multiplicada por la tarifa variable autorizada en tu zona.</p>
+        <p><strong>3. Recargo de Verano (si corresponde):</strong> Si en los meses de verano consumes más de 40 metros cúbicos mensuales, cada metro cúbico extra tiene un precio mayor (sobreconsumo).</p>
+        <p><strong>4. Alcantarillado y Limpieza (si corresponde):</strong> El cobro por retirar el agua usada del hogar y limpiarla antes de devolverla a la naturaleza.</p>
+        <p><strong>5. IVA (si corresponde):</strong> El impuesto de ley del 19% aplicado sobre la suma de los cobros anteriores.</p>
       </div>
     </div>
   </div>

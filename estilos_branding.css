@@ -296,9 +296,9 @@
       transition: all .3s
     }
 
-    .semaphore.g { background: var(--green); box-shadow: 0 0 8px rgba(54,195,176,.5) }
-    .semaphore.y { background: #EAB308; box-shadow: 0 0 8px rgba(234,179,8,.5) }
-    .semaphore.r { background: #EF4444; box-shadow: 0 0 8px rgba(239,68,68,.5) }
+    .semaphore.vol-low { background: var(--pri-200); box-shadow: 0 0 8px rgba(102,214,242,.5) }
+    .semaphore.vol-med { background: var(--pri); box-shadow: 0 0 8px rgba(22,119,200,.5) }
+    .semaphore.vol-high { background: var(--pri-dark); box-shadow: 0 0 8px rgba(13,60,120,.5) }
 
     @keyframes semPulse {
       0% { transform: scale(1) }
