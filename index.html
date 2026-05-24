@@ -7,6 +7,25 @@
   <title>Calcula Tu Agua — Ahorra agua, ahorra dinero</title>
   <meta name="description"
     content="Calcula tu consumo de agua, descubre cuánto puedes ahorrar y conoce los subsidios disponibles para familias en Chile. calculatuagua.cl">
+  <meta name="keywords" content="calcula tu agua, calculadora de agua chile, subsidio agua chile, subsidio sap, siss tarifas agua, consumo agua chile, ahorrar agua chile">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://calculatuagua.cl/">
+  <meta property="og:title" content="Calcula Tu Agua — Simula tu boleta y ahorra agua">
+  <meta property="og:description" content="Descubre cuánto gastas en agua, cuánto puedes ahorrar con hábitos eficientes y qué subsidios tienes disponibles en Chile.">
+  <meta property="og:image" content="https://calculatuagua.cl/logo.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://calculatuagua.cl/">
+  <meta property="twitter:title" content="Calcula Tu Agua — Simula tu boleta y ahorra agua">
+  <meta property="twitter:description" content="Descubre cuánto gastas en agua, cuánto puedes ahorrar con hábitos eficientes y qué subsidios tienes disponibles en Chile.">
+  <meta property="twitter:image" content="https://calculatuagua.cl/logo.png">
+
+  <!-- Google Search Console Verification -->
+  <meta name="google-site-verification" content="AGREGAR_AQUI_TU_CODIGO_DE_VERIFICACION_DE_GOOGLE">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -20,11 +39,11 @@
   <div class="hero" id="heroSection">
     <div class="hero-blob hero-blob-1"></div>
     <div class="hero-blob hero-blob-2"></div>
-    <div class="hero-logo-container">
+    <h1 class="hero-logo-container" style="font-size: inherit; font-weight: inherit; margin: 0; line-height: inherit;">
       <!-- Reemplaza logo.png por la ruta del logo en alta calidad si la dejas en esta misma carpeta -->
-      <img src="logo.png" alt="Logo Calcula Tu Agua" class="hero-logo-img" onerror="this.style.display='none'; document.getElementById('fallbackLogoText').style.display='block';">
-      <div id="fallbackLogoText" class="hero-logo" style="display: none;"><span class="drop">💧</span> Calcula Tu Agua</div>
-    </div>
+      <img src="logo.png" alt="Calcula Tu Agua" class="hero-logo-img" onerror="this.style.display='none'; document.getElementById('fallbackLogoText').style.display='block';">
+      <span id="fallbackLogoText" class="hero-logo" style="display: none;"><span class="drop">💧</span> Calcula Tu Agua</span>
+    </h1>
     <p class="hero-sub">Descubre cuánto gastas en agua, cuánto puedes ahorrar y qué subsidios tienes disponibles</p>
     <div class="hero-badge" id="heroBadge"> calculatuagua.cl — Herramienta  para familias chilenas</div>
     <div class="wave-bottom">
@@ -2973,7 +2992,7 @@
 
     function buildPrograms() {
       return `
-        <div class="prog"><div class="prog-icon">🏛️</div><div><h4>Subsidio SAP</h4><p>Cubre hasta 85% de tu boleta. <a href="https://www.chileatiende.gob.cl" target="_blank" rel="noopener">Más info →</a></p></div></div>
+        <div class="prog"><div class="prog-icon">🏛️</div><div><h4>Subsidio SAP</h4><p>Cubre hasta 85% de tu boleta. <a href="subsidio-sap.html" style="font-weight: 700; color: var(--pri);">Ver requisitos y cómo postular →</a></p></div></div>
         <div class="prog"><div class="prog-icon">🔧</div><div><h4>Revisión de medidor</h4><p>Revisión gratuita si sospechas de mal cobro.</p></div></div>
         <div class="prog"><div class="prog-icon">🏘️</div><div><h4>Kit de ahorro municipal</h4><p>Aireadores y reductores de flujo sin costo.</p></div></div>
         <div class="prog"><div class="prog-icon">📞</div><div><h4>Convenio de pago</h4><p>Cuotas con tu empresa sanitaria, sin corte.</p></div></div>`;
