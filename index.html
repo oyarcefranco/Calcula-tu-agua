@@ -25,7 +25,7 @@
       <div id="fallbackLogoText" class="hero-logo" style="display: none;"><span class="drop">💧</span> Calcula Tu Agua</div>
     </div>
     <p class="hero-sub">Descubre cuánto gastas en agua, cuánto puedes ahorrar y qué subsidios tienes disponibles</p>
-    <div class="hero-badge" id="heroBadge">🌊 calculatuagua.cl — Herramienta gratuita para familias chilenas</div>
+    <div class="hero-badge" id="heroBadge"> calculatuagua.cl — Herramienta  para familias chilenas</div>
     <div class="wave-bottom">
       <svg viewBox="0 0 1440 70" preserveAspectRatio="none">
         <path d="M0,35 C240,70 480,0 720,35 C960,70 1200,0 1440,35 L1440,70 L0,70 Z" fill="var(--bg)" />
@@ -3148,7 +3148,12 @@
 ${tipsMsg}
 ¡Calcula el tuyo en calculatuagua.cl! 🌊`;
 
-      window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (isMobile) {
+        window.location.href = 'whatsapp://send?text=' + encodeURIComponent(msg);
+      } else {
+        window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+      }
     }
 
     function showFormulaModal() {
