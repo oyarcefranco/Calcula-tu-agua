@@ -1,0 +1,857 @@
+# 📘 Documento Consolidado — calculatuagua.cl
+
+## Especificación Completa del Producto
+
+**Versión:** 3.0
+**Fecha:** Abril 2026
+**Proyecto:** Calcula Tu Agua — Herramienta de cálculo y educación sobre consumo de agua para familias vulnerables en Chile
+**Contexto académico:** Proyecto de Liderazgo — Negociación y Equipos, Universidad San Sebastián
+**Dominio planificado:** calculatuagua.cl (NIC Chile)
+
+---
+
+## Índice
+
+1. [Descripción General](#1-descripción-general)
+2. [Público Objetivo](#2-público-objetivo)
+3. [Stack Tecnológico](#3-stack-tecnológico)
+4. [Arquitectura y Flujo de Usuario](#4-arquitectura-y-flujo-de-usuario)
+5. [Datos Utilizados](#5-datos-utilizados)
+6. [Metodología de Cálculos](#6-metodología-de-cálculos)
+7. [Funcionalidades Detalladas](#7-funcionalidades-detalladas)
+8. [Diseño Visual y UX](#8-diseño-visual-y-ux)
+9. [Accesibilidad](#9-accesibilidad)
+10. [Integraciones](#10-integraciones)
+11. [Fuentes y Referencias](#11-fuentes-y-referencias)
+12. [Limitaciones](#12-limitaciones)
+13. [Roadmap](#13-roadmap-futuro)
+
+---
+
+## 1. Descripción General
+
+**Calcula Tu Agua** es una herramienta web gratuita que permite a familias chilenas, especialmente aquellas en situación de vulnerabilidad, calcular su consumo mensual de agua potable a partir de sus hábitos diarios.
+
+### ¿Qué problema resuelve?
+
+Muchas familias vulnerables en Chile:
+
+- No comprenden cómo se calcula su boleta de agua
+- No conocen el sistema de tramos tarifarios que penaliza el sobreconsumo
+- Desconocen la existencia del Subsidio SAP al que podrían acceder
+- No tienen visibilidad sobre qué hábitos generan mayor gasto de agua
+- No saben cuánto podrían ahorrar con cambios simples
+
+### ¿Qué entrega la herramienta?
+
+1. **Estimación personalizada** del consumo diario, mensual (en litros y m³) y costo en pesos chilenos
+2. **Comparación** con el promedio chileno para dimensionar si su consumo es alto o bajo
+3. **Información del Subsidio SAP** con cálculo personalizado del ahorro según tramo RSH
+4. **Proyección de ahorro** si adoptan hábitos eficientes (mensual, anual, a 5 años)
+5. **Consejos priorizados** ordenados por impacto real en litros/mes
+6. **Equivalencias económicas** del ahorro en bienes cotidianos (pan, pasajes, recargas)
+7. **Información sobre programas de apoyo** (convenios de pago, kits municipales, revisión de medidor)
+
+---
+
+## 2. Público Objetivo
+
+### Perfilamiento de Usuario y Arquetipos (Proyecto WHY)
+
+Para personalizar la experiencia de usuario y optimizar la efectividad de las recomendaciones de ahorro de agua, la aplicación implementa un cuestionario de onboarding rápido de 3 preguntas a nivel de entrada. Este perfilamiento asigna a cada usuario uno de los **7 arquetipos de comportamiento** definidos por el proyecto europeo WHY:
+
+1. **El Calculador (Homo Economicus):** Enfocado en el beneficio económico directo. La interfaz resalta las proyecciones financieras a 5 años y el retorno de inversión de grifería eficiente.
+2. **El Austero (Stubborn):** Sensible a la ecología y a los consejos prácticos sin costo (ej. botella de agua en el WC).
+3. **El Asustadizo (Fearful):** Sensible a la privacidad y seguridad. La interfaz le entrega notas de seguridad técnica (procesamiento 100% local en su teléfono) y respaldo legal.
+4. **El Cauteloso (Careful):** Requiere transparencia. Se habilita un botón con el desglose exacto de fórmulas y decretos SISS.
+5. **El Líder Social (Influencer):** Sensible a la presión comunitaria y contagio social. Resalta la visualización familiar y facilita compartir resultados en redes sociales.
+6. **El Pionero (Early Adopter):** Interesado en nuevas tecnologías. Ofrece inscripción a proyectos piloto para medidores de flujo inteligentes.
+7. **El Desinteresado (Uninterested):** Busca conveniencia extrema. Ofrece un interruptor para una vista simple consolidada de su ahorro en tres pasos.
+
+### Perfil primario
+
+- **Familias chilenas vulnerables** (RSH 0-90%)
+- Hogares de 3-6 personas
+- Acceso principal a internet vía **celular** (smartphone Android)
+- Nivel educacional variable, requiere lenguaje simple y visual
+- Potenciales beneficiarios del Subsidio SAP
+
+### Perfil secundario
+
+- Cualquier hogar chileno que quiera entender y reducir su consumo de agua
+- Profesionales de oficinas sociales municipales que asesoran a familias
+- Educadores y facilitadores de talleres sobre ahorro de recursos
+
+---
+
+## 3. Stack Tecnológico
+
+### Arquitectura: SPA — Single Page Application
+
+| Componente                    | Tecnología                 | Justificación                         |
+| ----------------------------- | --------------------------- | -------------------------------------- |
+| **Estructura**          | HTML5 semántico            | Compatibilidad universal               |
+| **Estilos**             | CSS3 con Variables CSS      | Mantenibilidad, tematización          |
+| **Lógica**             | JavaScript puro (ES6+)      | Sin dependencias, carga instantánea   |
+| **Tipografía**         | Google Fonts (Inter)        | Moderna, legible, gratis               |
+| **Persistencia**        | localStorage                | Offline, sin servidor                  |
+| **Hosting planificado** | Cualquier hosting estático | GitHub Pages, Netlify, Hostinger, etc. |
+
+### Dependencias externas
+
+- **Google Fonts CDN** (`fonts.googleapis.com`) — Tipografía Inter
+- **WhatsApp API** (`wa.me`) — Compartir resultados (solo al hacer clic)
+- **Ningún framework JS** — 0 dependencias
+- **Ningún backend** — 100% cliente
+
+### Tamaño del archivo
+
+- **1 archivo HTML** autocontenido (~60 KB)
+- **0 imágenes** (todo SVG inline + emojis)
+- **Carga estimada**: < 1 segundo en 3G
+
+---
+
+## 4. Arquitectura y Flujo de Usuario
+
+### Flujo SPA: Entrada + Carrusel de Resultados
+
+```
+┌──────────────────────────────────────────────┐
+│              PÁGINA DE ENTRADA               │
+│                                              │
+│  ┌─────────────────────────────────────────┐ │
+│  │  📍 Región -> Comuna -> Sanitaria       │ │
+│  │  👥 Número de personas (1-8)            │ │
+│  │  🚿 Ajustar 7 hábitos de consumo       │ │
+│  │     · Ducha (min/día)                   │ │
+│  │     · WC (veces/día)                    │ │
+│  │     · Cepillado (veces/día)             │ │
+│  │     · Lavado platos (veces/día)         │ │
+│  │     · Lavadora (cargas/semana)          │ │
+│  │     · Cocina (litros/día)               │ │
+│  │     · Riego (veces/semana)              │ │
+│  └─────────────────────────────────────────┘ │
+│                                              │
+│        [ 📊 Calcular mi consumo ]            │
+│                                              │
+└──────────────────┬───────────────────────────┘
+                   │ click
+                   ▼
+┌──────────────────────────────────────────────┐
+│   RESULTADOS — CARRUSEL TIPO HISTORIA        │
+│                                              │
+│  [← Volver]                    [2 / 5]       │
+│  ┌─────────────────────────────────────────┐ │
+│  │          💧 (emoji grande)              │ │
+│  │       Tu Consumo Mensual                │ │
+│  │       Así es como usas el agua          │ │
+│  │                                         │ │
+│  │  ┌─────┐ ┌──────┐ ┌────────┐           │ │
+│  │  │ L/d │ │ m³/m │ │ $costo │           │ │
+│  │  └─────┘ └──────┘ └────────┘           │ │
+│  │  [══════ Tramo tarifario ══════]        │ │
+│  └─────────────────────────────────────────┘ │
+│  ═══════════════════════ progreso            │
+│  ● ○ ○ ○ ○  (dots navegación)               │
+│  [← Anterior]  [Siguiente →]  (full width)  │
+└──────────────────────────────────────────────┘
+
+5 Paneles en orden:
+  Panel 1: 💧 Tu Consumo Mensual (stats + tramo)
+  Panel 2: 📊 ¿Cómo te comparas? (promedio + tabla)
+  Panel 3: 🏛️ Subsidios para Ti (SAP + programas)
+  Panel 4: 💰 ¡Puedes Ahorrar! (stats eficientes + ahorro)
+  Panel 5: 🌟 Consejos para Ti (tips + WhatsApp + acciones)
+```
+
+### Navegación SPA
+
+- **No recarga la página**. Se oculta/muestra con `display:none` + clase `.active`
+- **Animación de entrada** con CSS `@keyframes pageIn` (fade + slide up)
+- **Scroll al tope** automático al cambiar de panel
+- **El hero banner** se oculta en la vista de resultados y reaparece al volver
+- **Carrusel con paneles** que usan `position: absolute/relative` para altura dinámica
+- **Navegación múltiple**: botones grandes (56px), dots clickeables, swipe táctil, teclado (←→)
+
+---
+
+## 5. Datos Utilizados
+
+### 5.1 Base de Datos de Tarifas SISS (111 Zonas y 16 Regiones de Chile)
+
+La aplicación incluye un catálogo completo y comprimido (`TARIFF_DB`) de **111 entradas tarifarias** correspondientes a todas las subconcesiones y grupos sanitarios vigentes de Chile, extraídas directamente de las **108 hojas tarifarias en formato PDF publicadas por la Superintendencia de Servicios Sanitarios (SISS)**.
+
+Cada registro en la base de datos contiene los siguientes coeficientes oficiales:
+- **Región (`r`):** Código de la región de Chile (XV, I, II, III, IV, V, RM, VI, VII, VIII, IX, XIV, X, XI, XII, XVI).
+- **Empresa (`c`):** Nombre de la sanitaria (ej. Aguas Andinas, ESVAL, ESSBIO, Suralis, Nuevosur, Nueva Atacama, etc.).
+- **Grupo/Sector (`g`):** Sector tarifario o listado de localidades cubiertas por ese decreto tarifario.
+- **Cargo Fijo (`f`):** Cobro base en CLP.
+- **T1 (`t1`):** Tarifa Agua Potable (Base/Invierno) en $/m³.
+- **T2 (`t2`):** Tarifa Agua Potable (Verano/Punta) en $/m³.
+- **T3 (`t3`):** Tarifa Agua Potable (Sobreconsumo Verano > 40 m³) en $/m³.
+- **Alcantarillado (`al`):** Tarifa variable de recolección y tratamiento de aguas servidas en $/m³.
+
+### 5.2 Actividades de consumo (7 actividades)
+
+| Actividad     | Icono |   Consumo por unidad   |    Tipo    | Frecuencia |
+| ------------- | :---: | :---------------------: | :---------: | :--------: |
+| Ducha         |  🚿  |        10 L/min        | Per cápita |   Diaria   |
+| Descarga WC   |  🚽  |      8 L/descarga      | Per cápita |   Diaria   |
+| Cepillado     |  🪥  | 6 L/vez (llave abierta) | Per cápita |   Diaria   |
+| Lavado platos | 🍽️ |       15 L/lavada       |    Hogar    |   Diaria   |
+| Lavadora      |  👕  |       65 L/carga       |    Hogar    |  Semanal  |
+| Cocinar/beber |  🍳  |     1 L/L declarado     |    Hogar    |   Diaria   |
+| Riego jardín |  🌱  |        30 L/vez        |    Hogar    |  Semanal  |
+
+**Fuentes:** SISS, Aguas Andinas (material educativo), fabricantes de artefactos sanitarios (Fanaloza, Roca), Andess.
+
+### 5.3 Valores eficientes (meta de ahorro)
+
+| Actividad | Valor por defecto |   Meta eficiente   | Mecanismo         |
+| --------- | :---------------: | :-----------------: | ----------------- |
+| Ducha     | 8 min × 10 L/min |  5 min × 10 L/min  | Reducir tiempo    |
+| WC        |     5 × 8 L     |  5 ×**4 L**  | WC doble descarga |
+| Cepillado |     3 × 6 L     |  3 ×**1 L**  | Cerrar la llave   |
+| Platos    |     2 × 15 L     |  2 ×**5 L**  | Usar recipiente   |
+| Lavadora  |     3 × 65 L     | **2** × 65 L | Carga completa    |
+| Cocina    |        8 L        |    **6 L**    | Reutilizar agua   |
+| Riego     |     0 × 30 L     | 0 ×**20 L** | Riego eficiente   |
+
+**Fuente:** Recomendaciones SISS, programas de ahorro de Aguas Andinas, guías del MOP.
+
+### 5.4 Subsidio SAP
+
+| Tramo RSH |   Descuento   |
+| :-------: | :-----------: |
+|  0–40%  | **85%** |
+|  41–70%  | **50%** |
+|  71–90%  | **25%** |
+
+- **Tope SAP estándar:** 13 m³/mes
+- **Tope Chile Seguridades y Oportunidades:** 15 m³/mes (hasta 100%)
+- **Fuente legal:** Ley N° 18.778, ChileAtiende, BCN
+
+### 5.5 Promedio chileno
+
+- **3.8 m³/persona/mes** (~127 L/persona/día)
+- **Fuente:** SISS, Andess (tendencia a la baja reportada en 2023-2025)
+
+### 5.6 Precios de equivalencias
+
+| Bien             |  Precio  | Fuente                          |
+| ---------------- | :-------: | ------------------------------- |
+| Pan (marraqueta) | $2.300/kg | Odepa 2025                      |
+| Pasaje micro     |   $795   | Tarifa bus RED adulto, feb 2026 |
+| Recarga celular  |  $5.000  | Promedio operadores chilenos    |
+
+---
+
+## 6. Metodología de Cálculos
+
+### 6.1 Consumo diario por actividad
+
+```
+Para cada actividad:
+  Si es per cápita (ducha, WC, cepillado):
+    consumo = valor × litros_por_unidad × número_personas
+  
+  Si es del hogar (platos, lavadora, cocina, riego):
+    consumo = valor × litros_por_unidad × 1
+  
+  Si la frecuencia es semanal (lavadora, riego):
+    consumo = resultado ÷ 7
+```
+
+### 6.2 Conversión a m³/mes
+
+```
+litros_dia = Σ consumo de todas las actividades
+m3_mes = (litros_dia × 30) ÷ 1.000
+```
+
+### 6.3 Costo mensual (Cálculo Detallado y Opcionales)
+
+El sistema ahora soporta un desglose realista del cobro incluyendo cargos fijos, consumo de agua potable con escalonamiento, recargo estival de sobreconsumo, recolección y tratamiento de alcantarillado, e IVA.
+
+#### 6.3.1 Escalonamiento Base (Agua Potable)
+```
+Si m³ ≤ 15:     variable_base = m³ × tarifa_T1
+Si m³ ≤ 30:     variable_base = (15 × T1) + ((m³ − 15) × T2)
+Si m³ > 30:     variable_base = (15 × T1) + (15 × T2) + ((m³ − 30) × T3)
+
+costo_agua = cargo_fijo + variable_base
+```
+
+#### 6.3.2 Surcharge de Verano (Opcional)
+Si la opción "Período tarifario de Verano" está activa y el consumo supera el límite regulado de 40 m³:
+```
+Si m³ > 40:     summer_surcharge = (m³ − 40) × tarifa_T3 × 0.5
+Si m³ ≤ 40:     summer_surcharge = 0
+
+costo_agua_total = costo_agua + summer_surcharge
+```
+
+#### 6.3.3 Alcantarillado y Tratamiento (Opcional)
+Si la opción "Incluir alcantarillado y tratamiento" está activa, se aplica la tasa de alcantarillado `sr` específica de la sanitaria sobre el cargo variable de agua potable consumida:
+```
+cargo_alcantarillado = (variable_base + summer_surcharge) × ratio_sr
+```
+
+#### 6.3.4 IVA (Opcional)
+Si la opción "Incluir IVA" está activa, se agrega el 19% al subtotal de la boleta:
+```
+subtotal = costo_agua_total + cargo_alcantarillado
+iva = subtotal × 0.19
+costo_final = subtotal + iva
+```
+
+**Ejemplo:** 18.5 m³ con Aguas Andinas (r: 0.81), con alcantarillado e IVA activos:
+*   Cargo Fijo: $3.500
+*   Agua Potable Consumo: (15 × $680) + (3.5 × $980) = $10.200 + $3.430 = $13.630
+*   Surcharge Verano: $0 (18.5 m³ ≤ 40 m³)
+*   Alcantarillado (r: 0.81): $13.630 × 0.81 = $11.040
+*   Subtotal Neto: $3.500 + $13.630 + $11.040 = $28.170
+*   IVA (19%): $28.170 × 0.19 = $5.352
+*   **Total con todo: $33.522**
+
+### 6.4 Cálculo del ahorro
+```
+ahorro_mensual = costo_final_actual − costo_final_eficiente
+ahorro_anual = ahorro_mensual × 12
+ahorro_5_años = ahorro_anual × 5
+```
+
+### 6.5 Subsidio SAP
+```
+costo_subsidiable = tarifa_total(mínimo(consumo, 13 m³))
+descuento = costo_subsidiable × porcentaje_RSH
+
+Alertas:
+  - consumo ≤ 13 m³ → ✅ Cubierto por SAP estándar
+  - 13 < consumo ≤ 15 m³ → ⚠️ Solo cubierto por Chile Seg. y Oportunidades
+  - consumo > 15 m³ → 🔴 Excede todo subsidio
+```
+
+### 6.6 Semáforo de eficiencia
+
+Cada actividad tiene dos umbrales `[verde_max, amarillo_max]`:
+
+| Actividad |  🟢 ≤  |  🟡 ≤  |   🔴 >   |
+| --------- | :------: | :------: | :------: |
+| Ducha     |  5 min  |  12 min  |  12 min  |
+| WC        | 4 veces | 8 veces | 8 veces |
+| Cepillado | 2 veces | 4 veces | 4 veces |
+| Platos    | 2 veces | 4 veces | 4 veces |
+| Lavadora  | 3 cargas | 7 cargas | 7 cargas |
+| Cocina    |   8 L   |   15 L   |   15 L   |
+| Riego     | 2 veces | 5 veces | 5 veces |
+
+### 6.7 Equivalencias de ahorro
+
+```
+kg_pan = ahorro_anual ÷ 2.300
+pasajes = ahorro_anual ÷ 795
+recargas = ahorro_anual ÷ 5.000
+```
+
+### 6.8 Motor de Consejos Contextuales (Algoritmo Inteligente)
+
+El sistema de consejos no usa IA generativa ni conexión a internet. En su lugar, emplea un **algoritmo basado en reglas con banco de ~50 condiciones** que evalúa el contexto completo del hogar para seleccionar los consejos más relevantes.
+
+#### 6.8.1 Variables de entrada del algoritmo
+
+El motor recibe las siguientes variables calculadas a partir de los inputs del usuario:
+
+| Variable | Descripción | Ejemplo |
+| -------- | ----------- | ------- |
+| `m3` | Consumo mensual actual en m³ | 18.5 |
+| `m3e` | Consumo mensual eficiente en m³ | 9.8 |
+| `cost` | Costo mensual actual en CLP | $17.130 |
+| `ce` | Costo mensual eficiente en CLP | $10.164 |
+| `save` | Ahorro mensual potencial (cost − ce) | $6.966 |
+| `sY` | Ahorro anual (save × 12) | $83.592 |
+| `company` | Empresa sanitaria seleccionada | Aguas Andinas |
+| `tramo` | Tramo tarifario (1, 2 o 3) | 2 |
+| `ppl` | Número de personas en el hogar | 4 |
+| `V[actividad]` | Valor actual de cada slider (7 actividades) | shower=8, toilet=5, etc. |
+
+Adicionalmente, para cada actividad se calculan dos métricas auxiliares:
+
+```
+actSave(actividad) = (consumo_actual − consumo_eficiente) × 30 días    → Litros ahorrados al mes
+actDaily(actividad) = consumo_actual_litros_día                         → Litros consumidos al día
+```
+
+#### 6.8.2 Banco de condiciones (6 categorías)
+
+El algoritmo evalúa **~50 reglas** organizadas en 6 categorías. Cada regla que se cumple genera un objeto tip con: `{ico, title, text, save, priority}`.
+
+##### Categoría 1: Tips por actividad (multi-nivel)
+
+Cada una de las 7 actividades tiene entre 2 y 4 niveles de consejo según el valor del slider:
+
+| Actividad | Nivel | Condición | Prioridad | Ejemplo de consejo |
+| --------- | ----- | --------- | :-------: | ------------------ |
+| 🚿 Ducha | Crítico | `≥ 15 min` | 10 | "¡Cada persona usa 150L! Eso es como vaciar 10 baldes" |
+| 🚿 Ducha | Alto | `≥ 10 min` | 8 | "X min × N personas = Y L/día. Pon una canción de 5 min" |
+| 🚿 Ducha | Medio | `≥ 7 min` | 5 | "Vas bien, cierra la llave mientras te enjabonas" |
+| 🚿 Ducha | Bueno | `> 5 min` | 3 | "Muy cerca del ideal, un pequeño ajuste más" |
+| 🚽 WC | Alto | `≥ 8 descargas` | 7 | "WC doble descarga reduce 50%. Algunas municipalidades los dan gratis" |
+| 🚽 WC | Medio | `≥ 6 descargas` | 5 | "Kit de doble botón por ~$5.000, se paga solo" |
+| 🚽 WC | Bajo | `ahorro > 0` | 3 | "Botella de 1.5L dentro del estanque = menos agua por descarga" |
+| 🪥 Cepillado | Alto | `≥ 4 veces` | 6 | "Llave abierta = 6L/vez. Con N personas = X L/día desperdiciados" |
+| 🪥 Cepillado | Normal | `≥ 2 y ahorro > 0` | 4 | "Cerrar la llave ahorra X L/mes por persona" |
+| 🍽️ Platos | Alto | `≥ 4 lavadas` | 6 | "Junta la loza, usa recipiente. Ahorras hasta 70%" |
+| 🍽️ Platos | Normal | `≥ 2 y ahorro > 0` | 4 | "Recipiente en vez de llave corriendo: 15→5 L/lavada" |
+| 👕 Lavadora | Alto | `≥ 7 cargas/sem` | 7 | "Cada carga usa 65L. Acumula ropa, baja a 2-3 cargas" |
+| 👕 Lavadora | Medio | `≥ 4 cargas/sem` | 5 | "Carga completa gasta igual que a medias, pero lavas el doble" |
+| 👕 Lavadora | Bajo | `≥ 3 y ahorro > 0` | 3 | "Agua fría + carga completa = ahorro de agua y electricidad" |
+| 🍳 Cocina | Alto | `≥ 15 L/día` | 5 | "Lava frutas/verduras en bowl, reutiliza agua de cocción" |
+| 🍳 Cocina | Normal | `≥ 8 y ahorro > 0` | 3 | "Agua de cocción de verduras sirve para regar (una vez fría)" |
+| 🌱 Riego | Alto | `≥ 5 veces/sem` | 7 | "Riega solo 2-3 veces, temprano o al atardecer" |
+| 🌱 Riego | Medio | `≥ 3 veces/sem` | 5 | "Usa agua del lavado de verduras o del enjuague de ropa" |
+| 🌱 Riego | Bajo | `≥ 1 y ahorro > 0` | 3 | "Plantas nativas + mulch retiene humedad" |
+
+**Tip especial por familia grande + ducha:** Si `ducha ≥ 8 min` Y `personas ≥ 5`, se genera un tip adicional (prioridad 9) que cuantifica el porcentaje del consumo total que representa la ducha.
+
+##### Categoría 2: Combinaciones entre actividades
+
+| Condición | Prioridad | Consejo |
+| --------- | :-------: | ------- |
+| `ducha ≥ 8` Y `cepillado ≥ 3` Y `platos ≥ 2` | 7 | "Baño + cocina suman X L/día. Cerrar la llave en las 3 ahorra Y L/mes" |
+| `ducha ≥ 8` Y `lavadora ≥ 4` | 8 | "Ducha y lavadora son tus 2 mayores gastos. Enfocarte en ambos da el mayor retorno" |
+
+##### Categoría 3: Tips por tramo tarifario
+
+| Condición | Prioridad | Consejo |
+| --------- | :-------: | ------- |
+| Tramo 3 (`m3 > 30`) | 10 | "Tienes X m³ en tarifa alta ($Y/m³). Te cuesta $Z extra. Prioridad #1" |
+| Tramo 2 (`15 < m3 ≤ 30`) | 8 | "Te faltan X m³ para el tramo más barato. Equivale a reducir Y L/día" |
+
+##### Categoría 4: Tips por proximidad al subsidio
+
+| Condición | Prioridad | Consejo |
+| --------- | :-------: | ------- |
+| `m3 > 15` (sobre tope Chile Seguridades) | 9 | "Tu consumo supera los 15 m³. Bajar te da hasta 85% descuento" |
+| `13 < m3 ≤ 15` (entre tope SAP y CSO) | 7 | "Superas el SAP estándar pero estás en tope Chile Seguridades" |
+| `m3 ≤ 13` Y `m3 ≥ 10` (dentro del tope) | 6 | "Apto para subsidio. ¡Postula en tu municipio!" |
+
+##### Categoría 5: Tips por tamaño familiar
+
+| Condición | Prioridad | Consejo |
+| --------- | :-------: | ------- |
+| `personas ≥ 6` | 6 | "Cada persona consume ~X L/día. Los niños pueden ser 'guardianes del agua'" |
+| `personas = 1` | 4 | "Vivir solo = solo depende de ti. Ducha y WC son 70% de tu consumo" |
+| `personas 3-5` Y `ahorro > $3.000` | 5 | "3 cambios simples (ducha, cepillado, lavadora) = $X/año para toda la familia" |
+
+##### Categoría 6: Tips motivacionales y metas progresivas
+
+| Condición | Prioridad | Consejo |
+| --------- | :-------: | ------- |
+| `ahorro ≥ $8.000/mes` | 7 | "Puedes ahorrar $X/año (= Y kg pan + Z pasajes). Empieza con 1 cambio por semana" |
+| `ahorro ≥ $3.000/mes` | 5 | "$X/mes es alcanzable. Empieza reduciendo 2 min en la ducha esta semana" |
+| `m3_eficiente ≤ 13` Y `m3_actual > 13` | 8 | "Con hábitos eficientes bajarías a X m³ = apto para subsidio. Doble beneficio" |
+
+#### 6.8.3 Algoritmo de puntuación y selección
+
+Una vez evaluadas todas las reglas, el algoritmo sigue estos pasos:
+
+```
+PASO 1 — EVALUAR: Recorrer las ~50 reglas. Cada condición TRUE genera un tip candidato.
+          Resultado típico: 8-15 tips candidatos.
+
+PASO 2 — PUNTUAR: Para cada tip candidato:
+          score = prioridad × (1 + (ahorro_litros / max_ahorro_litros) × 2)
+          
+          Esto favorece tips que tienen TANTO alta prioridad contextual
+          COMO alto impacto real en litros ahorrados.
+          
+          Ejemplo:  Ducha prioridad=8, ahorro=3.600 L/mes (máximo del set)
+                    score = 8 × (1 + (3600/3600) × 2) = 8 × 3 = 24
+                    
+                    Subsidio prioridad=9, ahorro=0 (informativo)
+                    score = 9 × (1 + 0) = 9
+
+PASO 3 — ORDENAR: Sort descendente por score.
+
+PASO 4 — DEDUPLICAR: Para evitar consejos repetitivos de una misma categoría,
+          se limita a máximo 1 tip por emoji/categoría si ya se seleccionaron ≥ 3 tips.
+          
+          Esto asegura variedad: un tip de ducha, uno de tarifa, uno de subsidio, 
+          uno motivacional, etc.
+
+PASO 5 — SELECCIONAR: Tomar los primeros 6 tips (máximo).
+          Para WhatsApp: se envían los primeros 4 (truncados a 100 caracteres).
+```
+
+#### 6.8.4 Ejemplo de ejecución
+
+**Escenario:** Familia de 5, ducha 10 min, WC 5, cepillado 3, platos 2, lavadora 5/sem, cocina 8L, riego 3/sem. Aguas Andinas. Consumo: 22.3 m³ (Tramo 2).
+
+```
+Tips candidatos generados:
+┌────┬──────────────────────────────────┬────────┬──────────┬───────┐
+│ #  │ Tip                              │ Prior. │ Ahorro   │ Score │
+├────┼──────────────────────────────────┼────────┼──────────┼───────┤
+│ 1  │ 🚿 Ducha — Reducir tiempo        │   8    │ 4.500 L  │ 24.0  │
+│ 2  │ 👨‍👩‍👧‍👦 Familia grande + ducha    │   9    │ 4.500 L  │ 27.0  │
+│ 3  │ 📊 Cerca del tramo bajo          │   8    │    0     │  8.0  │
+│ 4  │ 🏛️ Sobre tope de subsidio        │   9    │    0     │  9.0  │
+│ 5  │ 🌟 ¡Meta realista!               │   8    │    0     │  8.0  │
+│ 6  │ 👕 Lavadora — Optimizar cargas   │   5    │ 1.393 L  │  8.1  │
+│ 7  │ 🪥 Cepillado — Cerrar la llave   │   4    │ 2.250 L  │  8.0  │
+│ 8  │ 🌱 Riego — Reutiliza agua        │   5    │   857 L  │  5.9  │
+│ 9  │ 🍽️ Platos — Usar recipiente      │   4    │   600 L  │  5.1  │
+│ 10 │ 🎯 Ahorro alcanzable             │   5    │    0     │  5.0  │
+│ 11 │ 💪 Objetivo familiar             │   5    │    0     │  5.0  │
+│ 12 │ 🍳 Cocina — Reutilizar agua      │   3    │   180 L  │  3.2  │
+└────┴──────────────────────────────────┴────────┴──────────┴───────┘
+
+Después de ordenar y deduplicar (top 6):
+  1. 👨‍👩‍👧‍👦 Familia grande + ducha (score 27.0)
+  2. 🚿 Ducha — Reducir tiempo (score 24.0)  ← se permite repetición (< 3 tips)
+  3. 🏛️ Sobre tope de subsidio (score 9.0)
+  4. 📊 Cerca del tramo bajo (score 8.0)      ← descartado: ya hay 🚿 y 👨‍👩‍👧‍👦
+  4. 👕 Lavadora — Optimizar cargas (score 8.1)
+  5. 🪥 Cepillado — Cerrar la llave (score 8.0)
+  6. 🌟 ¡Meta realista! (score 8.0)
+```
+
+> **Resultado:** El usuario recibe 6 consejos variados que cubren: su mayor gasto individual (ducha), el impacto de ser familia grande, su situación de subsidio, un tip de lavadora, uno de cepillado, y una meta motivacional. Cada consejo usa datos reales de SU hogar (litros, pesos, m³).
+
+---
+
+## 7. Funcionalidades Detalladas
+
+### 7.1 Página de Entrada
+
+| Función                       | Descripción                                                                                        |
+| ------------------------------ | --------------------------------------------------------------------------------------------------- |
+| **Selector de ubicación** | Selector inteligente de 3 niveles: Región -> Comuna -> Sanitaria. Filtra dinámicamente según la base de datos SISS. Si la comuna tiene cobertura única, se autoselecciona la sanitaria y se muestra como etiqueta informativa de solo lectura para mantener al usuario informado sin abrumarlo con desplegables. Si la comuna tiene múltiples sanitarias, se habilita un dropdown para seleccionar el sector correspondiente. |
+| **Selector de personas** | Botones del 1 al 8. Resalta el activo con gradiente cyan. Afecta actividades per cápita.           |
+| **Sliders de actividad** | 7 sliders con rango configurable, botones +/− para ajuste fino, semáforo visual en tiempo real.   |
+| **Tags de tipo**         | Cada actividad muestra "× PERSONA" (cyan) o "HOGAR" (amber) para indicar cómo se multiplica.      |
+| **Botón CTA**           | "Calcular mi consumo" — botón grande redondeado con gradiente, hover con efecto ripple.           |
+
+### 7.2 Resultados — Carrusel tipo Historia (5 paneles)
+
+La página de resultados usa un **carrusel horizontal** que presenta la información de forma progresiva, como una historia, evitando abrumar al usuario con toda la data de golpe.
+
+#### Panel 1: 💧 Tu Consumo Mensual
+
+| Elemento | Descripción |
+| -------- | ----------- |
+| **Stats** | 3 cards: Litros/día, m³/mes (con tooltip), Costo mensual (con color semáforo). |
+| **Tramo** | Barra degradada tri-color con punto indicador animado. Muestra tramo activo. |
+
+#### Panel 2: 📊 ¿Cómo te comparas?
+
+| Elemento | Descripción |
+| -------- | ----------- |
+| **Emoji central** | ✅ o ⚠️ grande (60px) según si estás sobre o bajo el promedio. |
+| **Barra comparativa** | Barra visual con pin del promedio chileno. |
+| **Tabla detalle** | 7 actividades + total. Columnas: actual, eficiente, ahorro/día. |
+
+#### Panel 3: 🏛️ Subsidios para Ti
+
+| Elemento | Descripción |
+| -------- | ----------- |
+| **Info SAP** | Explicación del subsidio, topes (13/15 m³). |
+| **Grid de descuentos** | 3 tramos RSH con descuento calculado + costo sin subsidio. |
+| **Alerta contextual** | Verde/amarillo/rojo según si el consumo excede los topes. |
+| **Programas de apoyo** | 4 cards: SAP, revisión medidor, kit municipal, convenio de pago. |
+
+#### Panel 4: 💰 ¡Puedes Ahorrar
+
+| Elemento | Descripción |
+| -------- | ----------- |
+| **Stats eficientes** | 3 cards: Litros eficientes, m³ eficientes, ahorro mensual. |
+| **Banner de ahorro** | Card verde con ahorro anual, agua ahorrada, equivalencias, proyección a 5 años. |
+
+#### Panel 5: 🌟 Consejos para Ti
+
+| Elemento | Descripción |
+| -------- | ----------- |
+| **Tips personalizados** | Lista dinámica ordenada por impacto. Cada tip con emoji, texto y badge "Ahorra X L/mes". |
+| **Botón WhatsApp** | Botón grande verde (full-width en mobile) para compartir resultados + consejos. |
+| **Acciones secundarias** | Guardar, Cargar, Restablecer en fila. |
+
+### 7.3 Persistencia (localStorage)
+
+| Acción               | Comportamiento                                                                       |
+| --------------------- | ------------------------------------------------------------------------------------ |
+| **Guardar**     | Almacena en `cta_data`: personas, empresa, valores de todos los sliders, timestamp |
+| **Cargar**      | Lee `cta_data`, restaura todos los valores, regresa a la página de entrada        |
+| **Restablecer** | Resetea a valores por defecto (4 personas, Aguas Andinas, hábitos promedio)         |
+| **Auto-carga**  | Al abrir la página, si existe un escenario guardado, lo restaura automáticamente   |
+
+---
+
+## 8. Diseño Visual y UX
+
+### 8.1 Identidad visual
+
+| Elemento                   | Valor                                                |
+| -------------------------- | ---------------------------------------------------- |
+| **Nombre**           | Calcula Tu Agua                                      |
+| **Dominio**          | calculatuagua.cl                                     |
+| **Emoji principal**  | 💧                                                   |
+| **Color primario**   | `#0891B2` (cyan-600, acuático)                     |
+| **Color claro**      | `#22D3EE` (cyan-300, acentos luminosos)            |
+| **Color oscuro**     | `#155E75` (cyan-800, textos)                       |
+| **Color profundo**   | `#0C4A6E` (cyan-900, hero, botones)                |
+| **Fondo**            | `#F0F9FF` (sky-50, celeste claro)                  |
+| **Bordes**           | `#BAE6FD` (sky-200, tono agua sutil)               |
+| **Acento**           | `#F59E0B` (amber) para tags "hogar"                |
+| **Éxito**           | `#059669` (green) para ahorro                      |
+| **Error**            | `#DC2626` (red) para alertas                       |
+| **Tipografía**      | Inter (Google Fonts) — 400, 500, 600, 700, 800, 900 |
+
+> **Nota de diseño:** Se eligió una paleta acuática azulada (en vez de verde) y se mantuvieron emojis (en vez de SVG icons) para un tono más familiar y cercano al público objetivo: familias chilenas en situación de vulnerabilidad.
+
+### 8.2 Componentes visuales
+
+| Componente                    | Técnica CSS                                                                                            |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------- |
+| **Hero banner**         | Degradado 4 pasos (#0C4A6E → #0E7490 → #0891B2 → #22D3EE), blobs orgánicos con `@keyframes morph`  |
+| **Ola SVG**             | `<svg>` inline con curva Bézier, transición entre hero y contenido                                  |
+| **Carrusel**            | Paneles `position:absolute/relative` con fade+slide, altura dinámica según panel activo             |
+| **Cards**               | Bordes redondeados 24px, sombras con tinte cyan, hover con elevación                                 |
+| **Botones de personas** | Gradiente activo (#0C4A6E → #0891B2), sombra con color, elevación al hover                          |
+| **Semáforos**          | Círculos 10px con `box-shadow` glow + animación `pulse` al cambiar de color                        |
+| **Range sliders**       | Thumb custom con gradiente cyan + borde blanco + sombra, track #CFFAFE                               |
+| **CTA**                 | Pill shape (60px radius), efecto ripple con pseudo-elemento, sombra profunda cyan                       |
+| **Nav botones**         | Grid 2 columnas, min-height 56px (52px mobile), touch-friendly                                         |
+| **Progress bar**        | Barra 5px con gradiente cyan, transición suave al avanzar paneles                                     |
+| **Tramo tarifario**     | Gradiente tri-color con punto indicador + cubic-bezier bounce                                           |
+| **Subsidio**            | Card con gradiente #ECFEFF → #CFFAFE, sub-stats con glassmorphism                                   |
+| **Stats**               | Cards con degradado según estado (blue/amber/red/green)                                                |
+| **Tips**                | Icono en container con fondo #ECFEFF, badge de ahorro verde                                             |
+| **Toast**               | Fixed bottom center, slide-in con cubic-bezier                                                          |
+
+### 8.3 Responsividad (Mobile-first)
+
+> **Diseño Mobile-first:** El carrusel de resultados fue diseñado prioritariamente para celulares, dado que el público objetivo accede principalmente desde smartphones Android.
+
+| Breakpoint  | Cambios                                                                                             |
+| ----------- | --------------------------------------------------------------------------------------------------- |
+| `>640px`  | Grid de 3 columnas en stats, botones nav max-width 500px centrados, padding 2rem en paneles         |
+| `≤640px` | Grid 2 cols en stats, botones nav 52px min-height, panel padding reducido, share full-width         |
+
+### 8.4 Animaciones
+
+| Animación       | Uso                                           |     Duración     |
+| ---------------- | --------------------------------------------- | :---------------: |
+| `float`        | Blobs decorativos del hero                    |   10-12s loop    |
+| `morph`        | Deformación orgánica de blobs                | 12-18s loop      |
+| `drip`         | Emoji de gota rebotando                        |      3s loop      |
+| `pageIn`       | Transición entre páginas                     |       0.5s       |
+| `fadeUp`       | Staggered entry de elementos en paneles       |  0.4s por item   |
+| `semPulse`     | Pulso al cambiar color del semáforo          |       0.3s       |
+| Panel transition | Fade + slide (opacity + translateX)           |       0.4s       |
+| Hover cards      | Elevación -3px + sombra                      |       0.2s       |
+| CTA ripple       | Círculo blanco expandiéndose                 |       0.5s       |
+| Progress bar     | Ancho con cubic-bezier al avanzar             |       0.5s       |
+| Toast            | Slide-up suave                                | 0.4s cubic-bezier |
+
+> **Accesibilidad:** Todas las animaciones se desactivan automáticamente con `@media (prefers-reduced-motion: reduce)`.
+
+---
+
+## 9. Accesibilidad
+
+| Aspecto               | Implementación                                                                                  |
+| --------------------- | ------------------------------------------------------------------------------------------------ |
+| **Semántica**  | `<button>` reales (no `<div>`), `<select>`, `<input type="range">`                       |
+| **ARIA**        | `aria-label` en todos los controles, `aria-pressed` en botones de personas, `role="group"` |
+| **Navegación** | `focus-visible` con outline 3px, navegación por teclado (←→) en carrusel                      |
+| **Contraste**   | Colores principales ≥ 4.5:1 contra fondo blanco (WCAG AA)                                       |
+| **Reduced motion** | `@media (prefers-reduced-motion: reduce)` desactiva todas las animaciones                    |
+| **Touch targets** | Botones de navegación ≥ 52px de altura, cumple mínimo WCAG 2.5.8 (44×44px)                 |
+| **Tooltips**    | Activados por hover Y focus (accesible por teclado)                                              |
+| **Botones ±**  | Permiten ajuste preciso sin slider (ideal para pantallas táctiles y lectores de pantalla)       |
+| **Idioma**      | `<html lang="es">` declarado                                                                   |
+| **Emojis**      | Usados como apoyo visual familiar, no como contenido único. Elegidos intencionalmente por cercanía con el público objetivo |
+
+---
+
+## 10. Integraciones
+
+### 10.1 WhatsApp (compartir resultados)
+
+- **API:** URL scheme `https://wa.me/?text=...`
+- **Activación:** Solo al hacer clic en botón "📲 WhatsApp"
+- **Contenido compartido:** Incluye datos de consumo + **consejos personalizados** con ahorro por hábito
+
+  ```
+  💧 *Calcula Tu Agua — Mi consumo*
+
+  👥 4 personas
+  🏢 Aguas Andinas (RM Santiago)
+
+  📊 *Mi consumo actual:*
+  • 18.5 m³/mes ($17.130)
+  • 617 litros por día
+
+  ✅ *Con hábitos eficientes:*
+  • 9.8 m³/mes ($10.164)
+
+  💰 *Ahorro potencial:*
+  • Mensual: $6.966
+  • Anual: $83.592
+
+  💡 *Consejos personalizados:*
+  🚿 Ducha: Reducir de 8 a 5 min ahorra ~30L/persona/día (Ahorra 3.600 L/mes)
+  🪥 Cepillado: Cerrar la llave ahorra hasta 5L por cepillado (Ahorra 1.800 L/mes)
+  🍽️ Lavado de platos: Usar recipiente reduce de 15 a 5L (Ahorra 600 L/mes)
+
+  ¡Calcula el tuyo en calculatuagua.cl! 🌊
+  ```
+
+- **No requiere API key** ni autenticación
+
+### 10.2 localStorage (persistencia)
+
+- **Key:** `cta_data`
+- **Formato:** JSON con campos `{ppl, cIdx, V, ts}`
+- **No expira** (persiste hasta que el usuario borre datos del navegador)
+- **Auto-restauración** al abrir la página
+
+### 10.3 Google Fonts CDN
+
+- **Font:** Inter (400-900)
+- **Fallback:** `system-ui, sans-serif`
+- **Carga:** `preconnect` + `swap` para evitar FOIT
+
+---
+
+## 11. Fuentes y Referencias
+
+| # | Fuente                             | URL                                                                   | Dato utilizado                                                    |
+| :-: | ---------------------------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| 1 | **SISS**                     | [siss.gob.cl](https://www.siss.gob.cl)                                   | Consumo per cápita, regulación tarifaria, resoluciones          |
+| 2 | **Aguas Andinas**            | [aguasandinas.cl](https://www.aguasandinas.cl)                           | Tarifas 2025, DS N°47 (VIII Proceso Tarifario), guías de ahorro |
+| 3 | **Andess**                   | [andess.cl](https://www.andess.cl)                                       | Estadísticas de consumo, tendencia a la baja del 30%             |
+| 4 | **BCN**                      | [bcn.cl/leychile](https://www.bcn.cl/leychile)                           | Ley N° 18.778 (Subsidio SAP)                                     |
+| 5 | **ChileAtiende**             | [chileatiende.gob.cl](https://www.chileatiende.gob.cl)                   | Ficha SAP, requisitos, tramos RSH                                 |
+| 6 | **Ventanilla Única Social** | [ventanillaunicasocial.gob.cl](https://www.ventanillaunicasocial.gob.cl) | Porcentajes de subsidio, procedimiento                            |
+| 7 | **Odepa**                    | [odepa.gob.cl](https://www.odepa.gob.cl)                                 | Precio marraqueta $2.300/kg (2025)                                |
+| 8 | **DTPM / Red**               | [red.cl](https://www.red.cl)                                             | Tarifa bus RED adulto $795 (feb 2026)                             |
+| 9 | **MOP**                      | [mop.gob.cl](https://www.mop.gob.cl)                                     | Guías de uso eficiente del agua                                  |
+| 10 | **Fabricantes**              | Fanaloza, Roca                                                        | Fichas técnicas: consumo WC, duchas                              |
+
+---
+
+## 12. Limitaciones
+
+### Lo que la herramienta SÍ hace
+
+- ✅ Estima consumo basado en hábitos declarados
+- ✅ Usa estructura tarifaria real (3 tramos escalonados)
+- ✅ Distingue consumo per cápita vs hogar
+- ✅ Informa sobre subsidio SAP con 3 tramos RSH
+- ✅ Compara con promedio nacional
+- ✅ Funciona 100% offline después de cargar
+- ✅ Permite incluir opcionalmente cargo por alcantarillado y tratamiento (ratios específicos por empresa)
+- ✅ Permite incluir opcionalmente el 19% de IVA para cuadrar con la boleta real
+- ✅ Considera período tarifario de verano (recargo de sobreconsumo del 50% sobre 40 m³)
+- ✅ Genera y exporta reportes de ahorro personalizados en PDF de forma 100% local y ultra-ligera
+
+### Lo que la herramienta NO hace
+
+- ❌ **No detecta fugas** — Las fugas pueden representar 10-20% del consumo real
+- ❌ **No reemplaza la boleta** — Es un cálculo referencial educativo
+- ❌ **No tiene datos en tiempo real** — Las tarifas se actualizan manualmente
+
+### Sesgos y consideraciones
+- El promedio de 3.8 m³/persona/mes es una **estimación conservadora** — el dato real varía por región y época del año.
+- Los litros por actividad son **promedios de referencia**, no mediciones reales del hogar específico.
+
+---
+
+## 13. Roadmap Futuro
+
+### Prioridad Alta
+
+| Mejora                   | Descripción                                                          | Impacto                                                  |
+| ------------------------ | --------------------------------------------------------------------- | -------------------------------------------------------- |
+| **PWA**            | Convertir en Progressive Web App para instalación y uso 100% offline | Alto — muchas familias tienen conectividad intermitente |
+
+### Prioridad Media
+
+| Mejora                       | Descripción                                                                       |
+| ---------------------------- | ---------------------------------------------------------------------------------- |
+| **Idioma mapudungun**  | Opción de idioma para comunidades mapuche en regiones del sur                     |
+
+### Prioridad Baja
+
+| Mejora                       | Descripción                                                       |
+| ---------------------------- | ------------------------------------------------------------------ |
+| **Analytics**          | Google Analytics o Plausible para medir uso real                   |
+| **Testing de usuario** | Pruebas con familias reales para validar comprensión del lenguaje |
+| **Historial**          | Guardar múltiples escenarios con fecha para trackear progreso     |
+
+---
+
+## Apéndice: Estructura del Archivo HTML
+
+```
+index.html (~60 KB, autocontenido)
+├── <head>
+│   ├── Meta tags (charset, viewport, SEO)
+│   ├── Google Fonts (Inter)
+│   └── <style> (~980 líneas CSS)
+│       ├── Variables CSS (paleta acuática: --pri #0891B2, fondo #F0F9FF)
+│       ├── Reset y base
+│       ├── Hero + blobs orgánicos + wave SVG
+│       ├── Sistema de cards (border: --border #BAE6FD)
+│       ├── Controles (select, buttons, custom range sliders)
+│       ├── Carrusel (viewport, panel absolute/relative, transitions)
+│       ├── Panel-specific (p-stats, tramo, avg bar, subsidy, tips)
+│       ├── Navegación (carousel-nav, buttons grid, dots, progress)
+│       ├── Share section (WhatsApp btn, secondary actions)
+│       ├── Toast y tooltips
+│       ├── @media (prefers-reduced-motion: reduce)
+│       ├── @media (max-width: 640px) — mobile-first optimizations
+│       └── @media (min-width: 641px) — desktop enhancements
+│
+├── <body>
+│   ├── Hero section (blobs, logo con drop, subtítulo, badge, wave SVG)
+│   ├── Container (max-width: 800px)
+│   │   ├── PAGE 1: Input
+│   │   │   ├── Selector Inteligente (Región -> Comuna -> Sanitaria)
+│   │   │   ├── Personas (buttons 1-8, staggered animation)
+│   │   │   ├── Actividades (7 rows con semáforo pulse + custom slider + ±)
+│   │   │   └── CTA "Calcular mi consumo" (ripple effect)
+│   │   │
+│   │   ├── PAGE 2: Results Carousel (hidden por defecto)
+│   │   │   ├── Topbar (← Volver + counter "2/5")
+│   │   │   ├── Carousel viewport
+│   │   │   │   ├── Panel 1: 💧 Tu Consumo (stats + tramo)
+│   │   │   │   ├── Panel 2: 📊 ¿Cómo te comparas? (avg + tabla)
+│   │   │   │   ├── Panel 3: 🏛️ Subsidios (SAP + programas)
+│   │   │   │   ├── Panel 4: 💰 ¡Puedes Ahorrar! (eficiente + ahorro)
+│   │   │   │   └── Panel 5: 🌟 Consejos (tips + WhatsApp + acciones)
+│   │   │   ├── Progress bar (5px, gradiente cyan)
+│   │   │   └── Navigation (dots + buttons grid 2 cols)
+│   │   │
+│   │   └── Footer (branding + links SISS/ChileAtiende/RSH)
+│   │
+│   ├── Toast (notificaciones)
+│   │
+│   └── <script> (~280 líneas JS)
+│       ├── DATA: empresas (7), actividades (7), subsidio (3 tramos), constantes
+│       ├── HELPERS: tariff(), actDaily(), totalDaily(), semaphore(), equivs()
+│       ├── BUILD: buildCompany(), buildPeople(), buildActs()
+│       ├── CAROUSEL: updateCarousel(), carouselNext/Prev(), buildDots(), setupSwipe()
+│       ├── NAVIGATION: showResults(), goBack()
+│       ├── RENDER: renderResults() → 5 paneles (consumo, compara, subsidio, ahorro, consejos)
+│       ├── ACTIONS: saveScen(), loadScen(), resetAll(), shareWA() (con tips)
+│       └── INIT: build + auto-load saved scenario
+```
+
+---
+
+*Documento consolidado de calculatuagua.cl — Versión 3.0, Abril 2026*
+*Proyecto de Liderazgo — Universidad San Sebastián*

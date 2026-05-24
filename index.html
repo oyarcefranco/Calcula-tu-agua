@@ -1,0 +1,3255 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calcula Tu Agua — Ahorra agua, ahorra dinero</title>
+  <meta name="description"
+    content="Calcula tu consumo de agua, descubre cuánto puedes ahorrar y conoce los subsidios disponibles para familias en Chile. calculatuagua.cl">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos_branding.css">
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <div class="hero" id="heroSection">
+    <div class="hero-blob hero-blob-1"></div>
+    <div class="hero-blob hero-blob-2"></div>
+    <div class="hero-logo-container">
+      <!-- Reemplaza logo.png por la ruta del logo en alta calidad si la dejas en esta misma carpeta -->
+      <img src="logo.png" alt="Logo Calcula Tu Agua" class="hero-logo-img" onerror="this.style.display='none'; document.getElementById('fallbackLogoText').style.display='block';">
+      <div id="fallbackLogoText" class="hero-logo" style="display: none;"><span class="drop">💧</span> Calcula Tu Agua</div>
+    </div>
+    <p class="hero-sub">Descubre cuánto gastas en agua, cuánto puedes ahorrar y qué subsidios tienes disponibles</p>
+    <div class="hero-badge" id="heroBadge">🌊 calculatuagua.cl — Herramienta gratuita para familias chilenas</div>
+    <div class="wave-bottom">
+      <svg viewBox="0 0 1440 70" preserveAspectRatio="none">
+        <path d="M0,35 C240,70 480,0 720,35 C960,70 1200,0 1440,35 L1440,70 L0,70 Z" fill="var(--bg)" />
+      </svg>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- ═══ PAGE 0: ONBOARDING CUESTIONARIO ═══ -->
+    <div class="page" id="pageOnboarding">
+      <div class="card card-featured stagger" style="margin-top: 2rem;">
+        <div class="panel-header">
+          <span class="panel-emoji">👋</span>
+          <div class="panel-title" style="font-size: 20px; font-weight: 900; color: var(--pri-dark);">¡Bienvenido a Calcula Tu Agua!</div>
+          <div class="panel-subtitle" style="font-size: 13.5px; color: var(--gray-500); margin-top: 4px;">Dinos un poco sobre ti para personalizar tus consejos y adaptar tu experiencia</div>
+        </div>
+        
+        <div class="carousel-progress" style="margin: 1.5rem 0; background: #e2e8f0; height: 6px; border-radius: 3px; overflow: hidden;">
+          <div class="carousel-progress-fill" id="onboardingProgress" style="width: 33%; height: 100%; background: var(--pri); transition: width 0.3s;"></div>
+        </div>
+        
+        <div id="onboardingQuestionContainer" style="min-height: 180px; margin-bottom: 1.5rem;"></div>
+        
+        <div style="display: flex; gap: 10px; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+          <button class="carousel-back" id="btnOnboardingPrev" onclick="onboardingPrev()" style="visibility: hidden; padding: 10px 18px; border: 1.5px solid var(--border); background: var(--card); border-radius: var(--r); font-weight: 700; color: var(--gray-600); cursor: pointer;">← Anterior</button>
+          <button onclick="skipOnboarding()" style="font-size: 13.5px; font-weight: 700; color: var(--gray-400); background: none; border: none; cursor: pointer; text-decoration: underline;">Saltar encuesta</button>
+          <button class="carousel-arrow carousel-next" id="btnOnboardingNext" onclick="onboardingNext()" style="padding: 10px 24px; min-height: 44px; margin: 0; display: inline-flex; align-items: center; justify-content: center; background: var(--pri); color: white; border: none; border-radius: var(--r); font-weight: 700; cursor: pointer;">Siguiente →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ PAGE 1: INPUT ═══ -->
+    <div class="page active" id="pageInput">
+
+      <div id="profileBadgeContainer" style="margin-bottom: 1rem; display: none;"></div>
+      <div id="profileNoticeContainer"></div>
+
+      <div class="section-label"><span class="dot"></span> Tu ubicación y empresa de agua</div>
+      <div class="card card-featured">
+        <div class="card-header">📍 Ubicación y Empresa Sanitaria</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 8px;">
+          <div>
+            <label for="regionSelect" style="font-size: 11px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; margin-bottom: 4px; display: block;">Región</label>
+            <select id="regionSelect" class="region-select" aria-label="Región"></select>
+          </div>
+          <div>
+            <label for="communeSelect" style="font-size: 11px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; margin-bottom: 4px; display: block;">Comuna</label>
+            <select id="communeSelect" class="region-select" aria-label="Comuna"></select>
+          </div>
+          <div id="companyAutoInfo" style="display: none;">
+            <label style="font-size: 11px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; margin-bottom: 4px; display: block;">Empresa Sanitaria</label>
+            <div id="companyAutoName" style="background: var(--gray-50); border: 1.5px solid var(--border); border-radius: var(--r); padding: 10px 14px; font-size: 14px; font-weight: 600; color: var(--pri-dark); display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 16px;">🏢</span>
+              <span id="companyAutoText"></span>
+            </div>
+          </div>
+          <div id="companySelectContainer" style="display: none;">
+            <label for="companySelect" style="font-size: 11px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; margin-bottom: 4px; display: block;">Empresa Sanitaria / Sector Tarifario</label>
+            <select id="companySelect" class="region-select" aria-label="Empresa sanitaria"></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label"><span class="dot"></span> Opciones de facturación</div>
+      <div class="card">
+        <div class="card-header">⚙️ Opciones de cálculo</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 8px;">
+          <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 14.5px; font-weight: 500; color: var(--gray-700);">
+            <input type="checkbox" id="chkSewer" style="margin-top: 4px; width: 18px; height: 18px; accent-color: var(--pri); cursor: pointer;">
+            <div>
+              <strong>Incluir alcantarillado y tratamiento servido</strong>
+              <div style="font-size: 12px; color: var(--gray-400); font-weight: 400;">Aplica el recargo de recolección y tratamiento de aguas servidas de la empresa sanitaria</div>
+            </div>
+          </label>
+          <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 14.5px; font-weight: 500; color: var(--gray-700);">
+            <input type="checkbox" id="chkIva" style="margin-top: 4px; width: 18px; height: 18px; accent-color: var(--pri); cursor: pointer;">
+            <div>
+              <strong>Incluir IVA (19%)</strong>
+              <div style="font-size: 12px; color: var(--gray-400); font-weight: 400;">Agrega el Impuesto al Valor Agregado al total de la boleta simulada</div>
+            </div>
+          </label>
+          <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 14.5px; font-weight: 500; color: var(--gray-700);">
+            <input type="checkbox" id="chkSummer" style="margin-top: 4px; width: 18px; height: 18px; accent-color: var(--pri); cursor: pointer;">
+            <div>
+              <strong>Período tarifario de Verano (Tarifa de Sobreconsumo)</strong>
+              <div style="font-size: 12px; color: var(--gray-400); font-weight: 400;">Aplica un 50% de recargo sobre el consumo mensual que exceda los 40 m³</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="section-label"><span class="dot"></span> ¿Cuántas personas viven en tu hogar?</div>
+      <div class="card">
+        <div class="people-row stagger" id="peopleRow" role="group" aria-label="Número de personas"></div>
+      </div>
+
+      <div class="section-label"><span class="dot"></span> Ajusta tus hábitos de consumo</div>
+      <div class="card" id="activityList"></div>
+
+      <div class="cta-wrap">
+        <button class="cta-btn" id="calcBtn" onclick="showResults()">
+          <span class="cta-icon">📊</span> Calcular mi consumo
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══ PAGE 2: RESULTS CAROUSEL ═══ -->
+    <div class="page" id="pageResults">
+      <div class="carousel-wrapper">
+        <div class="carousel-topbar">
+          <button class="carousel-back" onclick="goBack()">← Volver a editar</button>
+          <div class="carousel-counter" id="carouselCounter">1 / 5</div>
+        </div>
+
+        <div class="carousel-viewport" id="carouselViewport">
+
+            <!-- PANEL 1: Tu Consumo -->
+            <div class="panel active" id="panel-0">
+              <div class="panel-inner">
+                <div class="panel-header">
+                  <span class="panel-emoji">💧</span>
+                  <div class="panel-title">Tu Consumo Mensual</div>
+                  <div class="panel-subtitle">Así es como usas el agua cada mes</div>
+                </div>
+                <div class="panel-body" id="panelConsumo"></div>
+              </div>
+            </div>
+
+            <!-- PANEL 2: Comparación -->
+            <div class="panel" id="panel-1">
+              <div class="panel-inner">
+                <div class="panel-header">
+                  <span class="panel-emoji">📊</span>
+                  <div class="panel-title">¿Cómo te comparas?</div>
+                  <div class="panel-subtitle">Tu consumo vs. el promedio chileno</div>
+                </div>
+                <div class="panel-body" id="panelCompara"></div>
+              </div>
+            </div>
+
+            <!-- PANEL 3: Subsidios -->
+            <div class="panel" id="panel-2">
+              <div class="panel-inner">
+                <div class="panel-header">
+                  <span class="panel-emoji">🏛️</span>
+                  <div class="panel-title">Subsidios para Ti</div>
+                  <div class="panel-subtitle">Ayuda disponible para tu hogar</div>
+                </div>
+                <div class="panel-body" id="panelSubsidio"></div>
+              </div>
+            </div>
+
+            <!-- PANEL 4: Ahorro -->
+            <div class="panel" id="panel-3">
+              <div class="panel-inner">
+                <div class="panel-header">
+                  <span class="panel-emoji">💰</span>
+                  <div class="panel-title">¡Puedes Ahorrar!</div>
+                  <div class="panel-subtitle">Si adoptas hábitos eficientes</div>
+                </div>
+                <div class="panel-body" id="panelAhorro"></div>
+              </div>
+            </div>
+
+            <!-- PANEL 5: Consejos + Compartir -->
+            <div class="panel" id="panel-4">
+              <div class="panel-inner">
+                <div class="panel-header">
+                  <span class="panel-emoji">🌟</span>
+                  <div class="panel-title">Consejos para Ti</div>
+                  <div class="panel-subtitle">Cambia estos hábitos y ahorra</div>
+                </div>
+                <div class="panel-body" id="panelConsejos"></div>
+              </div>
+            </div>
+
+        </div>
+
+        <div class="carousel-progress">
+          <div class="carousel-progress-fill" id="progressFill" style="width:20%"></div>
+        </div>
+
+        <div class="carousel-nav">
+          <div class="carousel-dots" id="carouselDots"></div>
+          <div class="carousel-buttons">
+            <button class="carousel-arrow carousel-prev" id="btnPrev" onclick="carouselPrev()" disabled>
+              ← Anterior
+            </button>
+            <button class="carousel-arrow carousel-next" id="btnNext" onclick="carouselNext()">
+              Siguiente →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de Logos Institucionales Reorganizados y Llamativos (USS, SISS, ChileAtiende, RSH) -->
+    <div class="institutional-section stagger">
+      <p class="institutional-title">Con el respaldo y datos de instituciones de confianza</p>
+      <div class="institutional-logos">
+        <!-- Logo SISS (Superintendencia de Servicios Sanitarios) -->
+        <a href="https://www.siss.gob.cl" target="_blank" rel="noopener" class="inst-logo-card">
+          <!-- Espacio para agregar logo_siss.png en alta calidad -->
+          <img src="logo_siss.png" alt="SISS" class="inst-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+          <span class="inst-logo-fallback" style="display: none;">SISS</span>
+        </a>
+        
+        <!-- Logo ChileAtiende -->
+        <a href="https://www.chileatiende.gob.cl" target="_blank" rel="noopener" class="inst-logo-card">
+          <!-- Espacio para agregar logo_chileatiende.png en alta calidad -->
+          <img src="logo_chileatiende.png" alt="ChileAtiende" class="inst-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+          <span class="inst-logo-fallback" style="display: none;">ChileAtiende</span>
+        </a>
+        
+        <!-- Logo RSH (Registro Social de Hogares) -->
+        <a href="https://rsh.ministeriodesarrollosocial.gob.cl" target="_blank" rel="noopener" class="inst-logo-card">
+          <!-- Espacio para agregar logo_rsh.png en alta calidad -->
+          <img src="logo_rsh.png" alt="Registro Social de Hogares" class="inst-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+          <span class="inst-logo-fallback" style="display: none;">RSH</span>
+        </a>
+        
+        <!-- Logo USS (Universidad San Sebastián) -->
+        <a href="https://www.uss.cl" target="_blank" rel="noopener" class="inst-logo-card">
+          <!-- Espacio para agregar logo_uss.png en alta calidad -->
+          <img src="logo_uss.png" alt="Universidad San Sebastián" class="inst-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+          <span class="inst-logo-fallback" style="display: none;">USS</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer">
+      <strong>💧 Calcula Tu Agua</strong> — calculatuagua.cl<br>
+      Tarifas de agua y alcantarillado basadas en decretos tarifarios de la SISS.<br>
+      Cálculo referencial USS. No reemplaza la boleta oficial del distribuidor.
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ══════════════════════ DATA ══════════════════════ */
+    const TARIFF_DB = [
+  {
+    "r": "I",
+    "c": "Aguas Del Altiplano",
+    "g": "G1",
+    "f": 1219,
+    "t1": 1323.17,
+    "t2": 1314.06,
+    "t3": 3501.3,
+    "al": 617.93,
+    "m": [
+      "Iquique",
+      "Alto Hospicio",
+      "Pozo Almonte"
+    ]
+  },
+  {
+    "r": "I",
+    "c": "Aguas Del Altiplano",
+    "g": "G2",
+    "f": 1219,
+    "t1": 1545.61,
+    "t2": 1526.41,
+    "t3": 4355.96,
+    "al": 758.94,
+    "m": [
+      "Iquique",
+      "Pozo Almonte",
+      "Huara"
+    ]
+  },
+  {
+    "r": "I",
+    "c": "Aguas Del Altiplano",
+    "g": "G3",
+    "f": 1219,
+    "t1": 1042.22,
+    "t2": 1025.32,
+    "t3": 2960.35,
+    "al": 817.46,
+    "m": [
+      "Pica"
+    ]
+  },
+  {
+    "r": "II",
+    "c": "Aguas De Antofagasta",
+    "g": "G1",
+    "f": 1522,
+    "t1": 2197.94,
+    "t2": 2197.94,
+    "t3": 2197.94,
+    "al": 651.74,
+    "m": [
+      "Antofagasta",
+      "Mejillones",
+      "Tocopilla"
+    ]
+  },
+  {
+    "r": "II",
+    "c": "Aguas De Antofagasta",
+    "g": "G2",
+    "f": 1522,
+    "t1": 1409.61,
+    "t2": 1409.61,
+    "t3": 3761.42,
+    "al": 668.32,
+    "m": [
+      "Antofagasta",
+      "Sierra Gorda",
+      "Calama"
+    ]
+  },
+  {
+    "r": "III",
+    "c": "Nueva Atacama",
+    "g": "Grupo 1",
+    "f": 1085,
+    "t1": 1068.84,
+    "t2": 654.0,
+    "t3": 1960.92,
+    "al": 958.21,
+    "m": [
+      "Copiapó",
+      "Tierra Amarilla",
+      "Vallenar"
+    ]
+  },
+  {
+    "r": "III",
+    "c": "Nueva Atacama",
+    "g": "Grupo 2",
+    "f": 1085,
+    "t1": 1243.61,
+    "t2": 1288.03,
+    "t3": 2319.99,
+    "al": 1891.59,
+    "m": [
+      "Caldera",
+      "Chañaral",
+      "Diego de Almagro",
+      "Freirina",
+      "Huasco"
+    ]
+  },
+  {
+    "r": "IV",
+    "c": "Aguas Del Valle",
+    "g": "G1",
+    "f": 1119,
+    "t1": 1296.69,
+    "t2": 1292.61,
+    "t3": 3225.51,
+    "al": 1108.04,
+    "m": [
+      "Andacollo",
+      "Canela",
+      "Combarbalá"
+    ]
+  },
+  {
+    "r": "IV",
+    "c": "Aguas Del Valle",
+    "g": "G2",
+    "f": 1119,
+    "t1": 1116.36,
+    "t2": 584.15,
+    "t3": 2876.75,
+    "al": 883.94,
+    "m": [
+      "La Serena",
+      "Coquimbo",
+      "Illapel",
+      "Los Vilos",
+      "Punitaqui"
+    ]
+  },
+  {
+    "r": "IV",
+    "c": "Aguas Del Valle",
+    "g": "G3",
+    "f": 1119,
+    "t1": 690.08,
+    "t2": 690.08,
+    "t3": 1614.8,
+    "al": 999.6,
+    "m": [
+      "Vicuña",
+      "Salamanca",
+      "Ovalle"
+    ]
+  },
+  {
+    "r": "IV",
+    "c": "Aguas La Serena",
+    "g": "Grupo Serena",
+    "f": 2668,
+    "t1": 1433.91,
+    "t2": 1433.91,
+    "t3": 2750.18,
+    "al": 2258.54,
+    "m": [
+      "La Serena"
+    ]
+  },
+  {
+    "r": "IV",
+    "c": "Totoralillo",
+    "g": "Grupo Totoralillo",
+    "f": 1669,
+    "t1": 1797.64,
+    "t2": 1797.64,
+    "t3": 3328.31,
+    "al": 0.0,
+    "m": [
+      "Coquimbo"
+    ]
+  },
+  {
+    "r": "IX",
+    "c": "Aguas Araucanía",
+    "g": "G1",
+    "f": 1778,
+    "t1": 699.32,
+    "t2": 699.32,
+    "t3": 1691.58,
+    "al": 1145.08,
+    "m": [
+      "Temuco",
+      "Carahue",
+      "Cunco",
+      "Freire",
+      "Lautaro",
+      "Nueva Imperial",
+      "Padre las Casas",
+      "Pitrufquén",
+      "Saavedra",
+      "Vilcún",
+      "Cholchol",
+      "Angol",
+      "Lumaco",
+      "Traiguén",
+      "Victoria"
+    ]
+  },
+  {
+    "r": "IX",
+    "c": "Aguas Araucanía",
+    "g": "G2",
+    "f": 1778,
+    "t1": 782.92,
+    "t2": 782.91,
+    "t3": 1762.46,
+    "al": 1313.72,
+    "m": [
+      "Galvarino",
+      "Gorbea",
+      "Loncoche",
+      "Toltén",
+      "Collipulli",
+      "Curacautín",
+      "Ercilla",
+      "Lonquimay",
+      "Los Sauces",
+      "Purén",
+      "Renaico"
+    ]
+  },
+  {
+    "r": "IX",
+    "c": "Aguas Araucanía",
+    "g": "G3",
+    "f": 1778,
+    "t1": 558.11,
+    "t2": 558.11,
+    "t3": 1610.52,
+    "al": 1413.19,
+    "m": [
+      "Pucón",
+      "Villarrica"
+    ]
+  },
+  {
+    "r": "IX",
+    "c": "Aguas Araucanía",
+    "g": "G4",
+    "f": 1779,
+    "t1": 571.48,
+    "t2": 571.48,
+    "t3": 1357.1,
+    "al": 995.5,
+    "m": [
+      "Temuco",
+      "Vilcún"
+    ]
+  },
+  {
+    "r": "IX",
+    "c": "Aguas Araucanía",
+    "g": "Grupo Funda",
+    "f": 1251,
+    "t1": 475.13,
+    "t2": 475.13,
+    "t3": 1066.15,
+    "al": 648.32,
+    "m": [
+      "Temuco"
+    ]
+  },
+  {
+    "r": "IX",
+    "c": "Aguas Araucanía",
+    "g": "Grupo Naranjos",
+    "f": 890,
+    "t1": 349.75,
+    "t2": 349.75,
+    "t3": 846.08,
+    "al": 572.91,
+    "m": [
+      "Temuco"
+    ]
+  },
+  {
+    "r": "IX",
+    "c": "Aguas Araucanía",
+    "g": "Grupo Quepe",
+    "f": 1484,
+    "t1": 605.8,
+    "t2": 605.8,
+    "t3": 870.5,
+    "al": 833.11,
+    "m": [
+      "Freire"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Agua Potable Izarra De Lo Aguirre",
+    "g": "Grupo Izarra",
+    "f": 1658,
+    "t1": 745.27,
+    "t2": 745.27,
+    "t3": 1326.15,
+    "al": 737.35,
+    "m": [
+      "Pudahuel"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas Andinas",
+    "g": "G1",
+    "f": 914,
+    "t1": 599.14,
+    "t2": 599.14,
+    "t3": 1701.72,
+    "al": 759.39,
+    "m": [
+      "Cerro Navia",
+      "Conchalí",
+      "El Bosque",
+      "Estación Central",
+      "Independencia",
+      "La Cisterna",
+      "La Florida",
+      "La Granja",
+      "La Pintana",
+      "La Reina",
+      "Las Condes",
+      "Lo Barnechea",
+      "Lo Espejo",
+      "Lo Prado",
+      "Macul",
+      "Maipú",
+      "Ñuñoa",
+      "Pedro Aguirre Cerda",
+      "Peñalolén",
+      "Pirque",
+      "Providencia",
+      "Puente Alto",
+      "Quinta Normal",
+      "Recoleta",
+      "Renca",
+      "San Bernardo",
+      "San Joaquín",
+      "San Miguel",
+      "San Ramón",
+      "Santiago",
+      "Vitacura"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas Andinas",
+    "g": "G2",
+    "f": 914,
+    "t1": 474.87,
+    "t2": 474.44,
+    "t3": 1405.0,
+    "al": 791.66,
+    "m": [
+      "San José de Maipo",
+      "Buin",
+      "Calera de Tango",
+      "Paine",
+      "Melipilla",
+      "Curacaví",
+      "Talagante",
+      "El Monte",
+      "Isla de Maipo",
+      "Padre Hurtado",
+      "Peñaflor"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas Cordillera",
+    "g": "Grupo Cordillera",
+    "f": 1262,
+    "t1": 860.5,
+    "t2": 860.5,
+    "t3": 1305.21,
+    "al": 398.18,
+    "m": [
+      "Lo Barnechea",
+      "Santiago"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas De Colina",
+    "g": "Grupo Colina",
+    "f": 1409,
+    "t1": 558.85,
+    "t2": 558.85,
+    "t3": 1177.85,
+    "al": 767.7,
+    "m": [
+      "Colina"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas Del Centro",
+    "g": "Grupo Centro",
+    "f": 1069,
+    "t1": 723.71,
+    "t2": 723.71,
+    "t3": 1247.68,
+    "al": 382.3,
+    "m": [
+      "Talca"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas Manquehue",
+    "g": "G1",
+    "f": 1313,
+    "t1": 1036.24,
+    "t2": 1019.51,
+    "t3": 1542.94,
+    "al": 520.61,
+    "m": [
+      "Huechuraba",
+      "Vitacura"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas Manquehue",
+    "g": "G2",
+    "f": 1316,
+    "t1": 776.64,
+    "t2": 776.64,
+    "t3": 1482.07,
+    "al": 696.59,
+    "m": [
+      "Colina"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas Manquehue",
+    "g": "G3",
+    "f": 1331,
+    "t1": 645.75,
+    "t2": 645.75,
+    "t3": 1150.53,
+    "al": 662.68,
+    "m": [
+      "Lo Barnechea"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas Manquehue",
+    "g": "G4",
+    "f": 1300,
+    "t1": 561.17,
+    "t2": 561.17,
+    "t3": 1109.22,
+    "al": 642.84,
+    "m": [
+      "Vitacura",
+      "Las Condes"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas San Pedro",
+    "g": "Grupo 101125",
+    "f": 1309,
+    "t1": 731.19,
+    "t2": 731.19,
+    "t3": 1544.77,
+    "al": 1203.51,
+    "m": [
+      "San Pedro"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas San Pedro",
+    "g": "Grupo 150325",
+    "f": 850,
+    "t1": 640.79,
+    "t2": 640.79,
+    "t3": 886.3,
+    "al": 707.11,
+    "m": [
+      "Lo Prado"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas San Pedro",
+    "g": "Grupo Alerce",
+    "f": 1126,
+    "t1": 982.61,
+    "t2": 982.61,
+    "t3": 982.61,
+    "al": 1488.35,
+    "m": [
+      "San Pedro"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas San Pedro",
+    "g": "Grupo Chi",
+    "f": 1430,
+    "t1": 749.95,
+    "t2": 749.95,
+    "t3": 1107.03,
+    "al": 1302.9,
+    "m": [
+      "San Pedro"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas San Pedro",
+    "g": "Grupo Curico",
+    "f": 1754,
+    "t1": 644.75,
+    "t2": 644.75,
+    "t3": 1271.21,
+    "al": 1342.39,
+    "m": [
+      "San Pedro"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas San Pedro",
+    "g": "Grupo Emapal",
+    "f": 1743,
+    "t1": 697.52,
+    "t2": 697.52,
+    "t3": 1111.16,
+    "al": 849.78,
+    "m": [
+      "San Pedro"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas San Pedro",
+    "g": "Grupo Jahuel",
+    "f": 1088,
+    "t1": 375.99,
+    "t2": 375.99,
+    "t3": 1108.98,
+    "al": 805.63,
+    "m": [
+      "Buin"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas San Pedro",
+    "g": "Grupo Matte",
+    "f": 822,
+    "t1": 391.7,
+    "t2": 391.7,
+    "t3": 1145.64,
+    "al": 0.0,
+    "m": [
+      "Buin"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas San Pedro",
+    "g": "Grupo SLuisI",
+    "f": 1126,
+    "t1": 459.27,
+    "t2": 459.27,
+    "t3": 1359.4,
+    "al": 867.34,
+    "m": [
+      "Colina"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas Santa Rosa Del Peral",
+    "g": "Grupo DelPeral",
+    "f": 1807,
+    "t1": 1186.08,
+    "t2": 1186.08,
+    "t3": 2109.58,
+    "al": 758.78,
+    "m": [
+      "Puente Alto"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas Santiago Norte",
+    "g": "Grupo Batu",
+    "f": 1600,
+    "t1": 1118.32,
+    "t2": 1118.32,
+    "t3": 1716.47,
+    "al": 914.92,
+    "m": [
+      "Santiago"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas Santiago Norte",
+    "g": "Grupo Maria",
+    "f": 2352,
+    "t1": 629.06,
+    "t2": 629.06,
+    "t3": 1238.78,
+    "al": 200.01,
+    "m": [
+      "Maipú",
+      "Santiago"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas Santiago Norte",
+    "g": "Grupo Reina",
+    "f": 1856,
+    "t1": 1195.66,
+    "t2": 1195.66,
+    "t3": 2279.02,
+    "al": 856.81,
+    "m": [
+      "Santiago"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas Santiago Poniente",
+    "g": "Grupo S1",
+    "f": 919,
+    "t1": 553.85,
+    "t2": 553.85,
+    "t3": 1619.11,
+    "al": 710.64,
+    "m": [
+      "Pudahuel",
+      "Santiago"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Aguas Santiago Poniente",
+    "g": "Grupo S2",
+    "f": 919,
+    "t1": 728.45,
+    "t2": 728.45,
+    "t3": 1492.28,
+    "al": 1251.12,
+    "m": [
+      "Pudahuel",
+      "Santiago"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "BCC",
+    "g": "Grupo BCC",
+    "f": 1216,
+    "t1": 525.85,
+    "t2": 525.85,
+    "t3": 1015.79,
+    "al": 977.77,
+    "m": [
+      "Lampa"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Coopagua",
+    "g": "Grupo Copagua",
+    "f": 2537,
+    "t1": 991.99,
+    "t2": 991.99,
+    "t3": 1524.59,
+    "al": 1065.53,
+    "m": [
+      "Santo Domingo"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Cossbo",
+    "g": "Grupo COSSBO",
+    "f": 1315,
+    "t1": 711.54,
+    "t2": 711.54,
+    "t3": 711.54,
+    "al": 0.0,
+    "m": [
+      "Colina"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "El Colorado",
+    "g": "Grupo Colorado",
+    "f": 13069,
+    "t1": 4092.14,
+    "t2": 4092.14,
+    "t3": 4092.14,
+    "al": 899.53,
+    "m": [
+      "Lo Barnechea"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "El Molino Uno Y Cía Ltda.",
+    "g": "Grupo Molino",
+    "f": 1996,
+    "t1": 1470.06,
+    "t2": 1470.06,
+    "t3": 3350.61,
+    "al": 2833.3,
+    "m": [
+      "Lo Barnechea"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Essesa",
+    "g": "Grupo ESSESA",
+    "f": 1715,
+    "t1": 1948.08,
+    "t2": 1948.08,
+    "t3": 2015.71,
+    "al": 1917.77,
+    "m": [
+      "Colina"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Esssi",
+    "g": "Grupo Quilicura",
+    "f": 1121,
+    "t1": 426.21,
+    "t2": 331.39,
+    "t3": 435.62,
+    "al": 517.45,
+    "m": [
+      "Quilicura"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Essur",
+    "g": "Grupo essur",
+    "f": 770,
+    "t1": 564.73,
+    "t2": 564.73,
+    "t3": 564.73,
+    "al": 637.53,
+    "m": [
+      "Puerto Montt"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Explotaciones Sanitarias",
+    "g": "Grupo Explotaciones",
+    "f": 3066,
+    "t1": 770.01,
+    "t2": 770.01,
+    "t3": 992.86,
+    "al": 964.05,
+    "m": [
+      "Quilicura"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "La Leonera",
+    "g": "Grupo Leonera",
+    "f": 3151,
+    "t1": 4310.4,
+    "t2": 4310.4,
+    "t3": 4310.4,
+    "al": 6680.18,
+    "m": [
+      "Lo Barnechea"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Larapinta",
+    "g": "Grupo Larapinta",
+    "f": 994,
+    "t1": 550.28,
+    "t2": 550.28,
+    "t3": 899.12,
+    "al": 985.93,
+    "m": [
+      "Lampa"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Melipilla Norte",
+    "g": "Grupo S1",
+    "f": 2113,
+    "t1": 719.04,
+    "t2": 719.04,
+    "t3": 719.04,
+    "al": 1260.69,
+    "m": [
+      "Melipilla"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Novaguas",
+    "g": "Grupo Novaguas",
+    "f": 1254,
+    "t1": 505.9,
+    "t2": 505.9,
+    "t3": 1065.51,
+    "al": 895.57,
+    "m": [
+      "Lampa"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "SMAPA",
+    "g": "Grupo SMAPA",
+    "f": 1378,
+    "t1": 427.27,
+    "t2": 427.27,
+    "t3": 1022.59,
+    "al": 584.85,
+    "m": [
+      "Cerrillos",
+      "Maipú"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Sacyr Agua Chacabuco",
+    "g": "Grupo Ayres",
+    "f": 1486,
+    "t1": 729.75,
+    "t2": 729.75,
+    "t3": 888.11,
+    "al": 675.38,
+    "m": [
+      "Colina"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Sacyr Agua Chacabuco",
+    "g": "Grupo Colina",
+    "f": 1486,
+    "t1": 635.55,
+    "t2": 635.55,
+    "t3": 843.7,
+    "al": 772.03,
+    "m": [
+      "Santiago",
+      "Colina"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Sacyr Agua Lampa",
+    "g": "Grupo Lampa050325",
+    "f": 1498,
+    "t1": 559.29,
+    "t2": 559.29,
+    "t3": 1181.9,
+    "al": 1225.18,
+    "m": [
+      "Lampa"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Sacyr Agua Metropolitana",
+    "g": "Grupo Barne",
+    "f": 2035,
+    "t1": 1418.85,
+    "t2": 1418.85,
+    "t3": 2064.35,
+    "al": 720.49,
+    "m": [
+      "Lo Barnechea"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Sacyr Agua Metropolitana",
+    "g": "Grupo Pan",
+    "f": 2064,
+    "t1": 727.99,
+    "t2": 727.99,
+    "t3": 1440.18,
+    "al": 743.05,
+    "m": [
+      "Lampa",
+      "Colina"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Sacyr Agua Metropolitana",
+    "g": "Grupo VE",
+    "f": 2040,
+    "t1": 1549.15,
+    "t2": 1550.26,
+    "t3": 2705.04,
+    "al": 631.94,
+    "m": [
+      "Lo Barnechea"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Sacyr Agua Santiago",
+    "g": "Grupo LA",
+    "f": 1789,
+    "t1": 527.92,
+    "t2": 527.92,
+    "t3": 988.89,
+    "al": 800.0,
+    "m": [
+      "Lo Barnechea"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "San Isidro",
+    "g": "Grupo Chin",
+    "f": 872,
+    "t1": 1279.15,
+    "t2": 1279.15,
+    "t3": 1279.15,
+    "al": 1377.67,
+    "m": [
+      "Puerto Montt"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "San Isidro",
+    "g": "Grupo Huertos",
+    "f": 1687,
+    "t1": 1346.49,
+    "t2": 1346.49,
+    "t3": 2822.47,
+    "al": 922.1,
+    "m": [
+      "Tiltil"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "San Isidro",
+    "g": "Grupo Igna",
+    "f": 1061,
+    "t1": 419.57,
+    "t2": 419.57,
+    "t3": 551.46,
+    "al": 491.68,
+    "m": [
+      "Padre Hurtado"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "San Isidro",
+    "g": "Grupo Labra",
+    "f": 1346,
+    "t1": 656.54,
+    "t2": 656.54,
+    "t3": 1041.49,
+    "al": 930.19,
+    "m": [
+      "Temuco"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "San Isidro",
+    "g": "Grupo Molles",
+    "f": 2551,
+    "t1": 2975.96,
+    "t2": 2975.96,
+    "t3": 2975.96,
+    "al": 500.0,
+    "m": [
+      "La Ligua"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "San Isidro",
+    "g": "Grupo Padre",
+    "f": 1355,
+    "t1": 447.0,
+    "t2": 447.0,
+    "t3": 793.18,
+    "al": 671.26,
+    "m": [
+      "Padre Hurtado"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "San Isidro",
+    "g": "Grupo Pani",
+    "f": 1066,
+    "t1": 718.16,
+    "t2": 718.16,
+    "t3": 718.16,
+    "al": 1040.03,
+    "m": [
+      "Puerto Montt"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "San Isidro",
+    "g": "Grupo Pichi",
+    "f": 2551,
+    "t1": 2509.28,
+    "t2": 2509.28,
+    "t3": 2509.28,
+    "al": 4317.08,
+    "m": [
+      "Los Vilos"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "San Isidro",
+    "g": "Grupo Pillan",
+    "f": 2495,
+    "t1": 591.6,
+    "t2": 591.6,
+    "t3": 1342.37,
+    "al": 2165.29,
+    "m": [
+      "Vilcún"
+    ]
+  },
+  {
+    "r": "RM",
+    "c": "Sasipa",
+    "g": "Grupo Sasipa",
+    "f": 3666,
+    "t1": 5482.0,
+    "t2": 5482.0,
+    "t3": 5482.0,
+    "al": 0.0,
+    "m": [
+      "Isla de Pascua"
+    ]
+  },
+  {
+    "r": "V",
+    "c": "Algarrobo Norte",
+    "g": "Grupo Algarrobo",
+    "f": 2110,
+    "t1": 2303.12,
+    "t2": 2345.36,
+    "t3": 2345.36,
+    "al": 3077.2,
+    "m": [
+      "Algarrobo"
+    ]
+  },
+  {
+    "r": "V",
+    "c": "ESVAL",
+    "g": "G1",
+    "f": 1703,
+    "t1": 1265.86,
+    "t2": 1265.86,
+    "t3": 624.19,
+    "al": 854.32,
+    "m": [
+      "Valparaíso",
+      "Casablanca",
+      "Viña del Mar",
+      "Quilpué",
+      "Villa Alemana"
+    ]
+  },
+  {
+    "r": "V",
+    "c": "ESVAL",
+    "g": "G2",
+    "f": 1703,
+    "t1": 934.78,
+    "t2": 934.78,
+    "t3": 2056.76,
+    "al": 575.81,
+    "m": [
+      "Los Andes",
+      "Calle Larga",
+      "Rinconada",
+      "San Esteban",
+      "Quillota",
+      "Calera",
+      "Hijuelas",
+      "La Cruz",
+      "Nogales",
+      "San Felipe",
+      "Catemu",
+      "Putaendo",
+      "Limache"
+    ]
+  },
+  {
+    "r": "V",
+    "c": "ESVAL",
+    "g": "G3A",
+    "f": 1703,
+    "t1": 1071.66,
+    "t2": 1071.66,
+    "t3": 2014.08,
+    "al": 1226.45,
+    "m": [
+      "Cabildo",
+      "Petorca"
+    ]
+  },
+  {
+    "r": "V",
+    "c": "ESVAL",
+    "g": "G3B",
+    "f": 1703,
+    "t1": 1180.28,
+    "t2": 1180.28,
+    "t3": 2463.23,
+    "al": 1226.45,
+    "m": [
+      "La Ligua"
+    ]
+  },
+  {
+    "r": "V",
+    "c": "ESVAL",
+    "g": "G4",
+    "f": 1703,
+    "t1": 1102.0,
+    "t2": 1102.0,
+    "t3": 1944.91,
+    "al": 2282.92,
+    "m": [
+      "Puchuncaví",
+      "Quintero",
+      "Papudo",
+      "Zapallar"
+    ]
+  },
+  {
+    "r": "V",
+    "c": "ESVAL",
+    "g": "G5",
+    "f": 1703,
+    "t1": 1113.04,
+    "t2": 1113.04,
+    "t3": 2167.11,
+    "al": 1955.16,
+    "m": [
+      "San Antonio",
+      "Cartagena"
+    ]
+  },
+  {
+    "r": "V",
+    "c": "ESVAL",
+    "g": "G6",
+    "f": 1703,
+    "t1": 2028.35,
+    "t2": 2029.95,
+    "t3": 1370.58,
+    "al": 3229.15,
+    "m": [
+      "Algarrobo",
+      "El Quisco",
+      "El Tabo"
+    ]
+  },
+  {
+    "r": "V",
+    "c": "ESVAL",
+    "g": "GPC",
+    "f": 1765,
+    "t1": 800.59,
+    "t2": 800.59,
+    "t3": 1794.17,
+    "al": 993.7,
+    "m": [
+      "Los Andes"
+    ]
+  },
+  {
+    "r": "V",
+    "c": "Las Brisas De Mirasol",
+    "g": "Grupo Brisas",
+    "f": 2110,
+    "t1": 2303.12,
+    "t2": 2345.36,
+    "t3": 2345.36,
+    "al": 3077.2,
+    "m": [
+      "Algarrobo"
+    ]
+  },
+  {
+    "r": "V",
+    "c": "Población Mirasol De Algarrobo",
+    "g": "Grupo Mirasol",
+    "f": 2110,
+    "t1": 2303.12,
+    "t2": 2345.36,
+    "t3": 2345.36,
+    "al": 3077.2,
+    "m": [
+      "Algarrobo"
+    ]
+  },
+  {
+    "r": "VI",
+    "c": "ESSBIO",
+    "g": "G1",
+    "f": 916,
+    "t1": 798.33,
+    "t2": 796.44,
+    "t3": 1819.42,
+    "al": 1066.2,
+    "m": [
+      "Rancagua",
+      "Graneros",
+      "Machalí",
+      "Rengo",
+      "San Fernando"
+    ]
+  },
+  {
+    "r": "VI",
+    "c": "ESSBIO",
+    "g": "G1",
+    "f": 916,
+    "t1": 672.35,
+    "t2": 671.67,
+    "t3": 1470.51,
+    "al": 859.9,
+    "m": [
+      "Concepción",
+      "Cabrero",
+      "Coronel",
+      "Curanilahue",
+      "Chiguayante",
+      "Los Ángeles",
+      "Lota",
+      "Nacimiento",
+      "Penco",
+      "San Pedro de la Paz",
+      "Talcahuano",
+      "Tomé"
+    ]
+  },
+  {
+    "r": "VI",
+    "c": "ESSBIO",
+    "g": "G2",
+    "f": 916,
+    "t1": 731.66,
+    "t2": 731.66,
+    "t3": 2247.87,
+    "al": 1421.72,
+    "m": [
+      "Codegua",
+      "Coinco",
+      "Coltauco",
+      "Doñihue",
+      "Las Cabras",
+      "Malloa",
+      "Mostazal",
+      "Olivar",
+      "Peumo",
+      "Pichidegua",
+      "Quinta de Tilcoco",
+      "Requínoa",
+      "San Vicente",
+      "Pichilemu",
+      "Navidad",
+      "Chépica",
+      "Chimbarongo",
+      "Lolol",
+      "Nancagua",
+      "Palmilla",
+      "Peralillo",
+      "Placilla"
+    ]
+  },
+  {
+    "r": "VI",
+    "c": "ESSBIO",
+    "g": "G2",
+    "f": 916,
+    "t1": 877.23,
+    "t2": 880.95,
+    "t3": 2143.05,
+    "al": 1054.34,
+    "m": [
+      "Chillán",
+      "Arauco",
+      "Bulnes",
+      "Cañete",
+      "Cobquecura",
+      "Coelemu",
+      "Coihueco",
+      "Contulmo",
+      "El Carmen",
+      "Florida",
+      "Hualqui",
+      "Yumbel",
+      "Laja",
+      "Lebu",
+      "Los Álamos",
+      "Mulchén",
+      "Nacimiento",
+      "Negrete",
+      "Ninhue",
+      "Pemuco",
+      "Quilaco",
+      "Quilleco",
+      "Quillón",
+      "Quirihue",
+      "San Ignacio",
+      "San Rosendo",
+      "Santa Bárbara",
+      "Santa Juana",
+      "Tucapel",
+      "Yungay"
+    ]
+  },
+  {
+    "r": "VII",
+    "c": "Nuevosur",
+    "g": "G1",
+    "f": 1163,
+    "t1": 553.67,
+    "t2": 553.06,
+    "t3": 939.01,
+    "al": 1048.0,
+    "m": [
+      "Curicó",
+      "Linares"
+    ]
+  },
+  {
+    "r": "VII",
+    "c": "Nuevosur",
+    "g": "G2",
+    "f": 1163,
+    "t1": 667.7,
+    "t2": 667.87,
+    "t3": 1227.29,
+    "al": 1198.71,
+    "m": [
+      "Talca",
+      "Cauquenes",
+      "Molina",
+      "Parral"
+    ]
+  },
+  {
+    "r": "VII",
+    "c": "Nuevosur",
+    "g": "G3",
+    "f": 1163,
+    "t1": 962.14,
+    "t2": 985.79,
+    "t3": 2278.97,
+    "al": 1298.51,
+    "m": [
+      "Constitución",
+      "Curepto",
+      "Empedrado",
+      "Pelarco",
+      "San Clemente",
+      "San Rafael",
+      "Chanco",
+      "Pelluhue",
+      "Hualañé",
+      "Licantén",
+      "Rauco",
+      "Romeral",
+      "Teno",
+      "Longaví",
+      "Retiro",
+      "San Javier",
+      "Villa Alegre",
+      "Yerbas Buenas"
+    ]
+  },
+  {
+    "r": "VIII",
+    "c": "Aguas San Pedro",
+    "g": "Grupo Coronel",
+    "f": 1648,
+    "t1": 568.59,
+    "t2": 568.59,
+    "t3": 1445.63,
+    "al": 1142.32,
+    "m": [
+      "Coronel"
+    ]
+  },
+  {
+    "r": "X",
+    "c": "Aguas Décima",
+    "g": "G1",
+    "f": 1077,
+    "t1": 781.18,
+    "t2": 781.18,
+    "t3": 781.18,
+    "al": 1035.82,
+    "m": [
+      "Valdivia"
+    ]
+  },
+  {
+    "r": "X",
+    "c": "Suralis",
+    "g": "G1 — Dalcahue, Castro",
+    "f": 1029,
+    "t1": 679.46,
+    "t2": 679.46,
+    "t3": 679.46,
+    "al": 1177.7,
+    "m": [
+      "Castro",
+      "Dalcahue"
+    ]
+  },
+  {
+    "r": "X",
+    "c": "Suralis",
+    "g": "G1 — Osorno, Futrono",
+    "f": 1029,
+    "t1": 679.46,
+    "t2": 679.46,
+    "t3": 679.46,
+    "al": 1450.88,
+    "m": [
+      "Osorno"
+    ]
+  },
+  {
+    "r": "X",
+    "c": "Suralis",
+    "g": "G2",
+    "f": 1029,
+    "t1": 864.8,
+    "t2": 864.8,
+    "t3": 864.8,
+    "al": 1575.9,
+    "m": [
+      "Puerto Montt",
+      "Frutillar",
+      "Llanquihue",
+      "Puerto Varas",
+      "Ancud",
+      "Futaleufú"
+    ]
+  },
+  {
+    "r": "X",
+    "c": "Suralis",
+    "g": "G3",
+    "f": 1029,
+    "t1": 1071.36,
+    "t2": 1071.36,
+    "t3": 1071.36,
+    "al": 1613.57,
+    "m": [
+      "Calbuco",
+      "Fresia",
+      "Los Muermos",
+      "Maullín",
+      "Chonchi",
+      "Quellón",
+      "Purranque",
+      "Río Negro",
+      "San Pablo",
+      "Chaitén"
+    ]
+  },
+  {
+    "r": "X",
+    "c": "Suralis",
+    "g": "G4",
+    "f": 1029,
+    "t1": 648.19,
+    "t2": 648.19,
+    "t3": 648.19,
+    "al": 1027.57,
+    "m": [
+      "Puerto Montt"
+    ]
+  },
+  {
+    "r": "XI",
+    "c": "Aguas Patagonia",
+    "g": "G1",
+    "f": 2089,
+    "t1": 1502.45,
+    "t2": 1502.45,
+    "t3": 1502.45,
+    "al": 1427.77,
+    "m": [
+      "Coyhaique",
+      "Río Ibáñez"
+    ]
+  },
+  {
+    "r": "XI",
+    "c": "Aguas Patagonia",
+    "g": "G2",
+    "f": 2098,
+    "t1": 860.7,
+    "t2": 860.7,
+    "t3": 860.7,
+    "al": 1337.0,
+    "m": [
+      "Cisnes",
+      "Cochrane",
+      "Chile Chico"
+    ]
+  },
+  {
+    "r": "XII",
+    "c": "Aguas Magallanes",
+    "g": "Grupo Magallanes — Porvenir",
+    "f": 1519,
+    "t1": 888.03,
+    "t2": 888.03,
+    "t3": 888.03,
+    "al": 879.47,
+    "m": [
+      "Porvenir"
+    ]
+  },
+  {
+    "r": "XII",
+    "c": "Aguas Magallanes",
+    "g": "Grupo Magallanes — Punta Arenas, Puerto Natales",
+    "f": 1808,
+    "t1": 1056.76,
+    "t2": 1056.76,
+    "t3": 1056.76,
+    "al": 1046.57,
+    "m": [
+      "Punta Arenas",
+      "Natales"
+    ]
+  },
+  {
+    "r": "XIV",
+    "c": "Suralis",
+    "g": "G1 — Dalcahue, Castro",
+    "f": 1029,
+    "t1": 679.46,
+    "t2": 679.46,
+    "t3": 679.46,
+    "al": 1177.7,
+    "m": [
+      "Futrono"
+    ]
+  },
+  {
+    "r": "XIV",
+    "c": "Suralis",
+    "g": "G1 — Osorno, Futrono",
+    "f": 1029,
+    "t1": 679.46,
+    "t2": 679.46,
+    "t3": 679.46,
+    "al": 1450.88,
+    "m": [
+      "Futrono"
+    ]
+  },
+  {
+    "r": "XIV",
+    "c": "Suralis",
+    "g": "G2",
+    "f": 1029,
+    "t1": 864.8,
+    "t2": 864.8,
+    "t3": 864.8,
+    "al": 1575.9,
+    "m": [
+      "La Unión",
+      "Río Bueno"
+    ]
+  },
+  {
+    "r": "XIV",
+    "c": "Suralis",
+    "g": "G3",
+    "f": 1029,
+    "t1": 1071.36,
+    "t2": 1071.36,
+    "t3": 1071.36,
+    "al": 1613.57,
+    "m": [
+      "Corral",
+      "Lanco",
+      "Los Lagos",
+      "Máfil",
+      "Mariquina",
+      "Paillaco",
+      "Panguipulli",
+      "Lago Ranco"
+    ]
+  },
+  {
+    "r": "XV",
+    "c": "Aguas Del Altiplano",
+    "g": "G1",
+    "f": 1219,
+    "t1": 1323.17,
+    "t2": 1314.06,
+    "t3": 3501.3,
+    "al": 617.93,
+    "m": [
+      "Arica"
+    ]
+  },
+  {
+    "r": "XVI",
+    "c": "ESSBIO",
+    "g": "G1",
+    "f": 916,
+    "t1": 672.35,
+    "t2": 671.67,
+    "t3": 1470.51,
+    "al": 859.9,
+    "m": [
+      "San Carlos"
+    ]
+  },
+  {
+    "r": "XVI",
+    "c": "ESSBIO",
+    "g": "G2",
+    "f": 916,
+    "t1": 877.23,
+    "t2": 880.95,
+    "t3": 2143.05,
+    "al": 1054.34,
+    "m": [
+      "Cobquecura",
+      "Coelemu",
+      "Ninhue",
+      "Quirihue",
+      "Bulnes",
+      "Chillán",
+      "El Carmen",
+      "Pemuco",
+      "Pinto",
+      "Quillón",
+      "San Ignacio",
+      "Yungay",
+      "Coihueco"
+    ]
+  }
+];
+
+    const REGION_NAMES = {
+      "RM": "Región Metropolitana de Santiago",
+      "XV": "Región de Arica y Parinacota",
+      "I": "Región de Tarapacá",
+      "II": "Región de Antofagasta",
+      "III": "Región de Atacama",
+      "IV": "Región de Coquimbo",
+      "V": "Región de Valparaíso",
+      "VI": "Región del Libertador General Bernardo O'Higgins",
+      "VII": "Región del Maule",
+      "XVI": "Región de Ñuble",
+      "VIII": "Región del Biobío",
+      "IX": "Región de La Araucanía",
+      "XIV": "Región de Los Ríos",
+      "X": "Región de Los Lagos",
+      "XI": "Región de Aysén",
+      "XII": "Región de Magallanes y de la Antártica Chilena"
+    };
+
+    // Behavioral Profiles (WHY Project)
+    const PROFILES = {
+      fearful: {
+        name: "El Asustadizo (Fearful)",
+        emoji: "🛡️",
+        desc: "Valoras la seguridad, la certeza y el respaldo institucional de tus cálculos.",
+        badgeClass: "badge-fearful"
+      },
+      stubborn: {
+        name: "El Austero (Stubborn)",
+        emoji: "🌱",
+        desc: "Valoras la ecología y soluciones de costo cero para ahorrar agua de forma práctica.",
+        badgeClass: "badge-stubborn"
+      },
+      homo_economicus: {
+        name: "El Calculador (Homo Economicus)",
+        emoji: "📈",
+        desc: "Valoras el ahorro financiero en pesos y el retorno de inversión.",
+        badgeClass: "badge-economicus"
+      },
+      influencer: {
+        name: "El Líder Social (Influencer)",
+        emoji: "📢",
+        desc: "Valoras el impacto comunitario y te gusta motivar a tus vecinos.",
+        badgeClass: "badge-influencer"
+      },
+      careful: {
+        name: "El Cauteloso (Careful)",
+        emoji: "🔍",
+        desc: "Valoras la precisión técnica y conocer el desglose exacto de las fórmulas.",
+        badgeClass: "badge-careful"
+      },
+      early_adopter: {
+        name: "El Pionero (Early Adopter)",
+        emoji: "🚀",
+        desc: "Te interesan las innovaciones tecnológicas y las tendencias digitales.",
+        badgeClass: "badge-early"
+      },
+      uninterested: {
+        name: "El Desinteresado (Uninterested)",
+        emoji: "⚡",
+        desc: "Prefieres simplicidad, respuestas rápidas y mínimo esfuerzo para calcular.",
+        badgeClass: "badge-uninterested"
+      }
+    };
+
+    const AC = [
+      { id: 'shower', lb: 'Ducha', ic: '🚿', ds: 'minutos por persona / día', mn: 0, mx: 20, st: 1, df: 8, u: 'min', lpu: 10, ev: 5, el: null, pp: true, tip: 'Reducir la ducha de 8 a 5 min ahorra ~30 litros por persona al día.', th: [5, 12] },
+      { id: 'toilet', lb: 'Descarga de WC', ic: '🚽', ds: 'veces por persona / día', mn: 1, mx: 12, st: 1, df: 5, u: 'veces', lpu: 8, ev: 5, el: 4, pp: true, tip: 'Un WC con doble descarga (3L/6L) puede reducir 50% del consumo del baño.', th: [4, 8] },
+      { id: 'teeth', lb: 'Cepillado de dientes', ic: '🪥', ds: 'veces por persona / día', mn: 0, mx: 6, st: 1, df: 3, u: 'veces', lpu: 6, ev: 3, el: 1, pp: true, tip: 'Cerrar la llave mientras te cepillas ahorra hasta 5 litros por cepillado.', th: [2, 4] },
+      { id: 'dishes', lb: 'Lavado de platos', ic: '🍽️', ds: 'veces al día (hogar)', mn: 0, mx: 6, st: 1, df: 2, u: 'veces', lpu: 15, ev: 2, el: 5, pp: false, tip: 'Llenar un recipiente reduce de 15 a 5 litros por lavada.', th: [2, 4] },
+      { id: 'laundry', lb: 'Lavadora', ic: '👕', ds: 'cargas por semana', mn: 0, mx: 14, st: 1, df: 3, u: 'cargas', lpu: 65, ev: 2, el: null, pp: false, wk: true, tip: 'Usa carga completa y programa corto. Evita lavadas parciales.', th: [3, 7] },
+      { id: 'cook', lb: 'Cocinar, beber y otros', ic: '🍳', ds: 'litros estimados / día (hogar)', mn: 2, mx: 30, st: 1, df: 8, u: 'L', lpu: 1, ev: 6, el: null, pp: false, tip: 'Reutiliza el agua de cocción de verduras para regar plantas.', th: [8, 15] },
+      { id: 'garden', lb: 'Riego de jardín / huerto', ic: '🌱', ds: 'veces por semana', mn: 0, mx: 7, st: 1, df: 0, u: 'veces', lpu: 30, ev: 0, el: 20, pp: false, wk: true, tip: 'Riega temprano o al atardecer. Usa agua reutilizada.', th: [2, 5] },
+    ];
+    const SUB_T = [{ l: 'RSH 0–40%', p: 85 }, { l: 'RSH 41–70%', p: 50 }, { l: 'RSH 71–90%', p: 25 }];
+    const SUB_MAX = 13, SUB_MAX_SSO = 15, AVG_PP = 3.8;
+    let ppl = 4;
+    let selectedTariff = null;
+    const V = {}; AC.forEach(a => V[a.id] = a.df);
+
+    // Onboarding Survey State
+    let onboardingStep = 0;
+    const onboardingAnswers = [];
+    let userProfile = null;
+
+    const ONBOARDING_QUESTIONS = [
+      {
+        q: "¿Qué te motivaría más a reducir el consumo de agua en tu hogar?",
+        options: [
+          { text: "💵 Reducir la cuenta mensual en pesos", score: { homo_economicus: 3, uninterested: 1 } },
+          { text: "🌍 Cuidar el planeta y dejar agua para el futuro", score: { stubborn: 3 } },
+          { text: "📢 Motivar a mi familia y vecinos a cuidar el agua", score: { influencer: 3 } },
+          { text: "🛡️ Evitar cobros por sobreconsumo o multas de la SISS", score: { careful: 2, fearful: 2 } }
+        ]
+      },
+      {
+        q: "¿Cómo actúas frente a las recomendaciones de ahorro?",
+        options: [
+          { text: "🚀 Me gusta probar nuevas tecnologías y dispositivos eficientes", score: { early_adopter: 3 } },
+          { text: "🌱 Prefiero consejos prácticos que no me cuesten un peso", score: { stubborn: 3 } },
+          { text: "📈 Solo me interesa si veo una baja real en el cobro de mi boleta", score: { homo_economicus: 3 } },
+          { text: "⚡ No me gusta complicarme la vida, prefiero no hacer grandes cambios", score: { uninterested: 3 } }
+        ]
+      },
+      {
+        q: "Al tomar decisiones en tu hogar, ¿qué es lo más importante para ti?",
+        options: [
+          { text: "🛡️ Tener la seguridad y el respaldo técnico de que las cosas funcionan bien", score: { fearful: 3 } },
+          { text: "🔍 Saber exactamente en qué se gasta cada peso y cada litro", score: { careful: 3 } },
+          { text: "⚡ Tener comodidad y no perder tiempo con cosas complejas", score: { uninterested: 3 } },
+          { text: "📢 Ser un referente en mi comunidad para un cambio positivo", score: { influencer: 3 } }
+        ]
+      }
+    ];
+
+    /* ══════════════════════ UTILS ══════════════════════ */
+    function gc() { return selectedTariff }
+    
+    function calculateDetailedTariff(m3) {
+      const c = selectedTariff;
+      if (!c) return { fixedCharge: 0, baseVariableCharge: 0, summerSurcharge: 0, sewerageCharge: 0, subtotal: 0, iva: 0, total: 0 };
+      
+      const fixedCharge = c.f;
+      
+      const includeSummer = document.getElementById('chkSummer') ? document.getElementById('chkSummer').checked : false;
+      const includeSewer = document.getElementById('chkSewer') ? document.getElementById('chkSewer').checked : false;
+      const includeIva = document.getElementById('chkIva') ? document.getElementById('chkIva').checked : false;
+      
+      let baseVariableCharge = 0;
+      let summerSurcharge = 0;
+      
+      if (includeSummer) {
+        if (m3 <= 40) {
+          baseVariableCharge = m3 * c.t2;
+          summerSurcharge = 0;
+        } else {
+          baseVariableCharge = 40 * c.t2;
+          summerSurcharge = (m3 - 40) * c.t3;
+        }
+      } else {
+        baseVariableCharge = m3 * c.t1;
+        summerSurcharge = 0;
+      }
+      
+      let sewerageCharge = 0;
+      if (includeSewer) {
+        sewerageCharge = m3 * c.al;
+      }
+      
+      const subtotal = fixedCharge + baseVariableCharge + summerSurcharge + sewerageCharge;
+      let iva = 0;
+      if (includeIva) {
+        iva = subtotal * 0.19;
+      }
+      
+      const total = subtotal + iva;
+      
+      return {
+        fixedCharge: Math.round(fixedCharge),
+        baseVariableCharge: Math.round(baseVariableCharge),
+        summerSurcharge: Math.round(summerSurcharge),
+        sewerageCharge: Math.round(sewerageCharge),
+        subtotal: Math.round(subtotal),
+        iva: Math.round(iva),
+        total: Math.round(total)
+      };
+    }
+    
+    function tariff(m3) {
+      return calculateDetailedTariff(m3).total;
+    }
+    
+    function aD(a, eff) { const val = eff ? a.ev : V[a.id], lit = eff && a.el !== null ? a.el : a.lpu, raw = a.wk ? (val * lit / 7) : (val * lit); return raw * (a.pp ? ppl : 1) }
+    function tD(eff) { return Math.round(AC.reduce((s, a) => s + aD(a, eff), 0)) }
+    function fm(n) { return Math.round(n).toLocaleString('es-CL') }
+    function fD(n) { return parseFloat(n.toFixed(1)) }
+    function sC(a) { const v = V[a.id]; return v <= a.th[0] ? 'g' : v <= a.th[1] ? 'y' : 'r' }
+    function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500) }
+    
+    function equivs(amt) {
+      const r = [];
+      const b = Math.round(amt / 2300), bu = Math.round(amt / 795), re = Math.round(amt / 5000);
+      if (b > 0) r.push('🍞 ' + b + ' kg de pan');
+      if (bu > 0) r.push('🚌 ' + bu + ' pasajes de micro');
+      if (re > 0) r.push('📱 ' + re + ' recarga(s) de celular');
+      return r;
+    }
+
+    /* ══════════════════════ BUILD INPUT ══════════════════════ */
+    // Helper: manages visibility of auto-info vs dropdown
+    function setCompanyDisplay(mode, label) {
+      const autoInfo = document.getElementById('companyAutoInfo');
+      const autoText = document.getElementById('companyAutoText');
+      const compCont = document.getElementById('companySelectContainer');
+      if (mode === 'auto') {
+        autoText.textContent = label || '';
+        autoInfo.style.display = 'block';
+        compCont.style.display = 'none';
+      } else if (mode === 'multi') {
+        autoInfo.style.display = 'none';
+        compCont.style.display = 'block';
+      } else {
+        autoInfo.style.display = 'none';
+        compCont.style.display = 'none';
+      }
+    }
+
+    function buildSelectors() {
+      const regSel = document.getElementById('regionSelect');
+      const comSel = document.getElementById('communeSelect');
+      const compSel = document.getElementById('companySelect');
+      
+      const presentRegions = [...new Set(TARIFF_DB.map(t => t.r))];
+      presentRegions.sort((a, b) => REGION_NAMES[a].localeCompare(REGION_NAMES[b]));
+      
+      regSel.innerHTML = presentRegions.map(r => `<option value="${r}">${REGION_NAMES[r]}</option>`).join('');
+      
+      regSel.onchange = () => {
+        const rCode = regSel.value;
+        const filtered = TARIFF_DB.filter(t => t.r === rCode);
+        
+        // Extract unique communes from all tariffs in this region
+        const communes = new Set();
+        filtered.forEach(t => {
+          if (t.m && Array.isArray(t.m)) {
+            t.m.forEach(m => communes.add(m));
+          }
+        });
+        const sortedCommunes = [...communes].sort((a, b) => a.localeCompare(b));
+        
+        comSel.innerHTML = sortedCommunes.map(c => `<option value="${c}">${c}</option>`).join('');
+        comSel.onchange();
+      };
+      
+      comSel.onchange = () => {
+        const rCode = regSel.value;
+        const cName = comSel.value;
+        
+        // Find tariffs in this region that serve this commune
+        const matchingTariffs = TARIFF_DB.filter(t => t.r === rCode && t.m && t.m.includes(cName));
+        
+        if (matchingTariffs.length === 1) {
+          // Only one matching sanitaria — show auto-info label
+          const globalIdx = TARIFF_DB.indexOf(matchingTariffs[0]);
+          compSel.innerHTML = `<option value="${globalIdx}">${matchingTariffs[0].c} — ${matchingTariffs[0].g}</option>`;
+          selectedTariff = matchingTariffs[0];
+          setCompanyDisplay('auto', `${matchingTariffs[0].c} — ${matchingTariffs[0].g}`);
+          if (document.getElementById('pageResults').classList.contains('active')) {
+            renderResults();
+          }
+        } else if (matchingTariffs.length > 1) {
+          // Multiple sanitarias/sectors serve this commune, show dropdown
+          setCompanyDisplay('multi');
+          compSel.innerHTML = matchingTariffs.map(t => `<option value="${TARIFF_DB.indexOf(t)}">${t.c} — ${t.g}</option>`).join('');
+          compSel.onchange();
+        } else {
+          // Fallback
+          setCompanyDisplay('multi');
+          const filtered = TARIFF_DB.filter(t => t.r === rCode);
+          compSel.innerHTML = filtered.map(t => `<option value="${TARIFF_DB.indexOf(t)}">${t.c} — ${t.g}</option>`).join('');
+          compSel.onchange();
+        }
+      };
+      
+      compSel.onchange = () => {
+        const globalIdx = +compSel.value;
+        selectedTariff = TARIFF_DB[globalIdx];
+        if (document.getElementById('pageResults').classList.contains('active')) {
+          renderResults();
+        }
+      };
+      
+      // Default initialization to Region Metropolitana (RM)
+      if (presentRegions.includes("RM")) {
+        regSel.value = "RM";
+      }
+      regSel.onchange();
+    }
+
+    function buildPeople() { const r = document.getElementById('peopleRow'); r.innerHTML = '';[1, 2, 3, 4, 5, 6, 7, 8].forEach(n => { const b = document.createElement('button'); b.className = 'pnum' + (n === ppl ? ' active' : ''); b.textContent = n; b.setAttribute('aria-label', n + ' personas'); b.setAttribute('aria-pressed', n === ppl); b.onclick = () => { ppl = n; buildPeople() }; r.appendChild(b) }) }
+
+    function buildActs() {
+      const l = document.getElementById('activityList'); l.innerHTML = ''; AC.forEach(a => {
+        const v = V[a.id], row = document.createElement('div'); row.className = 'act-row';
+        row.innerHTML = `<div class="semaphore ${sC(a)}"></div><div class="act-info"><div class="act-name">${a.ic} ${a.lb} <span class="tag ${a.pp ? 'tag-p' : 'tag-h'}">${a.pp ? '× persona' : 'hogar'}</span></div><div class="act-desc">${a.ds}</div></div><div class="act-ctrl"><button class="pm-btn" aria-label="Disminuir ${a.lb}" data-id="${a.id}" data-d="-1">−</button><input type="range" min="${a.mn}" max="${a.mx}" step="${a.st}" value="${v}" id="sl_${a.id}" aria-label="${a.lb}"><button class="pm-btn" aria-label="Aumentar ${a.lb}" data-id="${a.id}" data-d="1">+</button><div class="act-val" id="vl_${a.id}">${v} ${a.u}</div></div>`; l.appendChild(row);
+        const sl = document.getElementById('sl_' + a.id);
+        sl.oninput = e => {
+          const oldColor = sC(a); V[a.id] = +e.target.value;
+          document.getElementById('vl_' + a.id).textContent = e.target.value + ' ' + a.u;
+          const newColor = sC(a); const sem = row.querySelector('.semaphore');
+          sem.className = 'semaphore ' + newColor;
+          if (oldColor !== newColor) { sem.classList.add('pulse'); setTimeout(() => sem.classList.remove('pulse'), 300); }
+        };
+        row.querySelectorAll('.pm-btn').forEach(b => b.onclick = () => {
+          const oldColor = sC(a);
+          const d = +b.dataset.d, nv = Math.max(a.mn, Math.min(a.mx, V[a.id] + d * a.st));
+          V[a.id] = nv; sl.value = nv;
+          document.getElementById('vl_' + a.id).textContent = nv + ' ' + a.u;
+          const newColor = sC(a); const sem = row.querySelector('.semaphore');
+          sem.className = 'semaphore ' + newColor;
+          if (oldColor !== newColor) { sem.classList.add('pulse'); setTimeout(() => sem.classList.remove('pulse'), 300); }
+        })
+      })
+    }
+
+    /* ══════════════════════ CAROUSEL ENGINE ══════════════════════ */
+    const TOTAL_PANELS = 5;
+    let currentPanel = 0;
+    let prevPanel = -1;
+
+    function updateCarousel() {
+      document.getElementById('carouselCounter').textContent = `${currentPanel + 1} / ${TOTAL_PANELS}`;
+      document.getElementById('progressFill').style.width = `${((currentPanel + 1) / TOTAL_PANELS) * 100}%`;
+      document.getElementById('btnPrev').disabled = currentPanel === 0;
+      document.getElementById('btnNext').disabled = currentPanel === TOTAL_PANELS - 1;
+
+      document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentPanel);
+      });
+
+      const panels = document.querySelectorAll('.panel');
+      panels.forEach((p, i) => {
+        p.classList.remove('active', 'slide-left');
+        if (i === currentPanel) {
+          p.classList.add('active');
+        } else if (i < currentPanel) {
+          p.classList.add('slide-left');
+        }
+      });
+      prevPanel = currentPanel;
+
+      const wrapper = document.querySelector('.carousel-wrapper');
+      if (wrapper) {
+        const top = wrapper.getBoundingClientRect().top + window.scrollY - 16;
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+      }
+    }
+
+    function carouselNext() {
+      if (currentPanel < TOTAL_PANELS - 1) { currentPanel++; updateCarousel(); }
+    }
+
+    function carouselPrev() {
+      if (currentPanel > 0) { currentPanel--; updateCarousel(); }
+    }
+
+    function carouselGoTo(idx) {
+      currentPanel = idx; updateCarousel();
+    }
+
+    function buildDots() {
+      const container = document.getElementById('carouselDots');
+      container.innerHTML = '';
+      for (let i = 0; i < TOTAL_PANELS; i++) {
+        const dot = document.createElement('button');
+        dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', `Panel ${i + 1}`);
+        dot.onclick = () => carouselGoTo(i);
+        container.appendChild(dot);
+      }
+    }
+
+    function setupSwipe() {
+      const viewport = document.getElementById('carouselViewport');
+      let startX = 0, startY = 0, isDragging = false;
+
+      viewport.addEventListener('touchstart', e => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        isDragging = true;
+      }, { passive: true });
+
+      viewport.addEventListener('touchend', e => {
+        if (!isDragging) return;
+        isDragging = false;
+        const endX = e.changedTouches[0].clientX;
+        const endY = e.changedTouches[0].clientY;
+        const diffX = startX - endX;
+        const diffY = startY - endY;
+
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+          if (diffX > 0) carouselNext();
+          else carouselPrev();
+        }
+      }, { passive: true });
+    }
+
+    document.addEventListener('keydown', e => {
+      if (!document.getElementById('pageResults').classList.contains('active')) return;
+      if (e.key === 'ArrowRight') carouselNext();
+      if (e.key === 'ArrowLeft') carouselPrev();
+    });
+
+    /* ══════════════════════ NAV ══════════════════════ */
+    function showResults() {
+      document.getElementById('pageInput').classList.remove('active');
+      document.getElementById('pageResults').classList.add('active');
+      document.getElementById('heroSection').style.display = 'none';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      currentPanel = 0;
+      prevPanel = -1;
+      buildDots();
+      setupSwipe();
+      renderResults();
+      updateCarousel();
+    }
+
+    function goBack() {
+      document.getElementById('pageResults').classList.remove('active');
+      document.getElementById('pageInput').classList.add('active');
+      document.getElementById('heroSection').style.display = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ══════════════════════ ONBOARDING LOGIC ══════════════════════ */
+    function startOnboarding() {
+      onboardingStep = 0;
+      onboardingAnswers.length = 0;
+      document.getElementById('pageOnboarding').classList.add('active');
+      document.getElementById('pageInput').classList.remove('active');
+      document.getElementById('pageResults').classList.remove('active');
+      document.getElementById('heroSection').style.display = 'none';
+      renderOnboardingQuestion();
+    }
+
+    function renderOnboardingQuestion() {
+      const qContainer = document.getElementById('onboardingQuestionContainer');
+      const qData = ONBOARDING_QUESTIONS[onboardingStep];
+      
+      const progressFill = document.getElementById('onboardingProgress');
+      const pct = ((onboardingStep + 1) / ONBOARDING_QUESTIONS.length) * 100;
+      progressFill.style.width = `${pct}%`;
+      
+      document.getElementById('btnOnboardingPrev').style.visibility = onboardingStep === 0 ? 'hidden' : 'visible';
+      
+      const nextBtn = document.getElementById('btnOnboardingNext');
+      if (onboardingStep === ONBOARDING_QUESTIONS.length - 1) {
+        nextBtn.textContent = 'Finalizar 🎉';
+      } else {
+        nextBtn.textContent = 'Siguiente →';
+      }
+      
+      let html = `
+        <div style="font-size: 16px; font-weight: 800; color: var(--gray-800); margin-bottom: 1rem;">
+          ${qData.q}
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+      `;
+      
+      qData.options.forEach((opt, idx) => {
+        const isSelected = onboardingAnswers[onboardingStep] === idx;
+        html += `
+          <button class="onboarding-btn-opt ${isSelected ? 'selected' : ''}" onclick="selectOnboardingOption(${idx})">
+            ${opt.text}
+          </button>
+        `;
+      });
+      
+      html += `</div>`;
+      qContainer.innerHTML = html;
+    }
+
+    function selectOnboardingOption(optIdx) {
+      onboardingAnswers[onboardingStep] = optIdx;
+      renderOnboardingQuestion();
+    }
+
+    function onboardingPrev() {
+      if (onboardingStep > 0) {
+        onboardingStep--;
+        renderOnboardingQuestion();
+      }
+    }
+
+    function onboardingNext() {
+      if (onboardingAnswers[onboardingStep] === undefined) {
+        toast('⚠️ Por favor selecciona una opción.');
+        return;
+      }
+      
+      if (onboardingStep < ONBOARDING_QUESTIONS.length - 1) {
+        onboardingStep++;
+        renderOnboardingQuestion();
+      } else {
+        finishOnboarding();
+      }
+    }
+
+    function skipOnboarding() {
+      userProfile = 'uninterested';
+      localStorage.setItem('cta_profile', userProfile);
+      applyProfileUI(userProfile);
+      closeOnboarding();
+    }
+
+    function finishOnboarding() {
+      const scores = {
+        fearful: 0,
+        stubborn: 0,
+        homo_economicus: 0,
+        influencer: 0,
+        careful: 0,
+        early_adopter: 0,
+        uninterested: 0
+      };
+      
+      onboardingAnswers.forEach((optIdx, qIdx) => {
+        const opt = ONBOARDING_QUESTIONS[qIdx].options[optIdx];
+        if (opt && opt.score) {
+          for (const [prof, points] of Object.entries(opt.score)) {
+            scores[prof] = (scores[prof] || 0) + points;
+          }
+        }
+      });
+      
+      let maxScore = -1;
+      let maxProf = 'uninterested';
+      for (const [prof, score] of Object.entries(scores)) {
+        if (score > maxScore) {
+          maxScore = score;
+          maxProf = prof;
+        }
+      }
+      
+      userProfile = maxProf;
+      localStorage.setItem('cta_profile', userProfile);
+      applyProfileUI(userProfile);
+      closeOnboarding();
+      toast(`✨ Perfil: ${PROFILES[userProfile].name}`);
+    }
+
+    function closeOnboarding() {
+      document.getElementById('pageOnboarding').classList.remove('active');
+      document.getElementById('pageInput').classList.add('active');
+      document.getElementById('heroSection').style.display = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function applyProfileUI(profile) {
+      if (!profile || !PROFILES[profile]) return;
+      
+      const badgeContainer = document.getElementById('profileBadgeContainer');
+      const noticeContainer = document.getElementById('profileNoticeContainer');
+      const prof = PROFILES[profile];
+      
+      document.body.className = document.body.className.replace(/\bp-\w+\b/g, '');
+      document.body.classList.add(`p-${profile}`);
+      
+      badgeContainer.style.display = 'block';
+      badgeContainer.innerHTML = `
+        <div class="profile-badge ${prof.badgeClass}">
+          <span>${prof.emoji}</span>
+          <span>Perfil: ${prof.name}</span>
+          <button onclick="localStorage.removeItem('cta_profile'); startOnboarding();" style="background: none; border: none; font-size: 11px; text-decoration: underline; cursor: pointer; color: inherit; margin-left: 8px;">(Cambiar)</button>
+        </div>
+      `;
+      
+      let noticeHtml = '';
+      if (profile === 'fearful') {
+        noticeHtml = `
+          <div style="background: #fee2e2; border: 1.5px solid #fca5a5; color: #991b1b; border-radius: var(--r); padding: 12px; margin-bottom: 1rem; font-size: 13.5px; line-height: 1.5;">
+            🛡️ <strong>Nota de Seguridad:</strong> Tus datos de consumo se procesan localmente. No los enviamos a ningún servidor. Las tarifas se basan en resoluciones oficiales vigentes de la SISS.
+          </div>
+        `;
+      } else if (profile === 'careful') {
+        noticeHtml = `
+          <div style="background: #f3e8ff; border: 1.5px solid #d8b4fe; color: #6b21a8; border-radius: var(--r); padding: 12px; margin-bottom: 1rem; font-size: 13.5px; line-height: 1.5;">
+            🔍 <strong>Transparencia:</strong> Los cálculos usan las tarifas vigentes oficiales de la SISS. Haz clic en "Ver Fórmulas" en los resultados para revisar el desglose matemático.
+          </div>
+        `;
+      }
+      noticeContainer.innerHTML = noticeHtml;
+    }
+
+    /* ══════════════════════ RENDER RESULTS ══════════════════════ */
+    function renderResults() {
+      const ld = tD(false), m3 = fD(ld * 30 / 1000), cost = tariff(m3);
+      const le = tD(true), m3e = fD(le * 30 / 1000), ce = tariff(m3e);
+      const save = Math.max(0, cost - ce), sY = save * 12, m3s = fD(Math.max(0, m3 - m3e)), c = gc();
+
+      // ── PANEL 1: Tu Consumo ──
+      let cls = m3 <= 15 ? 'blue' : m3 <= 30 ? 'amber' : 'red';
+      
+      const includeSewer = document.getElementById('chkSewer').checked;
+      const includeIva = document.getElementById('chkIva').checked;
+      const includeSummer = document.getElementById('chkSummer').checked;
+      const det = calculateDetailedTariff(m3);
+
+      let tramoLbl = '';
+      let pct = 0;
+      let trackHtml = '';
+      
+      if (includeSummer) {
+        if (m3 > 40) {
+          tramoLbl = `Sobreconsumo de Verano (${m3.toFixed(1)} m³ > 40 m³)`;
+          pct = 100;
+          cls = 'red';
+        } else {
+          tramoLbl = `Tarifa Punta Base (${m3.toFixed(1)} m³ ≤ 40 m³)`;
+          pct = (m3 / 40) * 66;
+          cls = m3 <= 15 ? 'blue' : 'amber';
+        }
+        trackHtml = `
+          <div style="font-size:13px;font-weight:700;color:var(--gray-700);margin-bottom:4px">📶 ${tramoLbl}</div>
+          <div class="tramo-track" style="background: linear-gradient(90deg, var(--pri-200) 0%, var(--pri-200) 66%, #FECACA 66%) !important;"><div class="tramo-dot" style="left:${pct}%"></div></div>
+          <div class="tramo-lbls"><span>Punta Base ($${fm(c.t2)}/m³)</span><span style="font-weight:700;color:var(--gray-700)">Límite: 40 m³</span><span>Sobreconsumo ($${fm(c.t3)}/m³)</span></div>
+        `;
+      } else {
+        tramoLbl = `Período Normal (No Punta)`;
+        pct = Math.min(100, (m3 / 30) * 100);
+        cls = m3 <= 15 ? 'blue' : m3 <= 30 ? 'amber' : 'red';
+        trackHtml = `
+          <div style="font-size:13px;font-weight:700;color:var(--gray-700);margin-bottom:4px">📶 ${tramoLbl}</div>
+          <div class="tramo-track" style="background: var(--pri-200) !important;"><div class="tramo-dot" style="left:${pct}%"></div></div>
+          <div class="tramo-lbls"><span>Consumo bajo</span><span style="font-weight:700;color:var(--gray-700)">Cargo único: $${fm(c.t1)}/m³</span><span>Consumo alto</span></div>
+        `;
+      }
+
+      let carefulMetodologiaBtn = '';
+      if (userProfile === 'careful') {
+        carefulMetodologiaBtn = `
+          <div style="margin-top: 12px; text-align: center;">
+            <button onclick="showFormulaModal()" class="carousel-back" style="font-size: 12.5px; padding: 8px 14px; width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: 1.5px solid var(--border); border-radius: var(--r); background: var(--card); font-weight: 700; color: var(--gray-700);">🔍 Ver Fórmulas y Metodología de Cálculo</button>
+          </div>
+        `;
+      }
+
+      document.getElementById('panelConsumo').innerHTML = `
+        <div class="p-stats">
+          <div class="p-stat"><div class="label">Litros / día</div><div class="value">${fm(ld)}<span class="unit">L</span></div></div>
+          <div class="p-stat"><div class="label"><span class="tt-wrap">M³ / mes<span class="tt-box">Un metro cúbico (m³) = 1.000 litros ≈ 66 baldes de 15L</span></span></div><div class="value">${m3.toFixed(1)}<span class="unit">m³</span></div></div>
+          <div class="p-stat ${cls}"><div class="label">Costo mensual</div><div class="value">$${fm(det.total)}</div></div>
+        </div>
+        
+        <div style="background:var(--gray-50);border-radius:var(--r);padding:1rem;border:1px solid var(--gray-100);margin-bottom:1rem">
+          ${trackHtml}
+        </div>
+
+        <div style="background: var(--card); border: 1.5px solid var(--border); border-radius: var(--r); padding: 1.25rem; box-shadow: var(--sh);">
+          <div style="font-size: 14px; font-weight: 800; color: var(--pri-dark); border-bottom: 1.5px solid var(--border); padding-bottom: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+            <span>🧾 DETALLE DE LA BOLETA</span>
+            <span style="font-size: 11px; background: var(--pri-50); color: var(--pri); padding: 3px 8px; border-radius: 12px; font-weight: 700;">Simulado</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13.5px; color: var(--gray-700);">
+            <div style="display: flex; justify-content: space-between;">
+              <span>Cargo Fijo</span>
+              <span style="font-weight: 600;">$${fm(det.fixedCharge)}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span>Consumo Agua Potable (${m3.toFixed(1)} m³)</span>
+              <span style="font-weight: 600;">$${fm(det.baseVariableCharge)}</span>
+            </div>
+            
+            ${includeSummer ? `
+            <div style="display: flex; justify-content: space-between; ${det.summerSurcharge > 0 ? 'color: var(--accent-dark); font-weight: 600;' : ''}">
+              <span>Sobreconsumo de Verano (${Math.max(0, m3 - 40).toFixed(1)} m³)</span>
+              <span>$${fm(det.summerSurcharge)}</span>
+            </div>` : ''}
+            
+            ${includeSewer ? `
+            <div style="display: flex; justify-content: space-between;">
+              <span>Servicio Alcantarillado ($${fm(c.al)}/m³)</span>
+              <span style="font-weight: 600;">$${fm(det.sewerageCharge)}</span>
+            </div>` : ''}
+            
+            ${includeIva ? `
+            <div style="display: flex; justify-content: space-between; border-top: 1px dashed var(--gray-200); padding-top: 8px; margin-top: 4px;">
+              <span>Subtotal Neto</span>
+              <span style="font-weight: 600;">$${fm(det.subtotal)}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span>IVA (19%)</span>
+              <span style="font-weight: 600;">$${fm(det.iva)}</span>
+            </div>` : ''}
+            
+            <div style="display: flex; justify-content: space-between; border-top: 2px solid var(--pri); padding-top: 10px; margin-top: 6px; font-size: 16px; font-weight: 900; color: var(--gray-900);">
+              <span>TOTAL A PAGAR</span>
+              <span style="color: var(--pri-dark); font-weight: 900;">$${fm(det.total)}</span>
+            </div>
+          </div>
+        </div>
+        ${carefulMetodologiaBtn}`;
+
+      // ── PANEL 2: Comparación ──
+      const avg = fD(AVG_PP * ppl), mxB = Math.max(m3, avg, 30) * 1.2;
+      const uP = Math.min(100, m3 / mxB * 100), aP = Math.min(100, avg / mxB * 100);
+      const dif = m3 - avg;
+      const difEmoji = dif > 0 ? '⚠️' : '✅';
+      const difColor = dif > 0 ? 'var(--red)' : 'var(--green)';
+      const difText = dif > 0 ? `Consumes <strong>${fD(Math.abs(dif))} m³ más</strong> que el promedio` : `Consumes <strong>${fD(Math.abs(dif))} m³ menos</strong> que el promedio`;
+
+      document.getElementById('panelCompara').innerHTML = `
+        <div style="text-align:center;padding:1rem 0">
+          <div style="font-size:60px;margin-bottom:4px">${difEmoji}</div>
+          <div style="font-size:18px;font-weight:800;color:${difColor};line-height:1.4">${difText}</div>
+          <div style="font-size:13px;color:var(--gray-400);margin-top:4px">Promedio para ${ppl} personas: ${avg} m³/mes</div>
+        </div>
+        <div class="avg-bar-track">
+          <div class="avg-fill" style="width:${uP}%;background:${difColor}"></div>
+          <div class="avg-pin" style="left:${aP}%"><div class="avg-pin-lbl">Promedio ${avg} m³</div></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--gray-400)">
+          <span>Tu consumo: ${m3.toFixed(1)} m³</span>
+          <span>Promedio: ${avg} m³</span>
+        </div>
+        <div style="margin-top:1.25rem;overflow:auto;border-radius:var(--r);border:1px solid var(--gray-100)">
+          <table class="cmp-tbl">${buildCmpTable()}</table>
+        </div>`;
+
+      // ── PANEL 3: Subsidios ──
+      const sCostStd = tariff(Math.min(m3, SUB_MAX));
+      const sh = SUB_T.map(t => `<div class="sub-stat"><div class="sl">${t.l} (${t.p}%)</div><div class="sv">−$${fm(Math.round(sCostStd * t.p / 100))}/mes</div></div>`).join('');
+      const oS = m3 > SUB_MAX, oSSO = m3 > SUB_MAX_SSO;
+      let subAlert = '';
+      if (oSSO) subAlert = `<div class="sub-alert danger">⚠️ <strong>Tu consumo (${m3.toFixed(1)} m³) supera los ${SUB_MAX_SSO} m³</strong> (tope máximo Chile Seguridades). Los ${fD(m3 - SUB_MAX_SSO)} m³ extra se cobran a tarifa completa.</div>`;
+      else if (oS) subAlert = `<div class="sub-alert warn">⚠️ <strong>Tu consumo (${m3.toFixed(1)} m³) supera los ${SUB_MAX} m³ del SAP.</strong> Con Chile Seguridades, tu tope es ${SUB_MAX_SSO} m³.</div>`;
+      else subAlert = `<div class="sub-alert ok">✅ Tu consumo (${m3.toFixed(1)} m³) está dentro del límite de ${SUB_MAX} m³ subsidiables.</div>`;
+
+      document.getElementById('panelSubsidio').innerHTML = `
+        <p style="font-size:14px;color:var(--gray-600);line-height:1.7;margin-bottom:1rem">Si tu hogar está en el <strong>Registro Social de Hogares (RSH)</strong>, puedes recibir un descuento en tu boleta. El SAP cubre hasta <strong>${SUB_MAX} m³/mes</strong>.</p>
+        <div class="sub-grid">${sh}
+          <div class="sub-stat"><div class="sl">Tu costo sin subsidio</div><div class="sv">$${fm(cost)}/mes</div></div>
+        </div>
+        ${subAlert}
+        <div style="margin-top:1rem">
+          ${buildPrograms()}
+        </div>`;
+
+      // ── PANEL 4: Ahorro ──
+      const eq = equivs(sY);
+      
+      let econStyle = '';
+      if (userProfile === 'homo_economicus') {
+        econStyle = 'border: 2px solid var(--accent); box-shadow: var(--sh-md), 0 0 16px rgba(245, 158, 11, 0.25);';
+      }
+
+      document.getElementById('panelAhorro').innerHTML = `
+        <div class="p-stats">
+          <div class="p-stat"><div class="label">Litros/día eficiente</div><div class="value">${fm(le)}<span class="unit">L</span></div></div>
+          <div class="p-stat"><div class="label">M³/mes eficiente</div><div class="value">${m3e.toFixed(1)}<span class="unit">m³</span></div></div>
+          <div class="p-stat green"><div class="label">Ahorro mensual</div><div class="value">$${fm(save)}</div></div>
+        </div>
+        <div class="save-hero" style="${econStyle}">
+          <div><div class="sh-lbl">Ahorro anual</div><div class="sh-val">$${fm(sY)} CLP</div>${eq.length ? `<div class="sh-extra">${eq.join(' · ')}</div>` : ''}</div>
+          <div><div class="sh-lbl">Agua ahorrada al año</div><div class="sh-val">${(m3s * 12).toFixed(1)} m³</div><div class="sh-extra">💧 ${fm(Math.round(m3s * 12 * 1000))} litros menos</div></div>
+          <div><div class="sh-lbl">En 5 años ahorras</div><div class="sh-val">$${fm(sY * 5)} CLP</div></div>
+        </div>`;
+
+      // ── PANEL 5: Consejos + Compartir ──
+      const smartTips = generateSmartTips(m3, m3e, cost, ce, save, sY, c);
+      let tipsHTML = '';
+      if (!smartTips.length) {
+        tipsHTML = '<div class="tip"><div class="tip-ico">🎉</div><p><strong>¡Excelente!</strong> Tus hábitos ya son muy eficientes. ¡Sigue así!</p></div>';
+      } else {
+        smartTips.forEach(t => {
+          const badge = t.save > 0 ? `<span class="tip-badge">Ahorra ${fm(t.save)} L/mes</span>` : '';
+          tipsHTML += `<div class="tip"><div class="tip-ico">${t.ico}</div><p><strong>${t.title}:</strong> ${t.text}${badge}</p></div>`;
+        });
+      }
+
+      let influencerShareText = '';
+      if (userProfile === 'influencer') {
+        influencerShareText = `<p style="font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 8px; text-align: center;">📢 ¡Felicidades! Lideras el ahorro de agua. Comparte tus resultados e invita a tu comunidad.</p>`;
+      }
+
+      let earlyPilotHtml = '';
+      if (userProfile === 'early_adopter') {
+        earlyPilotHtml = `
+          <div style="background: var(--green-50); border: 1.5px solid var(--green-light); border-radius: var(--r); padding: 12px; margin-top: 1rem; text-align: center; font-size: 12.5px; color: #065F46;">
+            <strong>🚀 Plan Piloto de Ahorro Tecnológico</strong>
+            <div style="margin: 4px 0 8px; line-height: 1.4;">Prueba gratis un medidor inteligente digital de flujo en tu hogar. Cupos limitados.</div>
+            <button onclick="toast('🚀 ¡Gracias! Te has inscrito en el plan piloto para early adopters.')" class="carousel-next" style="padding: 6px 14px; min-height: 32px; font-size: 11px; margin: 0; width: auto; display: inline-flex;">Inscribirse en el piloto</button>
+          </div>
+        `;
+      }
+
+      let uninterestedToggle = '';
+      if (userProfile === 'uninterested') {
+        uninterestedToggle = `
+          <div style="background: var(--gray-50); border: 1px solid var(--border); border-radius: var(--r); padding: 12px; margin-bottom: 1rem; text-align: center;">
+            <p style="font-size: 12.5px; font-weight: 600; color: var(--gray-600); margin-bottom: 8px;">⚡ ¿Prefieres ver solo un resumen rápido?</p>
+            <button onclick="toggleSimpleView()" class="carousel-back" style="padding: 6px 14px; min-height: 32px; font-size: 12px; width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: 1.5px solid var(--border); border-radius: var(--r); background: var(--card);">Ver resumen simple</button>
+          </div>
+        `;
+      }
+
+      document.getElementById('panelConsejos').innerHTML = `
+        ${uninterestedToggle}
+        <div id="tipsContentArea" style="margin-bottom:1.5rem">${tipsHTML}</div>
+        <div class="share-section">
+          ${influencerShareText}
+          <div class="share-main-buttons">
+            <button class="share-btn-big" onclick="shareWA()">📲 Compartir por WhatsApp</button>
+            <button class="share-btn-big print-btn-big" onclick="window.print()">📄 Descargar Reporte (PDF/Imprimir)</button>
+          </div>
+          <div class="share-secondary">
+            <button onclick="saveScen()">💾 Guardar</button>
+            <button onclick="loadScen()">📂 Cargar</button>
+            <button onclick="resetAll()">🔄 Restablecer</button>
+          </div>
+        </div>
+        ${earlyPilotHtml}`;
+    }
+
+    function toggleSimpleView() {
+      const ld = tD(false), m3 = fD(ld * 30 / 1000), cost = tariff(m3);
+      const le = tD(true), m3e = fD(le * 30 / 1000), ce = tariff(m3e);
+      const save = Math.max(0, cost - ce), sY = save * 12;
+      
+      const html = `
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <div style="font-size: 40px; margin-bottom: 6px;">⚡</div>
+          <div style="font-size: 20px; font-weight: 900; color: var(--pri-dark); line-height: 1.3;">Resumen de tu Ahorro</div>
+        </div>
+        <div style="background: var(--pri-50); border: 1.5px solid var(--border); border-radius: var(--r); padding: 1.25rem; margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: 10px; text-align: center;">
+          <div>
+            <div style="font-size: 11px; font-weight: 700; color: var(--pri); text-transform: uppercase;">Costo mensual actual</div>
+            <div style="font-size: 28px; font-weight: 900; color: var(--pri-dark);">$${fm(cost)}</div>
+          </div>
+          <div style="border-top: 1px dashed var(--border); padding-top: 10px;">
+            <div style="font-size: 11px; font-weight: 700; color: var(--green); text-transform: uppercase;">Costo mensual eficiente</div>
+            <div style="font-size: 28px; font-weight: 900; color: var(--green);">$${fm(ce)}</div>
+          </div>
+          <div style="border-top: 1px dashed var(--border); padding-top: 10px; background: var(--green-50); border-radius: 12px; padding: 10px;">
+            <div style="font-size: 11px; font-weight: 700; color: var(--green-light); text-transform: uppercase;">Ahorro potencial al año</div>
+            <div style="font-size: 26px; font-weight: 900; color: #065F46;">$${fm(sY)}</div>
+          </div>
+        </div>
+        <div class="share-section" style="padding: 0;">
+          <button class="share-btn-big" onclick="shareWA()" style="width: 100%; justify-content: center;">📲 Compartir por WhatsApp</button>
+          <button onclick="renderResults()" class="carousel-back" style="width: 100%; justify-content: center; margin-top: 10px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: 1.5px solid var(--border); border-radius: var(--r); background: var(--card);">← Volver al detalle</button>
+        </div>
+      `;
+      
+      document.getElementById('panelConsejos').innerHTML = html;
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       MOTOR DE CONSEJOS CONTEXTUALES
+       ══════════════════════════════════════════════════════════ */
+    function generateSmartTips(m3, m3e, cost, ce, save, sY, company) {
+      const tips = [];
+      const tramo = m3 > 40 ? 3 : 1;
+
+      function actSave(a) { return Math.round((aD(a, false) - aD(a, true)) * 30); }
+      function actDaily(a) { return Math.round(aD(a, false)); }
+
+      // Ducha
+      const sv = V.shower, shSave = actSave(AC[0]), shDaily = actDaily(AC[0]);
+      if (sv >= 15) {
+        tips.push({ ico: '🚿', title: 'Ducha — Nivel crítico', text: `Con ${sv} minutos de ducha, cada persona usa ${sv * 10} litros. Intenta poner una alarma de 7 minutos e ir bajando poco a poco.`, save: shSave, priority: 10 });
+      } else if (sv >= 10) {
+        tips.push({ ico: '🚿', title: 'Ducha — Reducir tiempo', text: `${sv} minutos de ducha × ${ppl} personas = ${fm(shDaily)} litros/día solo en duchas. Pon una canción corta (5 min) como temporizador.`, save: shSave, priority: 8 });
+      } else if (sv >= 7) {
+        tips.push({ ico: '🚿', title: 'Ducha — Casi ideal', text: `Vas bien con ${sv} minutos, pero bajar a 5 ahorraría ${fm(shSave)} litros al mes. Tip: cierra la llave mientras te enjabonas.`, save: shSave, priority: 5 });
+      } else if (sv > 5) {
+        tips.push({ ico: '🚿', title: 'Ducha — Buen hábito', text: `${sv} minutos está muy cerca del ideal. Cerrar la llave al enjabonarte te lleva a los 5 min recomendados.`, save: shSave, priority: 3 });
+      }
+      if (sv >= 8 && ppl >= 5) {
+        tips.push({ ico: '👨‍👩‍👧‍👦', title: 'Familia grande + ducha', text: `Con ${ppl} personas duchándose ${sv} min, la ducha consume ${fm(shDaily)} L/día (${Math.round(shDaily / tD(false) * 100)}% de tu consumo total). Reducir 2 minutos por persona sumará un gran ahorro familiar.`, save: 0, priority: 6 });
+      }
+
+      // WC
+      const wc = V.toilet, wcSave = actSave(AC[1]);
+      if (wc >= 8) {
+        tips.push({ ico: '🚽', title: 'WC — Alto uso', text: `${wc} descargas diarias por persona es alto. Un WC con doble descarga (3L/6L) reduce el consumo a la mitad.`, save: wcSave, priority: 7 });
+      } else if (wc >= 6) {
+        tips.push({ ico: '🚽', title: 'WC — Descarga eficiente', text: `Si tu WC es antiguo, considera instalar un kit de doble botón. Cuesta ~$5.000 y se ahorra desde el primer mes.`, save: wcSave, priority: 5 });
+      } else if (wcSave > 0) {
+        tips.push({ ico: '🚽', title: 'WC — Optimizar descarga', text: `Coloca una botella de 1.5L llena de agua dentro del estanque. Cada descarga usará menos agua sin afectar el funcionamiento.`, save: wcSave, priority: 3 });
+      }
+
+      // Cepillado
+      const tth = V.teeth, tthSave = actSave(AC[2]);
+      if (tth >= 4) {
+        tips.push({ ico: '🪥', title: 'Cepillado — Llave abierta', text: `Si dejas la llave abierta al cepillarte, gastas ~6 litros por vez. Con ${tth} cepillados × ${ppl} personas = ${fm(tth * 6 * ppl)} L/día desperdiciados. Usa un vaso.`, save: tthSave, priority: 6 });
+      } else if (tth >= 2 && tthSave > 0) {
+        tips.push({ ico: '🪥', title: 'Cepillado — Cerrar la llave', text: `Cerrar la llave mientras te cepillas ahorra ${fm(Math.round(tthSave / ppl))} litros al mes por persona.`, save: tthSave, priority: 4 });
+      }
+
+      // Lavado Platos
+      const dsh = V.dishes, dshSave = actSave(AC[3]);
+      if (dsh >= 4) {
+        tips.push({ ico: '🍽️', title: 'Platos — Muchas lavadas', text: `${dsh} lavadas al día con llave abierta usa ${dsh * 15} litros. Junta la loza y lávala 1-2 veces usando un recipiente con agua.`, save: dshSave, priority: 6 });
+      } else if (dsh >= 2 && dshSave > 0) {
+        tips.push({ ico: '🍽️', title: 'Platos — Usar recipiente', text: `Llenar un lavaplatos o recipiente en vez de usar la llave corriendo reduce de 15 a 5 litros por lavada.`, save: dshSave, priority: 4 });
+      }
+
+      // Lavadora
+      const lnd = V.laundry, lndSave = actSave(AC[4]);
+      if (lnd >= 7) {
+        tips.push({ ico: '👕', title: 'Lavadora — Demasiadas cargas', text: `${lnd} cargas por semana es mucho. Cada carga usa ~65 litros. Acumula ropa y lava con carga completa.`, save: lndSave, priority: 7 });
+      } else if (lnd >= 4) {
+        tips.push({ ico: '👕', title: 'Lavadora — Optimizar cargas', text: `Con ${lnd} cargas semanales, asegúrate de llenar la lavadora completa. Una carga completa gasta lo mismo que una a medias.`, save: lndSave, priority: 5 });
+      }
+
+      // Cocina
+      const ck = V.cook, ckSave = actSave(AC[5]);
+      if (ck >= 15) {
+        tips.push({ ico: '🍳', title: 'Cocina — Consumo alto', text: `${ck} litros en cocina es elevado. Tip: lava frutas y verduras en un bowl, no bajo el chorro.`, save: ckSave, priority: 5 });
+      } else if (ck >= 8 && ckSave > 0) {
+        tips.push({ ico: '🍳', title: 'Cocina — Reutilizar agua', text: `El agua donde herviste verduras, huevos o papas sirve para regar plantas (una vez fría).`, save: ckSave, priority: 3 });
+      }
+
+      // Riego
+      const grd = V.garden, grdSave = actSave(AC[6]);
+      if (grd >= 5) {
+        tips.push({ ico: '🌱', title: 'Riego — Muy frecuente', text: `Regar ${grd} veces por semana es excesivo. Riega solo 2-3 veces, temprano o al atardecer para evitar evaporación.`, save: grdSave, priority: 7 });
+      } else if (grd >= 3) {
+        tips.push({ ico: '🌱', title: 'Riego — Reutiliza agua', text: `Usa el agua del lavado de verduras, del enjuague de ropa, o la recolectada mientras esperas que salga el agua caliente de la ducha.`, save: grdSave, priority: 5 });
+      }
+
+      // Combos
+      if (sv >= 8 && tth >= 3 && dsh >= 2) {
+        tips.push({ ico: '🔄', title: 'Baño + cocina juntos', text: `Tu baño y cocina suman ${fm(shDaily + actDaily(AC[2]) + actDaily(AC[3]))} L/día. Si cierras la llave en ambos, ahorrarías ${fm(shSave + tthSave + dshSave)} L/mes.`, save: 0, priority: 7 });
+      }
+
+      // Summer Surcharge / Tariff Surcharge
+      const includeSummer = document.getElementById('chkSummer') ? document.getElementById('chkSummer').checked : false;
+      if (includeSummer && m3 > 40) {
+        const summerExcess = fD(m3 - 40);
+        const summerCost = Math.round(summerExcess * (company.t3 - company.t2));
+        tips.push({
+          ico: '☀️',
+          title: 'Evitar Recargo de Verano',
+          text: `Estás sobrepasando el límite de 40 m³ por ${summerExcess} m³, lo que te genera un sobrecosto de sobreconsumo de $${fm(summerCost)}. Reducir a menos de 40 m³ te evitará este recargo.`,
+          save: 0,
+          priority: 12
+        });
+      }
+
+      // Subsidios
+      if (m3 > SUB_MAX_SSO) {
+        tips.push({ ico: '🏛️', title: 'Sobre el tope de subsidio', text: `Tu consumo (${m3.toFixed(1)} m³) supera los ${SUB_MAX_SSO} m³ del subsidio. Si llegas a ${SUB_MAX_SSO} m³ o menos, podrías recibir un descuento de hasta el 85%.`, save: 0, priority: 9 });
+      } else if (m3 <= SUB_MAX && m3 >= 10) {
+        tips.push({ ico: '✅', title: 'Apto para subsidio', text: `Con ${m3.toFixed(1)} m³ estás dentro del límite subsidiable. Si estás en el RSH (Registro Social de Hogares), ¡postula en tu municipio!`, save: 0, priority: 6 });
+      }
+
+      // Family size
+      if (ppl >= 6) {
+        const ppd = Math.round(tD(false) / ppl);
+        tips.push({ ico: '👨', title: 'Familia numerosa', text: `Con ${ppl} personas, cada una consume ~${ppd} litros/día. Involucra a toda la familia en el cuidado.`, save: 0, priority: 6 });
+      }
+
+      // ═══ APPLY BEHAVIORAL PROFILE MULTIPLIERS ═══
+      tips.forEach(t => {
+        let profileMultiplier = 1.0;
+        
+        if (userProfile === 'fearful') {
+          if (t.ico === '🏛️' || t.ico === '✅' || t.title.includes('subsidio')) {
+            profileMultiplier = 2.0;
+          }
+        } else if (userProfile === 'stubborn') {
+          if (t.ico === '🚽' && t.title.includes('Optimizar')) profileMultiplier = 2.0;
+          if (t.ico === '🪥' && t.title.includes('Cerrar')) profileMultiplier = 2.0;
+          if (t.ico === '🍳' && t.title.includes('Reutilizar')) profileMultiplier = 2.0;
+          if (t.ico === '🌱' && t.title.includes('Reutiliza')) profileMultiplier = 2.0;
+        } else if (userProfile === 'homo_economicus') {
+          if (t.save > 2000 || t.ico === '💰' || t.ico === '☀️') {
+            profileMultiplier = 2.0;
+          }
+        } else if (userProfile === 'influencer') {
+          if (t.ico === '👨‍👩‍👧‍👦' || t.ico === '👨' || t.title.includes('Familia') || t.ico === '🔄') {
+            profileMultiplier = 1.8;
+          }
+        }
+        
+        t.score = t.priority * profileMultiplier * (1 + (t.save / maxSave(tips)) * 1.5);
+      });
+
+      tips.sort((a, b) => b.score - a.score);
+
+      const seen = new Set();
+      const selected = [];
+      const maxTipsCount = userProfile === 'uninterested' ? 3 : 6;
+      
+      for (const t of tips) {
+        const cat = t.ico;
+        if (seen.has(cat) && selected.length >= 3) continue;
+        seen.add(cat);
+        selected.push(t);
+        if (selected.length >= maxTipsCount) break;
+      }
+
+      return selected;
+    }
+
+    function maxSave(tipsList) {
+      return Math.max(1, ...tipsList.map(t => t.save));
+    }
+
+    function buildCmpTable() {
+      let tH = `<thead><tr><th>Actividad</th><th>Actual</th><th>Eficiente</th><th>Ahorro</th></tr></thead><tbody>`;
+      let tC = 0, tE = 0;
+      AC.forEach(a => {
+        const cu = aD(a, false), ef = aD(a, true), d = Math.max(0, cu - ef);
+        tC += cu; tE += ef;
+        tH += `<tr><td>${a.ic} ${a.lb}</td><td>${fm(Math.round(cu))} L</td><td>${fm(Math.round(ef))} L</td><td class="saved">${d > 0 ? '−' + fm(Math.round(d)) + ' L' : '—'}</td></tr>`;
+      });
+      tH += `<tr><td><strong>Total/día</strong></td><td><strong>${fm(Math.round(tC))} L</strong></td><td><strong>${fm(Math.round(tE))} L</strong></td><td class="saved"><strong>−${fm(Math.round(Math.max(0, tC - tE)))} L</strong></td></tr></tbody>`;
+      return tH;
+    }
+
+    function buildPrograms() {
+      return `
+        <div class="prog"><div class="prog-icon">🏛️</div><div><h4>Subsidio SAP</h4><p>Cubre hasta 85% de tu boleta. <a href="https://www.chileatiende.gob.cl" target="_blank" rel="noopener">Más info →</a></p></div></div>
+        <div class="prog"><div class="prog-icon">🔧</div><div><h4>Revisión de medidor</h4><p>Revisión gratuita si sospechas de mal cobro.</p></div></div>
+        <div class="prog"><div class="prog-icon">🏘️</div><div><h4>Kit de ahorro municipal</h4><p>Aireadores y reductores de flujo sin costo.</p></div></div>
+        <div class="prog"><div class="prog-icon">📞</div><div><h4>Convenio de pago</h4><p>Cuotas con tu empresa sanitaria, sin corte.</p></div></div>`;
+    }
+
+    /* ══════════════════════ ACTIONS ══════════════════════ */
+    function saveScen() {
+      const sewer = document.getElementById('chkSewer').checked;
+      const iva = document.getElementById('chkIva').checked;
+      const summer = document.getElementById('chkSummer').checked;
+      const commune = document.getElementById('communeSelect').value;
+      localStorage.setItem('cta_data', JSON.stringify({
+        ppl,
+        tariffIdx: TARIFF_DB.indexOf(selectedTariff),
+        commune,
+        V: { ...V },
+        sewer,
+        iva,
+        summer,
+        ts: Date.now()
+      }));
+      toast('✅ Escenario guardado');
+    }
+
+    function loadScen() {
+      const r = localStorage.getItem('cta_data');
+      if (!r) { toast('⚠️ No hay guardado'); return }
+      try {
+        const d = JSON.parse(r);
+        ppl = d.ppl || 4;
+        const tariffIdx = d.tariffIdx !== undefined ? d.tariffIdx : TARIFF_DB.findIndex(t => t.r === "RM" && t.c === "Aguas Andinas" && t.g === "G1");
+        selectedTariff = TARIFF_DB[tariffIdx] || TARIFF_DB[0];
+        
+        Object.assign(V, d.V || {});
+        
+        const regSel = document.getElementById('regionSelect');
+        const comSel = document.getElementById('communeSelect');
+        const compSel = document.getElementById('companySelect');
+        
+        regSel.value = selectedTariff.r;
+        
+        // Trigger communes population for this region
+        const filtered = TARIFF_DB.filter(t => t.r === selectedTariff.r);
+        const communes = new Set();
+        filtered.forEach(t => {
+          if (t.m && Array.isArray(t.m)) {
+            t.m.forEach(m => communes.add(m));
+          }
+        });
+        const sortedCommunes = [...communes].sort((a, b) => a.localeCompare(b));
+        comSel.innerHTML = sortedCommunes.map(c => `<option value="${c}">${c}</option>`).join('');
+        
+        // Match commune
+        let communeToSelect = d.commune;
+        if (!communeToSelect || !communes.has(communeToSelect)) {
+          if (selectedTariff.m && selectedTariff.m.length > 0) {
+            communeToSelect = selectedTariff.m[0];
+          } else {
+            communeToSelect = sortedCommunes[0];
+          }
+        }
+        comSel.value = communeToSelect;
+        
+        // Match sanitaria list and visibility
+        const matchingTariffs = TARIFF_DB.filter(t => t.r === selectedTariff.r && t.m && t.m.includes(communeToSelect));
+        if (matchingTariffs.length === 1) {
+          setCompanyDisplay('auto', `${selectedTariff.c} — ${selectedTariff.g}`);
+          compSel.innerHTML = `<option value="${tariffIdx}">${selectedTariff.c} — ${selectedTariff.g}</option>`;
+        } else {
+          setCompanyDisplay('multi');
+          compSel.innerHTML = matchingTariffs.map(t => `<option value="${TARIFF_DB.indexOf(t)}">${t.c} — ${t.g}</option>`).join('');
+          compSel.value = tariffIdx;
+        }
+        
+        document.getElementById('chkSewer').checked = !!d.sewer;
+        document.getElementById('chkIva').checked = !!d.iva;
+        document.getElementById('chkSummer').checked = !!d.summer;
+        buildPeople();
+        buildActs();
+        toast('📂 Cargado');
+        goBack();
+      } catch (e) {
+        toast('❌ Error');
+      }
+    }
+
+    function resetAll() {
+      AC.forEach(a => V[a.id] = a.df);
+      ppl = 4;
+      selectedTariff = TARIFF_DB.find(t => t.r === "RM" && t.c === "Aguas Andinas" && t.g === "G1") || TARIFF_DB[0];
+      
+      const regSel = document.getElementById('regionSelect');
+      const comSel = document.getElementById('communeSelect');
+      const compSel = document.getElementById('companySelect');
+      
+      regSel.value = "RM";
+      
+      const filtered = TARIFF_DB.filter(t => t.r === "RM");
+      const communes = new Set();
+      filtered.forEach(t => {
+        if (t.m && Array.isArray(t.m)) {
+          t.m.forEach(m => communes.add(m));
+        }
+      });
+      const sortedCommunes = [...communes].sort((a, b) => a.localeCompare(b));
+      comSel.innerHTML = sortedCommunes.map(c => `<option value="${c}">${c}</option>`).join('');
+      
+      const defaultCommune = sortedCommunes.includes("Santiago") ? "Santiago" : sortedCommunes[0];
+      comSel.value = defaultCommune;
+      
+      const matchingTariffs = TARIFF_DB.filter(t => t.r === "RM" && t.m && t.m.includes(defaultCommune));
+      if (matchingTariffs.length === 1) {
+        const globalIdx = TARIFF_DB.indexOf(matchingTariffs[0]);
+        compSel.innerHTML = `<option value="${globalIdx}">${matchingTariffs[0].c} — ${matchingTariffs[0].g}</option>`;
+        setCompanyDisplay('auto', `${matchingTariffs[0].c} — ${matchingTariffs[0].g}`);
+      } else {
+        setCompanyDisplay('multi');
+        compSel.innerHTML = matchingTariffs.map(t => `<option value="${TARIFF_DB.indexOf(t)}">${t.c} — ${t.g}</option>`).join('');
+        const aaG1 = matchingTariffs.find(t => t.c === "Aguas Andinas" && t.g === "G1");
+        if (aaG1) {
+          compSel.value = TARIFF_DB.indexOf(aaG1);
+        } else {
+          compSel.value = TARIFF_DB.indexOf(matchingTariffs[0]);
+        }
+      }
+      
+      document.getElementById('chkSewer').checked = false;
+      document.getElementById('chkIva').checked = false;
+      document.getElementById('chkSummer').checked = false;
+      buildPeople();
+      buildActs();
+      toast('🔄 Restablecido');
+      goBack();
+    }
+
+    function shareWA() {
+      const ld = tD(false), m3 = fD(ld * 30 / 1000), cost = tariff(m3);
+      const le = tD(true), m3e = fD(le * 30 / 1000), ce = tariff(m3e);
+      const save = Math.max(0, cost - ce), sY = save * 12;
+
+      const smartTips = generateSmartTips(m3, m3e, cost, ce, save, sY, selectedTariff);
+      let tipsMsg = '';
+      if (smartTips.length) {
+        tipsMsg = '\n💡 *Consejos personalizados:*\n';
+        smartTips.slice(0, 4).forEach(t => {
+          const saveText = t.save > 0 ? ` (Ahorra ${fm(t.save)} L/mes)` : '';
+          tipsMsg += `${t.ico} ${t.title}: ${t.text.substring(0, 100)}...${saveText}\n`;
+        });
+      }
+
+      const includeSewer = document.getElementById('chkSewer').checked;
+      const includeIva = document.getElementById('chkIva').checked;
+      const includeSummer = document.getElementById('chkSummer').checked;
+      
+      let opts = [];
+      if (includeSewer) opts.push('Alcantarillado');
+      if (includeIva) opts.push('IVA');
+      if (includeSummer) opts.push('Tarifa Verano');
+      const optsStr = opts.length > 0 ? ` (${opts.join(' + ')})` : ' (Neto)';
+
+      const selectedCommune = document.getElementById('communeSelect').value;
+
+      const msg = `💧 *Calcula Tu Agua — Mi consumo*
+
+👥 Consumo para ${ppl} personas
+📍 Ubicación: ${selectedCommune}, ${REGION_NAMES[selectedTariff.r]}
+🏢 Empresa: ${selectedTariff.c} — ${selectedTariff.g}
+⚙️ Opciones: ${optsStr}
+
+📊 *Mi consumo actual:*
+• ${m3.toFixed(1)} m³/mes ($${fm(cost)})
+• ${fm(ld)} litros por día
+
+✅ *Con hábitos eficientes:*
+• ${m3e.toFixed(1)} m³/mes ($${fm(ce)})
+
+💰 *Ahorro potencial:*
+• Mensual: $${fm(save)}
+• Anual: $${fm(sY)}
+${tipsMsg}
+¡Calcula el tuyo en calculatuagua.cl! 🌊`;
+
+      window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+    }
+
+    function showFormulaModal() {
+      document.getElementById('formulaModal').style.display = 'flex';
+    }
+
+    function closeFormulaModal() {
+      document.getElementById('formulaModal').style.display = 'none';
+    }
+
+    /* ══════════════════════ INIT ══════════════════════ */
+    buildSelectors();
+    buildPeople();
+    buildActs();
+    
+    // Check for saved profile
+    const savedProfile = localStorage.getItem('cta_profile');
+    if (savedProfile) {
+      userProfile = savedProfile;
+      applyProfileUI(savedProfile);
+    } else {
+      startOnboarding();
+    }
+
+    // Load saved scenario if exists
+    const sv = localStorage.getItem('cta_data');
+    if (sv) {
+      try {
+        const d = JSON.parse(sv);
+        ppl = d.ppl || 4;
+        const tariffIdx = d.tariffIdx !== undefined ? d.tariffIdx : TARIFF_DB.findIndex(t => t.r === "RM" && t.c === "Aguas Andinas" && t.g === "G1");
+        selectedTariff = TARIFF_DB[tariffIdx] || TARIFF_DB[0];
+        if (d.V) Object.assign(V, d.V);
+        
+        const regSel = document.getElementById('regionSelect');
+        const comSel = document.getElementById('communeSelect');
+        const compSel = document.getElementById('companySelect');
+        
+        regSel.value = selectedTariff.r;
+        
+        // Trigger communes population for this region
+        const filtered = TARIFF_DB.filter(t => t.r === selectedTariff.r);
+        const communes = new Set();
+        filtered.forEach(t => {
+          if (t.m && Array.isArray(t.m)) {
+            t.m.forEach(m => communes.add(m));
+          }
+        });
+        const sortedCommunes = [...communes].sort((a, b) => a.localeCompare(b));
+        comSel.innerHTML = sortedCommunes.map(c => `<option value="${c}">${c}</option>`).join('');
+        
+        // Match commune
+        let communeToSelect = d.commune;
+        if (!communeToSelect || !communes.has(communeToSelect)) {
+          if (selectedTariff.m && selectedTariff.m.length > 0) {
+            communeToSelect = selectedTariff.m[0];
+          } else {
+            communeToSelect = sortedCommunes[0];
+          }
+        }
+        comSel.value = communeToSelect;
+        
+        // Match sanitaria list and visibility
+        const matchingTariffs = TARIFF_DB.filter(t => t.r === selectedTariff.r && t.m && t.m.includes(communeToSelect));
+        if (matchingTariffs.length === 1) {
+          setCompanyDisplay('auto', `${selectedTariff.c} — ${selectedTariff.g}`);
+          compSel.innerHTML = `<option value="${tariffIdx}">${selectedTariff.c} — ${selectedTariff.g}</option>`;
+        } else {
+          setCompanyDisplay('multi');
+          compSel.innerHTML = matchingTariffs.map(t => `<option value="${TARIFF_DB.indexOf(t)}">${t.c} — ${t.g}</option>`).join('');
+          compSel.value = tariffIdx;
+        }
+        
+        document.getElementById('chkSewer').checked = !!d.sewer;
+        document.getElementById('chkIva').checked = !!d.iva;
+        document.getElementById('chkSummer').checked = !!d.summer;
+        buildPeople();
+        buildActs();
+      } catch (e) { }
+    }
+  </script>
+  <!-- METODOLOGIA MODAL (Careful Profile) -->
+  <div id="formulaModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); z-index: 200; justify-content: center; align-items: center; padding: 1rem;">
+    <div style="background: #fff; border-radius: var(--r-lg); max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; border: 1.5px solid var(--border); padding: 1.75rem; box-shadow: var(--sh-lg); position: relative;">
+      <button onclick="closeFormulaModal()" style="position: absolute; top: 16px; right: 16px; font-size: 20px; color: var(--gray-400); font-weight: 700; background: none; border: none; cursor: pointer;">×</button>
+      <div style="font-size: 18px; font-weight: 900; color: var(--pri-dark); border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+        <span>🔍 Fórmulas y Metodología</span>
+      </div>
+      <div style="font-size: 13.5px; line-height: 1.6; color: var(--gray-700); display: flex; flex-direction: column; gap: 10px;">
+        <p>Los cálculos realizados en esta aplicación siguen rigurosamente el esquema de cobro fijado por los decretos de la <strong>Superintendencia de Servicios Sanitarios (SISS)</strong>:</p>
+        <div style="background: var(--gray-50); padding: 10px; border-radius: var(--r); font-family: monospace; font-size: 12px; border: 1px solid var(--gray-200); text-align: center;">
+          Total = (Fijo + AP + Alcantarillado) * (1 + IVA%)
+        </div>
+        <p><strong>1. Cargo Fijo:</strong> Cobro mensual constante por la lectura del medidor y mantención de la red.</p>
+        <p><strong>2. Consumo AP (Agua Potable):</strong> Volumen total en m³ facturado a tarifa normal (t1), o tarifa de verano punta base (t2) si corresponde.</p>
+        <p><strong>3. Sobreconsumo de Verano (si aplica):</strong> Volumen excedente sobre los 40 m³/mes facturado a la tarifa de sobreconsumo punta (t3).</p>
+        <p><strong>4. Alcantarillado y Saneamiento (si aplica):</strong> Volumen total en m³ facturado a la tarifa variable de la empresa sanitaria ($/m³).</p>
+        <p><strong>5. IVA (si aplica):</strong> Impuesto de 19% aplicado sobre el subtotal neto.</p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
