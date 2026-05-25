@@ -2270,7 +2270,7 @@
     function buildActs() {
       const l = document.getElementById('activityList'); l.innerHTML = ''; AC.forEach(a => {
         const v = V[a.id], row = document.createElement('div'); row.className = 'act-row';
-        row.innerHTML = `<div class="semaphore ${sC(a)}"></div><div class="act-info"><div class="act-name">${a.ic} ${a.lb} <span class="tag ${a.pp ? 'tag-p' : 'tag-h'}">${a.pp ? '× persona' : 'hogar'}</span></div><div class="act-desc">${a.ds}</div></div><div class="act-ctrl"><button class="pm-btn" aria-label="Disminuir ${a.lb}" data-id="${a.id}" data-d="-1">−</button><input type="range" min="${a.mn}" max="${a.mx}" step="${a.st}" value="${v}" id="sl_${a.id}" aria-label="${a.lb}"><button class="pm-btn" aria-label="Aumentar ${a.lb}" data-id="${a.id}" data-d="1">+</button><div class="act-val" id="vl_${a.id}">${v} ${a.u}</div></div>`; l.appendChild(row);
+        row.innerHTML = `<div class="semaphore ${sC(a)}"></div><div class="act-info"><div class="act-name"><img src="icon_${a.id}.png" alt="" style="height: 24px; width: 24px; object-fit: contain; vertical-align: middle; margin-right: 6px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">${a.ic}</span> ${a.lb} <span class="tag ${a.pp ? 'tag-p' : 'tag-h'}">${a.pp ? '× persona' : 'hogar'}</span></div><div class="act-desc">${a.ds}</div></div><div class="act-ctrl"><button class="pm-btn" aria-label="Disminuir ${a.lb}" data-id="${a.id}" data-d="-1">−</button><input type="range" min="${a.mn}" max="${a.mx}" step="${a.st}" value="${v}" id="sl_${a.id}" aria-label="${a.lb}"><button class="pm-btn" aria-label="Aumentar ${a.lb}" data-id="${a.id}" data-d="1">+</button><div class="act-val" id="vl_${a.id}">${v} ${a.u}</div></div>`; l.appendChild(row);
         const sl = document.getElementById('sl_' + a.id);
         sl.oninput = e => {
           const oldColor = sC(a); V[a.id] = +e.target.value;
@@ -2984,7 +2984,7 @@
       AC.forEach(a => {
         const cu = aD(a, false), ef = aD(a, true), d = Math.max(0, cu - ef);
         tC += cu; tE += ef;
-        tH += `<tr><td>${a.ic} ${a.lb}</td><td>${fm(Math.round(cu))} L</td><td>${fm(Math.round(ef))} L</td><td class="saved">${d > 0 ? '−' + fm(Math.round(d)) + ' L' : '—'}</td></tr>`;
+        tH += `<tr><td><img src="icon_${a.id}.png" alt="" style="height: 20px; width: 20px; object-fit: contain; vertical-align: middle; margin-right: 4px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">${a.ic}</span> ${a.lb}</td><td>${fm(Math.round(cu))} L</td><td>${fm(Math.round(ef))} L</td><td class="saved">${d > 0 ? '−' + fm(Math.round(d)) + ' L' : '—'}</td></tr>`;
       });
       tH += `<tr><td><strong>Total/día</strong></td><td><strong>${fm(Math.round(tC))} L</strong></td><td><strong>${fm(Math.round(tE))} L</strong></td><td class="saved"><strong>−${fm(Math.round(Math.max(0, tC - tE)))} L</strong></td></tr></tbody>`;
       return tH;
