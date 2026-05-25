@@ -2177,6 +2177,42 @@
     function sC(a) { const v = V[a.id]; return v <= a.th[0] ? 'vol-low' : v <= a.th[1] ? 'vol-med' : 'vol-high' }
     
     function getEmojiImg(emoji, size = '1.5em', style = '') {
+      if (emoji === '📲') {
+        return `<svg class="svg-icon" viewBox="0 0 24 24" style="height: ${size}; width: auto; vertical-align: middle; display: inline-block; filter: drop-shadow(0 2px 4px rgba(34, 197, 94, 0.25)); ${style}" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="waGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#4ade80" /><stop offset="100%" stop-color="#22c55e" /></linearGradient></defs>
+          <circle cx="12" cy="12" r="11" fill="url(#waGrad)" />
+          <path d="M12 5a7 7 0 0 0-6.05 10.5L5 19l3.6-.95A7 7 0 1 0 12 5zm3.7 9.8c-.2.6-.9 1.1-1.5 1.2-.5.1-1.1.2-3.2-.7-2.7-1.1-4.4-3.8-4.5-4-.1-.2-.9-1.2-.9-2.3 0-1.1.6-1.7.8-1.9.2-.2.5-.3.8-.3H8c.2 0 .4 0 .6.4.2.5.7 1.7.8 1.9 0 .1.1.2 0 .4-.1.1-.2.3-.3.4l-.4.5c-.1.2-.2.4 0 .7.2.4.9 1.5 2 2.4.9.8 1.6 1.1 1.9 1.2.3.1.5.1.7-.1.2-.2.8-.9 1-1.2.2-.3.3-.2.6-.1s1.7.8 2 1c.3.1.5.2.5.3s0 .7-.2 1.3z" fill="white" />
+        </svg><span style="display: none;">${emoji}</span>`;
+      }
+      if (emoji === '📄') {
+        return `<svg class="svg-icon" viewBox="0 0 24 24" style="height: ${size}; width: auto; vertical-align: middle; display: inline-block; filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.25)); ${style}" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="pdfGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f87171" /><stop offset="100%" stop-color="#ef4444" /></linearGradient></defs>
+          <circle cx="12" cy="12" r="11" fill="url(#pdfGrad)" />
+          <path d="M8 7v10h8V9.5L13.5 7H8zm4.5 1v2.5H15v.5h-2.5V8zM9.5 9h2v.5h-2V9zm0 2h5v.5h-5V11zm0 2h5v.5h-5V13z" fill="white" />
+        </svg><span style="display: none;">${emoji}</span>`;
+      }
+      if (emoji === '💾') {
+        return `<svg class="svg-icon" viewBox="0 0 24 24" style="height: ${size}; width: auto; vertical-align: middle; display: inline-block; filter: drop-shadow(0 2px 4px rgba(37, 99, 235, 0.25)); ${style}" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="saveGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#60a5fa" /><stop offset="100%" stop-color="#2563eb" /></linearGradient></defs>
+          <circle cx="12" cy="12" r="11" fill="url(#saveGrad)" />
+          <path d="M7 7h8.5L17 8.5V17H7V7zm2 1v3.5h5V8H9zm0 8h6v-3.5H9V16z" fill="white" />
+        </svg><span style="display: none;">${emoji}</span>`;
+      }
+      if (emoji === '📂') {
+        return `<svg class="svg-icon" viewBox="0 0 24 24" style="height: ${size}; width: auto; vertical-align: middle; display: inline-block; filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.25)); ${style}" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="loadGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fbbf24" /><stop offset="100%" stop-color="#d97706" /></linearGradient></defs>
+          <circle cx="12" cy="12" r="11" fill="url(#loadGrad)" />
+          <path d="M6 7v10h12V9h-5.5L11 7H6zm1.5 3h9v5.5h-9V10z" fill="white" />
+        </svg><span style="display: none;">${emoji}</span>`;
+      }
+      if (emoji === '🔄') {
+        return `<svg class="svg-icon" viewBox="0 0 24 24" style="height: ${size}; width: auto; vertical-align: middle; display: inline-block; filter: drop-shadow(0 2px 4px rgba(6, 182, 212, 0.25)); ${style}" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="resetGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#22d3ee" /><stop offset="100%" stop-color="#0891b2" /></linearGradient></defs>
+          <circle cx="12" cy="12" r="11" fill="url(#resetGrad)" />
+          <path d="M12 7.5v-2L8.5 8.5 12 11.5v-2a3.5 3.5 0 1 1-3.5 3.5H7a5 5 0 1 0 5-5z" fill="white" />
+        </svg><span style="display: none;">${emoji}</span>`;
+      }
+
       const map = {
         '🚿': 'icon_shower.png',
         '🚽': 'icon_toilet.png',
@@ -2211,11 +2247,6 @@
         '👨': 'icon_tips.png',
         '☀️': 'icon_summer.png',
         '⚠️': 'icon_alert.png',
-        '📲': 'icon_calc.png',
-        '📄': 'icon_calc.png',
-        '💾': 'icon_settings.png',
-        '📂': 'icon_settings.png',
-        '🔄': 'icon_settings.png',
         '🔒': 'icon_settings.png',
         '🍞': 'icon_cook.png',
         '🚌': 'icon_location.png',
