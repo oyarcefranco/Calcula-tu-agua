@@ -2214,6 +2214,34 @@
           <path d="M12 7.5v-2L8.5 8.5 12 11.5v-2a3.5 3.5 0 1 1-3.5 3.5H7a5 5 0 1 0 5-5z" fill="white" />
         </svg><span style="display: none;">${emoji}</span>`;
       }
+      if (emoji === '🍞') {
+        return `<svg class="svg-icon" viewBox="0 0 24 24" style="height: ${size}; width: auto; vertical-align: middle; display: inline-block; filter: drop-shadow(0 2px 4px rgba(249, 115, 22, 0.25)); ${style}" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="breadGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#fcd34d" /><stop offset="100%" stop-color="#f97316" /></linearGradient></defs>
+          <circle cx="12" cy="12" r="11" fill="url(#breadGrad)" />
+          <g transform="translate(4, 4) scale(0.03125)">
+            <path d="M256 32C192 32 0 64 0 192c0 35.3 28.7 64 64 64V432c0 26.5 21.5 48 48 48H400c26.5 0 48-21.5 48-48V256c35.3 0 64-28.7 64-64C512 64 320 32 256 32z" fill="white" />
+          </g>
+        </svg><span style="display: none;">${emoji}</span>`;
+      }
+      if (emoji === '🚌') {
+        return `<svg class="svg-icon" viewBox="0 0 24 24" style="height: ${size}; width: auto; vertical-align: middle; display: inline-block; filter: drop-shadow(0 2px 4px rgba(220, 38, 38, 0.25)); ${style}" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="busGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f87171" /><stop offset="100%" stop-color="#dc2626" /></linearGradient></defs>
+          <circle cx="12" cy="12" r="11" fill="url(#busGrad)" />
+          <g transform="translate(4, 4)">
+            <path d="M16 7a1 1 0 0 1-1 1v3.5c0 .818-.393 1.544-1 2v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5V14H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2a2.5 2.5 0 0 1-1-2V8a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1V2.64C1 1.452 1.845.408 3.064.268A44 44 0 0 1 8 0c2.1 0 3.792.136 4.936.268C14.155.408 15 1.452 15 2.64V4a1 1 0 0 1 1 1zM3.552 3.22A43 43 0 0 1 8 3c1.837 0 3.353.107 4.448.22a.5.5 0 0 0 .104-.994A44 44 0 0 0 8 2c-1.876 0-3.426.109-4.552.226a.5.5 0 1 0 .104.994M8 4c-1.876 0-3.426.109-4.552.226A.5.5 0 0 0 3 4.723v3.554a.5.5 0 0 0 .448.497C4.574 8.891 6.124 9 8 9s3.426-.109 4.552-.226A.5.5 0 0 0 13 8.277V4.723a.5.5 0 0 0-.448-.497A44 44 0 0 0 8 4m-3 7a1 1 0 1 0-2 0 1 1 0 0 0 2 0m8 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m-7 0a1 1 0 0 0 1 1h2a1 1 0 1 0 0-2H7a1 1 0 0 0-1 1" fill="white" />
+          </g>
+        </svg><span style="display: none;">${emoji}</span>`;
+      }
+      if (emoji === '🧺') {
+        return `<svg class="svg-icon" viewBox="0 0 24 24" style="height: ${size}; width: auto; vertical-align: middle; display: inline-block; filter: drop-shadow(0 2px 4px rgba(79, 70, 229, 0.25)); ${style}" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="basketGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#60a5fa" /><stop offset="100%" stop-color="#4f46e5" /></linearGradient></defs>
+          <circle cx="12" cy="12" r="11" fill="url(#basketGrad)" />
+          <g transform="translate(4, 4)">
+            <path d="M5.071 1.243a.5.5 0 0 1 .858.514L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15.5a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 6h1.717zM3.5 10.5a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0z" fill="white" />
+          </g>
+        </svg><span style="display: none;">${emoji}</span>`;
+      }
+
 
       const map = {
         '🚿': 'icon_shower.png',
@@ -2283,10 +2311,10 @@
     
     function equivs(amt) {
       const r = [];
-      const b = Math.round(amt / 2300), bu = Math.round(amt / 795), re = Math.round(amt / 5000);
+      const b = Math.round(amt / 2300), bu = Math.round(amt / 795), re = Math.round(amt / 15000);
       if (b > 0) r.push(getEmojiImg('🍞', '1.4em') + ' ' + b + ' kg de pan');
       if (bu > 0) r.push(getEmojiImg('🚌', '1.4em') + ' ' + bu + ' pasajes de micro');
-      if (re > 0) r.push(getEmojiImg('📱', '1.4em') + ' ' + re + ' recarga(s) de celular');
+      if (re > 0) r.push(getEmojiImg('🧺', '1.4em') + ' ' + re + ' canastas de alimentos básicos');
       return r;
     }
 

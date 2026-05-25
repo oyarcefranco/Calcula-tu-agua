@@ -49,7 +49,7 @@ Muchas familias vulnerables en Chile:
 3. **Información del Subsidio SAP** con cálculo personalizado del ahorro según tramo RSH
 4. **Proyección de ahorro** si adoptan hábitos eficientes (mensual, anual, a 5 años)
 5. **Consejos priorizados** ordenados por impacto real en litros/mes
-6. **Equivalencias económicas** del ahorro en bienes cotidianos (pan, pasajes, recargas)
+6. **Equivalencias económicas** del ahorro en bienes cotidianos (pan, pasajes, canasta básica)
 7. **Información sobre programas de apoyo** (convenios de pago, kits municipales, revisión de medidor)
 
 ---
@@ -243,7 +243,7 @@ Cada registro en la base de datos contiene los siguientes coeficientes oficiales
 | ---------------- | :-------: | ------------------------------- |
 | Pan (marraqueta) | $2.300/kg | Odepa 2025                      |
 | Pasaje micro     |   $795   | Tarifa bus RED adulto, feb 2026 |
-| Recarga celular  |  $5.000  | Promedio operadores chilenos    |
+| Canasta básica   | $15.000  | Canasta familiar básica promedio |
 
 ---
 
@@ -352,7 +352,7 @@ Cada actividad tiene dos umbrales `[verde_max, amarillo_max]`:
 ```
 kg_pan = ahorro_anual ÷ 2.300
 pasajes = ahorro_anual ÷ 795
-recargas = ahorro_anual ÷ 5.000
+canastas = ahorro_anual ÷ 15.000
 ```
 
 ### 6.8 Motor de Consejos Contextuales (Algoritmo Inteligente)
