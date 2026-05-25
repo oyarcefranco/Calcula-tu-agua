@@ -2232,12 +2232,12 @@
           </g>
         </svg><span style="display: none;">${emoji}</span>`;
       }
-      if (emoji === '🧺') {
-        return `<svg class="svg-icon" viewBox="0 0 24 24" style="height: ${size}; width: auto; vertical-align: middle; display: inline-block; filter: drop-shadow(0 2px 4px rgba(79, 70, 229, 0.25)); ${style}" xmlns="http://www.w3.org/2000/svg">
-          <defs><linearGradient id="basketGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#60a5fa" /><stop offset="100%" stop-color="#4f46e5" /></linearGradient></defs>
-          <circle cx="12" cy="12" r="11" fill="url(#basketGrad)" />
-          <g transform="translate(4, 4)">
-            <path d="M5.071 1.243a.5.5 0 0 1 .858.514L3.383 6h9.234L10.07 1.757a.5.5 0 1 1 .858-.514L13.783 6H15.5a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 6h1.717zM3.5 10.5a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0zm2.5 0a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0z" fill="white" />
+      if (emoji === '🫒') {
+        return `<svg class="svg-icon" viewBox="0 0 24 24" style="height: ${size}; width: auto; vertical-align: middle; display: inline-block; filter: drop-shadow(0 2px 4px rgba(101, 163, 13, 0.25)); ${style}" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="oilGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#a3e635" /><stop offset="100%" stop-color="#65a30d" /></linearGradient></defs>
+          <circle cx="12" cy="12" r="11" fill="url(#oilGrad)" />
+          <g transform="translate(5, 3.5) scale(0.58)">
+            <path d="M10 1c0-.6-.4-1-1-1H7C6.4 0 6 .4 6 1v1H5v2.1C3.8 5.6 3 7.2 3 9v12c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V9c0-1.8-.8-3.4-2-4.9V2h-1V1zm1 8v3H5V9c0-1.3.5-2.4 1.2-3.4.2-.2.3-.4.5-.6h2.6c.2.2.3.4.5.6C10.5 6.6 11 7.7 11 9zm-1 12H6v-7h4v7z" fill="white" />
           </g>
         </svg><span style="display: none;">${emoji}</span>`;
       }
@@ -2311,10 +2311,10 @@
     
     function equivs(amt) {
       const r = [];
-      const b = Math.round(amt / 2300), bu = Math.round(amt / 795), re = Math.round(amt / 15000);
+      const b = Math.round(amt / 2300), bu = Math.round(amt / 795), ac = Math.round(amt / 2500);
       if (b > 0) r.push(getEmojiImg('🍞', '1.4em') + ' ' + b + ' kg de pan');
       if (bu > 0) r.push(getEmojiImg('🚌', '1.4em') + ' ' + bu + ' pasajes de micro');
-      if (re > 0) r.push(getEmojiImg('🧺', '1.4em') + ' ' + re + ' canastas de alimentos básicos');
+      if (ac > 0) r.push(getEmojiImg('🫒', '1.4em') + ' ' + ac + ' botellas de aceite');
       return r;
     }
 
