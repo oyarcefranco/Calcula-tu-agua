@@ -102,7 +102,7 @@
           <div id="companyAutoInfo" style="display: none;">
             <label style="font-size: 11px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; margin-bottom: 4px; display: block;">Empresa Sanitaria</label>
             <div id="companyAutoName" style="background: var(--gray-50); border: 1.5px solid var(--border); border-radius: var(--r); padding: 10px 14px; font-size: 14px; font-weight: 600; color: var(--pri-dark); display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 16px;">🏢</span>
+              <img src="icon_location.png" alt="" style="height: 1.2em; width: auto; vertical-align: middle;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">🏢</span>
               <span id="companyAutoText"></span>
             </div>
           </div>
@@ -120,21 +120,21 @@
           <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 14.5px; font-weight: 500; color: var(--gray-700);">
             <input type="checkbox" id="chkSewer" style="margin-top: 4px; width: 18px; height: 18px; accent-color: var(--pri); cursor: pointer;">
             <div>
-              <strong>💧 Incluir agua sucia (Alcantarillado)</strong>
+              <strong><img src="logo.png" alt="" style="height: 1.2em; width: auto; vertical-align: middle; margin-right: 6px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">💧</span>Incluir agua sucia (Alcantarillado)</strong>
               <div style="font-size: 12px; color: var(--gray-400); font-weight: 400;">Activa esto si también te cobran por retirar y limpiar el agua usada en el hogar</div>
             </div>
           </label>
           <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 14.5px; font-weight: 500; color: var(--gray-700);">
             <input type="checkbox" id="chkIva" style="margin-top: 4px; width: 18px; height: 18px; accent-color: var(--pri); cursor: pointer;">
             <div>
-              <strong>🧾 Incluir IVA (19%)</strong>
+              <strong><img src="icon_calc.png" alt="" style="height: 1.2em; width: auto; vertical-align: middle; margin-right: 6px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">🧾</span>Incluir IVA (19%)</strong>
               <div style="font-size: 12px; color: var(--gray-400); font-weight: 400;">Agrega el impuesto obligatorio (IVA) para ver el precio total real a pagar</div>
             </div>
           </label>
           <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer; font-size: 14.5px; font-weight: 500; color: var(--gray-700);">
             <input type="checkbox" id="chkSummer" style="margin-top: 4px; width: 18px; height: 18px; accent-color: var(--pri); cursor: pointer;">
             <div>
-              <strong>☀️ Recargo de Verano (Sobreconsumo)</strong>
+              <strong><img src="icon_summer.png" alt="" style="height: 1.2em; width: auto; vertical-align: middle; margin-right: 6px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">☀️</span>Recargo de Verano (Sobreconsumo)</strong>
               <div style="font-size: 12px; color: var(--gray-400); font-weight: 400;">Activa esto si estás en los meses de verano y tu consumo supera los 40 m³ al mes</div>
             </div>
           </label>
@@ -2175,14 +2175,85 @@
     function fm(n) { return Math.round(n).toLocaleString('es-CL') }
     function fD(n) { return parseFloat(n.toFixed(1)) }
     function sC(a) { const v = V[a.id]; return v <= a.th[0] ? 'vol-low' : v <= a.th[1] ? 'vol-med' : 'vol-high' }
-    function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500) }
+    
+    function getEmojiImg(emoji, size = '1.2em', style = '') {
+      const map = {
+        '🚿': 'icon_shower.png',
+        '🚽': 'icon_toilet.png',
+        '🪥': 'icon_teeth.png',
+        '🍽️': 'icon_dishes.png',
+        '🍽': 'icon_dishes.png',
+        '👕': 'icon_laundry.png',
+        '🍳': 'icon_cook.png',
+        '🌱': 'icon_garden.png',
+        '🏛️': 'icon_subsidies.png',
+        '🏛': 'icon_subsidies.png',
+        '⚙️': 'icon_settings.png',
+        '⚙': 'icon_settings.png',
+        '📍': 'icon_location.png',
+        '📊': 'icon_calc.png',
+        '💰': 'icon_savings.png',
+        '💵': 'icon_savings.png',
+        '🏢': 'icon_location.png',
+        '🎉': 'icon_tips.png',
+        '💡': 'icon_tips.png',
+        '🌟': 'icon_tips.png',
+        '🔍': 'icon_calc.png',
+        '📈': 'icon_comparison.png',
+        '⚡': 'icon_settings.png',
+        '🚀': 'icon_calc.png',
+        '✅': 'icon_check.png',
+        '🏘️': 'icon_location.png',
+        '🏘': 'icon_location.png',
+        '🔧': 'icon_settings.png',
+        '📞': 'icon_calc.png',
+        '👨‍👩‍👧‍👦': 'icon_tips.png',
+        '👨': 'icon_tips.png',
+        '☀️': 'icon_summer.png',
+        '⚠️': 'icon_alert.png',
+        '📲': 'icon_calc.png',
+        '📄': 'icon_calc.png',
+        '💾': 'icon_settings.png',
+        '📂': 'icon_settings.png',
+        '🔄': 'icon_settings.png',
+        '🔒': 'icon_settings.png',
+        '🍞': 'icon_cook.png',
+        '🚌': 'icon_location.png',
+        '📱': 'icon_calc.png',
+        '📶': 'icon_comparison.png',
+        '✨': 'icon_tips.png',
+        '❌': 'icon_alert.png'
+      };
+      const src = map[emoji];
+      if (src) {
+        return `<img src="${src}" alt="" style="height: ${size}; width: auto; vertical-align: middle; display: inline-block; ${style}" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">${emoji}</span>`;
+      }
+      return emoji;
+    }
+
+    function parseTextWithEmoji(text) {
+      const match = text.match(/^([^\w\s\d,.:;?¿!¡'"()\-+]+)\s*(.*)$/u);
+      if (match) {
+        const emoji = match[1].trim();
+        const rest = match[2];
+        return getEmojiImg(emoji, '1.2em', 'margin-right: 6px;') + rest;
+      }
+      return text;
+    }
+
+    function toast(m) { 
+      const t = document.getElementById('toast'); 
+      t.innerHTML = parseTextWithEmoji(m); 
+      t.classList.add('show'); 
+      setTimeout(() => t.classList.remove('show'), 2500); 
+    }
     
     function equivs(amt) {
       const r = [];
       const b = Math.round(amt / 2300), bu = Math.round(amt / 795), re = Math.round(amt / 5000);
-      if (b > 0) r.push('🍞 ' + b + ' kg de pan');
-      if (bu > 0) r.push('🚌 ' + bu + ' pasajes de micro');
-      if (re > 0) r.push('📱 ' + re + ' recarga(s) de celular');
+      if (b > 0) r.push(getEmojiImg('🍞', '1.1em') + ' ' + b + ' kg de pan');
+      if (bu > 0) r.push(getEmojiImg('🚌', '1.1em') + ' ' + bu + ' pasajes de micro');
+      if (re > 0) r.push(getEmojiImg('📱', '1.1em') + ' ' + re + ' recarga(s) de celular');
       return r;
     }
 
@@ -2436,9 +2507,9 @@
       
       const nextBtn = document.getElementById('btnOnboardingNext');
       if (onboardingStep === ONBOARDING_QUESTIONS.length - 1) {
-        nextBtn.textContent = 'Finalizar 🎉';
+        nextBtn.innerHTML = `Finalizar ${getEmojiImg('🎉', '1.2em', 'margin-left: 4px;')}`;
       } else {
-        nextBtn.textContent = 'Siguiente →';
+        nextBtn.innerHTML = 'Siguiente &rarr;';
       }
       
       let html = `
@@ -2452,7 +2523,7 @@
         const isSelected = onboardingAnswers[onboardingStep] === idx;
         html += `
           <button class="onboarding-btn-opt ${isSelected ? 'selected' : ''}" onclick="selectOnboardingOption(${idx})">
-            ${opt.text}
+            ${parseTextWithEmoji(opt.text)}
           </button>
         `;
       });
@@ -2550,7 +2621,7 @@
       badgeContainer.style.display = 'block';
       badgeContainer.innerHTML = `
         <div class="profile-badge ${prof.badgeClass}">
-          <span>${prof.emoji}</span>
+          <span>${getEmojiImg(prof.emoji, '1.2em')}</span>
           <span>Perfil: ${prof.name}</span>
           <button onclick="localStorage.removeItem('cta_profile'); startOnboarding();" style="background: none; border: none; font-size: 11px; text-decoration: underline; cursor: pointer; color: inherit; margin-left: 8px;">(Cambiar)</button>
         </div>
@@ -2559,14 +2630,14 @@
       let noticeHtml = '';
       if (profile === 'fearful') {
         noticeHtml = `
-          <div style="background: #fee2e2; border: 1.5px solid #fca5a5; color: #991b1b; border-radius: var(--r); padding: 12px; margin-bottom: 1rem; font-size: 13.5px; line-height: 1.5;">
-            🔒 <strong>Tu privacidad importa:</strong> Todo el cálculo se hace directamente en tu teléfono. Ningún dato sale de aquí. Las tarifas son las oficiales de la SISS.
+          <div style="background: #fee2e2; border: 1.5px solid #fca5a5; color: #991b1b; border-radius: var(--r); padding: 12px; margin-bottom: 1rem; font-size: 13.5px; line-height: 1.5; display: flex; align-items: center; gap: 8px;">
+            ${getEmojiImg('🔒', '1.4em')} <div><strong>Tu privacidad importa:</strong> Todo el cálculo se hace directamente en tu teléfono. Ningún dato sale de aquí. Las tarifas son las oficiales de la SISS.</div>
           </div>
         `;
       } else if (profile === 'careful') {
         noticeHtml = `
-          <div style="background: #f3e8ff; border: 1.5px solid #d8b4fe; color: #6b21a8; border-radius: var(--r); padding: 12px; margin-bottom: 1rem; font-size: 13.5px; line-height: 1.5;">
-            🔍 <strong>Cálculos transparentes:</strong> Usamos las tarifas reales oficiales de la SISS. Puedes hacer clic en "Ver Fórmulas" al final para ver cómo se calcula paso a paso.
+          <div style="background: #f3e8ff; border: 1.5px solid #d8b4fe; color: #6b21a8; border-radius: var(--r); padding: 12px; margin-bottom: 1rem; font-size: 13.5px; line-height: 1.5; display: flex; align-items: center; gap: 8px;">
+            ${getEmojiImg('🔍', '1.4em')} <div><strong>Cálculos transparentes:</strong> Usamos las tarifas reales oficiales de la SISS. Puedes hacer clic en "Ver Fórmulas" al final para ver cómo se calcula paso a paso.</div>
           </div>
         `;
       }
@@ -2602,7 +2673,7 @@
           cls = m3 <= 15 ? 'blue' : 'amber';
         }
         trackHtml = `
-          <div style="font-size:13px;font-weight:700;color:var(--gray-700);margin-bottom:4px">📶 ${tramoLbl}</div>
+          <div style="font-size:13px;font-weight:700;color:var(--gray-700);margin-bottom:4px;display:flex;align-items:center;gap:6px">${getEmojiImg('📶', '1.2em')} <span>${tramoLbl}</span></div>
           <div class="tramo-track" style="background: linear-gradient(90deg, var(--pri-200) 0%, var(--pri-200) 66%, #FECACA 66%) !important;"><div class="tramo-dot" style="left:${pct}%"></div></div>
           <div class="tramo-lbls"><span>Punta Base ($${fm(c.t2)}/m³)</span><span style="font-weight:700;color:var(--gray-700)">Límite: 40 m³</span><span>Sobreconsumo ($${fm(c.t3)}/m³)</span></div>
         `;
@@ -2611,7 +2682,7 @@
         pct = Math.min(100, (m3 / 30) * 100);
         cls = m3 <= 15 ? 'blue' : m3 <= 30 ? 'amber' : 'red';
         trackHtml = `
-          <div style="font-size:13px;font-weight:700;color:var(--gray-700);margin-bottom:4px">📶 ${tramoLbl}</div>
+          <div style="font-size:13px;font-weight:700;color:var(--gray-700);margin-bottom:4px;display:flex;align-items:center;gap:6px">${getEmojiImg('📶', '1.2em')} <span>${tramoLbl}</span></div>
           <div class="tramo-track" style="background: var(--pri-200) !important;"><div class="tramo-dot" style="left:${pct}%"></div></div>
           <div class="tramo-lbls"><span>Consumo bajo</span><span style="font-weight:700;color:var(--gray-700)">Cargo único: $${fm(c.t1)}/m³</span><span>Consumo alto</span></div>
         `;
@@ -2621,7 +2692,7 @@
       if (userProfile === 'careful') {
         carefulMetodologiaBtn = `
           <div style="margin-top: 12px; text-align: center;">
-            <button onclick="showFormulaModal()" class="carousel-back" style="font-size: 12.5px; padding: 8px 14px; width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: 1.5px solid var(--border); border-radius: var(--r); background: var(--card); font-weight: 700; color: var(--gray-700);">🔍 Ver Fórmulas y Explicación del Cobro</button>
+            <button onclick="showFormulaModal()" class="carousel-back" style="font-size: 12.5px; padding: 8px 14px; width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: 1.5px solid var(--border); border-radius: var(--r); background: var(--card); font-weight: 700; color: var(--gray-700);">${getEmojiImg('🔍', '1.2em')} Ver Fórmulas y Explicación del Cobro</button>
           </div>
         `;
       }
@@ -2639,7 +2710,7 @@
 
         <div style="background: var(--card); border: 1.5px solid var(--border); border-radius: var(--r); padding: 1.25rem; box-shadow: var(--sh);">
           <div style="font-size: 14px; font-weight: 800; color: var(--pri-dark); border-bottom: 1.5px solid var(--border); padding-bottom: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
-            <span>🧾 DETALLE DE LA BOLETA</span>
+            <span style="display: flex; align-items: center; gap: 6px;">${getEmojiImg('🧾', '1.2em')} <span>DETALLE DE LA BOLETA</span></span>
             <span style="font-size: 11px; background: var(--pri-50); color: var(--pri); padding: 3px 8px; border-radius: 12px; font-weight: 700;">Simulado</span>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13.5px; color: var(--gray-700);">
@@ -2691,8 +2762,8 @@
       const difText = dif > 0 ? `Consumes <strong>${fD(Math.abs(dif))} m³ más</strong> que el promedio` : `Consumes <strong>${fD(Math.abs(dif))} m³ menos</strong> que el promedio`;
 
       document.getElementById('panelCompara').innerHTML = `
-        <div style="text-align:center;padding:1rem 0">
-          <div style="font-size:60px;margin-bottom:4px">${difEmoji}</div>
+        <div style="text-align:center;padding:1rem 0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <div style="margin-bottom:8px;height:64px;display:flex;align-items:center;justify-content:center;">${getEmojiImg(difEmoji, '64px')}</div>
           <div style="font-size:18px;font-weight:800;color:${difColor};line-height:1.4">${difText}</div>
           <div style="font-size:13px;color:var(--gray-400);margin-top:4px">Promedio para ${ppl} personas: ${avg} m³/mes</div>
         </div>
@@ -2713,9 +2784,9 @@
       const sh = SUB_T.map(t => `<div class="sub-stat"><div class="sl">${t.l} (${t.p}%)</div><div class="sv">−$${fm(Math.round(sCostStd * t.p / 100))}/mes</div></div>`).join('');
       const oS = m3 > SUB_MAX, oSSO = m3 > SUB_MAX_SSO;
       let subAlert = '';
-      if (oSSO) subAlert = `<div class="sub-alert danger">⚠️ <strong>Tu consumo (${m3.toFixed(1)} m³) supera los ${SUB_MAX_SSO} m³</strong> (tope máximo Chile Seguridades). Los ${fD(m3 - SUB_MAX_SSO)} m³ extra se cobran a tarifa completa.</div>`;
-      else if (oS) subAlert = `<div class="sub-alert warn">⚠️ <strong>Tu consumo (${m3.toFixed(1)} m³) supera los ${SUB_MAX} m³ del SAP.</strong> Con Chile Seguridades, tu tope es ${SUB_MAX_SSO} m³.</div>`;
-      else subAlert = `<div class="sub-alert ok">✅ Tu consumo (${m3.toFixed(1)} m³) está dentro del límite de ${SUB_MAX} m³ subsidiables.</div>`;
+      if (oSSO) subAlert = `<div class="sub-alert danger">${getEmojiImg('⚠️', '1.2em', 'margin-right: 4px;')} <strong>Tu consumo (${m3.toFixed(1)} m³) supera los ${SUB_MAX_SSO} m³</strong> (tope máximo Chile Seguridades). Los ${fD(m3 - SUB_MAX_SSO)} m³ extra se cobran a tarifa completa.</div>`;
+      else if (oS) subAlert = `<div class="sub-alert warn">${getEmojiImg('⚠️', '1.2em', 'margin-right: 4px;')} <strong>Tu consumo (${m3.toFixed(1)} m³) supera los ${SUB_MAX} m³ del SAP.</strong> Con Chile Seguridades, tu tope es ${SUB_MAX_SSO} m³.</div>`;
+      else subAlert = `<div class="sub-alert ok">${getEmojiImg('✅', '1.2em', 'margin-right: 4px;')} Tu consumo (${m3.toFixed(1)} m³) está dentro del límite de ${SUB_MAX} m³ subsidiables.</div>`;
 
       document.getElementById('panelSubsidio').innerHTML = `
         <p style="font-size:14px;color:var(--gray-600);line-height:1.7;margin-bottom:1rem">Si tu hogar está en el <strong>Registro Social de Hogares (RSH)</strong>, puedes recibir un descuento en tu boleta. El SAP cubre hasta <strong>${SUB_MAX} m³/mes</strong>.</p>
@@ -2743,7 +2814,7 @@
         </div>
         <div class="save-hero" style="${econStyle}">
           <div><div class="sh-lbl">Ahorro anual</div><div class="sh-val">$${fm(sY)} CLP</div>${eq.length ? `<div class="sh-extra">${eq.join(' · ')}</div>` : ''}</div>
-          <div><div class="sh-lbl">Agua ahorrada al año</div><div class="sh-val">${(m3s * 12).toFixed(1)} m³</div><div class="sh-extra">💧 ${fm(Math.round(m3s * 12 * 1000))} litros menos</div></div>
+          <div><div class="sh-lbl">Agua ahorrada al año</div><div class="sh-val">${(m3s * 12).toFixed(1)} m³</div><div class="sh-extra">${getEmojiImg('💧', '1.1em', 'margin-right: 4px;')} ${fm(Math.round(m3s * 12 * 1000))} litros menos</div></div>
           <div><div class="sh-lbl">En 5 años ahorras</div><div class="sh-val">$${fm(sY * 5)} CLP</div></div>
         </div>`;
 
@@ -2751,26 +2822,26 @@
       const smartTips = generateSmartTips(m3, m3e, cost, ce, save, sY, c);
       let tipsHTML = '';
       if (!smartTips.length) {
-        tipsHTML = '<div class="tip"><div class="tip-ico">🎉</div><p><strong>¡Excelente!</strong> Tus hábitos ya son muy eficientes. ¡Sigue así!</p></div>';
+        tipsHTML = `<div class="tip"><div class="tip-ico">${getEmojiImg('🎉', '2em')}</div><p><strong>¡Excelente!</strong> Tus hábitos ya son muy eficientes. ¡Sigue así!</p></div>`;
       } else {
         smartTips.forEach(t => {
           const badge = t.save > 0 ? `<span class="tip-badge">Ahorra ${fm(t.save)} L/mes</span>` : '';
-          tipsHTML += `<div class="tip"><div class="tip-ico">${t.ico}</div><p><strong>${t.title}:</strong> ${t.text}${badge}</p></div>`;
+          tipsHTML += `<div class="tip"><div class="tip-ico">${getEmojiImg(t.ico, '2em')}</div><p><strong>${t.title}:</strong> ${t.text}${badge}</p></div>`;
         });
       }
 
       let influencerShareText = '';
       if (userProfile === 'influencer') {
-        influencerShareText = `<p style="font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 8px; text-align: center;">📢 ¡Felicidades! Lideras el ahorro de agua. Comparte tus resultados e invita a tu comunidad.</p>`;
+        influencerShareText = `<p style="font-size: 13px; font-weight: 700; color: var(--green); margin-bottom: 8px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px;">${getEmojiImg('📢', '1.2em')} <span>¡Felicidades! Lideras el ahorro de agua. Comparte tus resultados e invita a tu comunidad.</span></p>`;
       }
 
       let earlyPilotHtml = '';
       if (userProfile === 'early_adopter') {
         earlyPilotHtml = `
           <div style="background: var(--green-50); border: 1.5px solid var(--green-light); border-radius: var(--r); padding: 12px; margin-top: 1rem; text-align: center; font-size: 12.5px; color: #065F46;">
-            <strong>🚀 Plan Piloto de Ahorro Tecnológico</strong>
+            <strong>${getEmojiImg('🚀', '1.2em')} Plan Piloto de Ahorro Tecnológico</strong>
             <div style="margin: 4px 0 8px; line-height: 1.4;">Prueba gratis un medidor inteligente digital de flujo en tu hogar. Cupos limitados.</div>
-            <button onclick="toast('🚀 ¡Gracias! Te has inscrito en el plan piloto para early adopters.')" class="carousel-next" style="padding: 6px 14px; min-height: 32px; font-size: 11px; margin: 0; width: auto; display: inline-flex;">Inscribirse en el piloto</button>
+            <button onclick="toast('${getEmojiImg('🚀', '1.2em')} ¡Gracias! Te has inscrito en el plan piloto para early adopters.')" class="carousel-next" style="padding: 6px 14px; min-height: 32px; font-size: 11px; margin: 0; width: auto; display: inline-flex;">Inscribirse en el piloto</button>
           </div>
         `;
       }
@@ -2779,7 +2850,7 @@
       if (userProfile === 'uninterested') {
         uninterestedToggle = `
           <div style="background: var(--gray-50); border: 1px solid var(--border); border-radius: var(--r); padding: 12px; margin-bottom: 1rem; text-align: center;">
-            <p style="font-size: 12.5px; font-weight: 600; color: var(--gray-600); margin-bottom: 8px;">⚡ ¿Prefieres ver solo un resumen rápido?</p>
+            <p style="font-size: 12.5px; font-weight: 600; color: var(--gray-600); margin-bottom: 8px;">${getEmojiImg('⚡', '1.2em')} ¿Prefieres ver solo un resumen rápido?</p>
             <button onclick="toggleSimpleView()" class="carousel-back" style="padding: 6px 14px; min-height: 32px; font-size: 12px; width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: 1.5px solid var(--border); border-radius: var(--r); background: var(--card);">Ver resumen simple</button>
           </div>
         `;
@@ -2791,13 +2862,13 @@
         <div class="share-section">
           ${influencerShareText}
           <div class="share-main-buttons">
-            <button class="share-btn-big" onclick="shareWA()">📲 Compartir por WhatsApp</button>
-            <button class="share-btn-big print-btn-big" onclick="window.print()">📄 Descargar Reporte (PDF/Imprimir)</button>
+            <button class="share-btn-big" onclick="shareWA()" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px;">${getEmojiImg('📲', '1.2em')} Compartir por WhatsApp</button>
+            <button class="share-btn-big print-btn-big" onclick="window.print()" style="display: inline-flex; align-items: center; justify-content: center; gap: 6px;">${getEmojiImg('📄', '1.2em')} Descargar Reporte (PDF/Imprimir)</button>
           </div>
           <div class="share-secondary">
-            <button onclick="saveScen()">💾 Guardar</button>
-            <button onclick="loadScen()">📂 Cargar</button>
-            <button onclick="resetAll()">🔄 Restablecer</button>
+            <button onclick="saveScen()" style="display: inline-flex; align-items: center; justify-content: center; gap: 4px;">${getEmojiImg('💾', '1.2em')} Guardar</button>
+            <button onclick="loadScen()" style="display: inline-flex; align-items: center; justify-content: center; gap: 4px;">${getEmojiImg('📂', '1.2em')} Cargar</button>
+            <button onclick="resetAll()" style="display: inline-flex; align-items: center; justify-content: center; gap: 4px;">${getEmojiImg('🔄', '1.2em')} Restablecer</button>
           </div>
         </div>
         ${earlyPilotHtml}`;
@@ -2810,7 +2881,7 @@
       
       const html = `
         <div style="text-align: center; margin-bottom: 1.5rem;">
-          <div style="font-size: 40px; margin-bottom: 6px;">⚡</div>
+          <div style="margin-bottom: 6px; display: flex; justify-content: center; align-items: center;">${getEmojiImg('⚡', '40px')}</div>
           <div style="font-size: 20px; font-weight: 900; color: var(--pri-dark); line-height: 1.3;">Resumen de tu Ahorro</div>
         </div>
         <div style="background: var(--pri-50); border: 1.5px solid var(--border); border-radius: var(--r); padding: 1.25rem; margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: 10px; text-align: center;">
@@ -2828,7 +2899,7 @@
           </div>
         </div>
         <div class="share-section" style="padding: 0;">
-          <button class="share-btn-big" onclick="shareWA()" style="width: 100%; justify-content: center;">📲 Compartir por WhatsApp</button>
+          <button class="share-btn-big" onclick="shareWA()" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 6px;">${getEmojiImg('📲', '1.2em')} Compartir por WhatsApp</button>
           <button onclick="renderResults()" class="carousel-back" style="width: 100%; justify-content: center; margin-top: 10px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; border: 1.5px solid var(--border); border-radius: var(--r); background: var(--card);">← Volver al detalle</button>
         </div>
       `;
@@ -3004,10 +3075,10 @@
 
     function buildPrograms() {
       return `
-        <div class="prog"><div class="prog-icon"><img src="icon_subsidies.png" alt="" style="height: 1.2em; width: auto; vertical-align: middle;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">🏛️</span></div><div><h4>Subsidio SAP</h4><p>Cubre hasta 85% de tu boleta. <a href="subsidio-sap.html" style="font-weight: 700; color: var(--pri);">Ver requisitos y cómo postular →</a></p></div></div>
-        <div class="prog"><div class="prog-icon">🔧</div><div><h4>Revisión de medidor</h4><p>Revisión gratuita si sospechas de mal cobro.</p></div></div>
-        <div class="prog"><div class="prog-icon">🏘️</div><div><h4>Kit de ahorro municipal</h4><p>Aireadores y reductores de flujo sin costo.</p></div></div>
-        <div class="prog"><div class="prog-icon">📞</div><div><h4>Convenio de pago</h4><p>Cuotas con tu empresa sanitaria, sin corte.</p></div></div>`;
+        <div class="prog"><div class="prog-icon"><img src="icon_subsidies.png" alt="" style="height: 1.2em; width: auto; vertical-align: middle;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">🏛️</span></div><div><h4>Subsidio SAP</h4><p>Cubre hasta 85% de tu boleta. <a href="subsidio-sap.html" style="font-weight: 700; color: var(--pri);">Ver requisitos y cómo postular &rarr;</a></p></div></div>
+        <div class="prog"><div class="prog-icon"><img src="icon_settings.png" alt="" style="height: 1.2em; width: auto; vertical-align: middle;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">🔧</span></div><div><h4>Revisión de medidor</h4><p>Revisión gratuita si sospechas de mal cobro.</p></div></div>
+        <div class="prog"><div class="prog-icon"><img src="icon_location.png" alt="" style="height: 1.2em; width: auto; vertical-align: middle;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">🏘️</span></div><div><h4>Kit de ahorro municipal</h4><p>Aireadores y reductores de flujo sin costo.</p></div></div>
+        <div class="prog"><div class="prog-icon"><img src="icon_calc.png" alt="" style="height: 1.2em; width: auto; vertical-align: middle;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">📞</span></div><div><h4>Convenio de pago</h4><p>Cuotas con tu empresa sanitaria, sin corte.</p></div></div>`;
     }
 
     /* ══════════════════════ ACTIONS ══════════════════════ */
@@ -3279,7 +3350,7 @@ ${tipsMsg}
     <div style="background: #fff; border-radius: var(--r-lg); max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto; border: 1.5px solid var(--border); padding: 1.75rem; box-shadow: var(--sh-lg); position: relative;">
       <button onclick="closeFormulaModal()" style="position: absolute; top: 16px; right: 16px; font-size: 20px; color: var(--gray-400); font-weight: 700; background: none; border: none; cursor: pointer;">×</button>
       <div style="font-size: 18px; font-weight: 900; color: var(--pri-dark); border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-        <span>🔍 ¿Cómo se calcula tu cuenta?</span>
+        <img src="icon_calc.png" alt="" style="height: 1.2em; width: auto; vertical-align: middle;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">🔍</span><span>¿Cómo se calcula tu cuenta?</span>
       </div>
       <div style="font-size: 13.5px; line-height: 1.6; color: var(--gray-700); display: flex; flex-direction: column; gap: 10px;">
         <p>Esta calculadora sigue las fórmulas oficiales de la <strong>Superintendencia de Servicios Sanitarios (SISS)</strong> para simular el cobro de tu boleta de agua:</p>
