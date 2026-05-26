@@ -1405,3 +1405,95 @@
   text-transform: uppercase;
   font-family: 'Poppins', sans-serif;
 }
+
+/* ══════════════════════ HOME HEADER (NAVBAR) ══════════════════════ */
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  max-width: 100%;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  color: var(--pri-dark);
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.header-brand img {
+  height: 32px;
+  width: auto;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.header-nav a {
+  font-size: 13.5px;
+  color: var(--gray-600);
+  font-weight: 600;
+  transition: color 0.2s;
+  text-decoration: none;
+}
+
+.header-nav a:hover {
+  color: var(--pri);
+  text-decoration: none;
+}
+
+.header-social {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.instagram-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
+  color: white;
+  transition: transform 0.2s;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.instagram-btn:hover {
+  transform: scale(1.1);
+  color: white;
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .home-header {
+    flex-direction: column;
+    gap: 10px;
+    padding: 0.75rem 1rem;
+    text-align: center;
+  }
+  
+  .header-nav {
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
