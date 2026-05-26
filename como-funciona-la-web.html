@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¿Cómo funciona Calcula Tu Agua? — Blog EducaCalcula</title>
+  <meta name="description"
+    content="Descubre el código, fórmulas y lógica detrás del simulador de Calcula Tu Agua. Explicación interactiva del viaje del dato en la web, perfiles WHY y algoritmos de ahorro.">
+  <meta name="keywords" content="como funciona calcula tu agua, algoritmo ahorro agua, constantes consumo diario siss, formulas programacion calculadora agua">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://calculatuagua.cl/como-funciona-la-web.html">
+  <meta property="og:title" content="¿Cómo funciona Calcula Tu Agua? — Blog EducaCalcula">
+  <meta property="og:description" content="Descubre el código, fórmulas y lógica detrás del simulador de Calcula Tu Agua. Explicación interactiva del viaje del dato en la web, perfiles WHY y algoritmos de ahorro.">
+  <meta property="og:image" content="https://calculatuagua.cl/logo.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://calculatuagua.cl/como-funciona-la-web.html">
+  <meta property="twitter:title" content="¿Cómo funciona Calcula Tu Agua? — Blog EducaCalcula">
+  <meta property="twitter:description" content="Descubre el código, fórmulas y lógica detrás del simulador de Calcula Tu Agua. Explicación interactiva del viaje del dato en la web, perfiles WHY y algoritmos de ahorro.">
+  <meta property="twitter:image" content="https://calculatuagua.cl/logo.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos_branding.css">
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <style>
+    /* Estilos específicos para la sección del Blog */
+    .blog-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    @media (min-width: 992px) {
+      .blog-container {
+        grid-template-columns: 2.2fr 1fr;
+      }
+    }
+
+    .article-card {
+      background: var(--card);
+      border-radius: var(--r-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--sh-md);
+      padding: 2rem;
+    }
+
+    .article-header {
+      margin-bottom: 2rem;
+      border-bottom: 1.5px solid var(--border);
+      padding-bottom: 1.5rem;
+    }
+
+    .article-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--pri-dark);
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+
+    .article-meta {
+      display: flex;
+      gap: 15px;
+      font-size: 13px;
+      color: var(--gray-500);
+      font-weight: 500;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .article-meta span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .article-body {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--gray-700);
+    }
+
+    .article-body p {
+      margin-bottom: 1.5rem;
+    }
+
+    .article-body h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--pri-dark);
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Estilos del Diagrama de Flujo Interactivo */
+    .flow-container {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r);
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .flow-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--pri-dark);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    /* Barra del Timeline superior */
+    .flow-timeline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      margin-bottom: 1.5rem;
+      padding: 0 10px;
+    }
+
+    .flow-timeline::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gray-200);
+      z-index: 1;
+      transform: translateY(-50%);
+    }
+
+    .flow-step-node {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3px solid var(--gray-300);
+      color: var(--gray-500);
+      font-weight: 800;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .flow-step-node:hover {
+      border-color: var(--pri-light);
+      color: var(--pri);
+      transform: scale(1.1);
+    }
+
+    .flow-step-node.active {
+      border-color: var(--pri);
+      background: var(--pri);
+      color: #ffffff;
+      box-shadow: 0 0 12px rgba(22, 119, 200, 0.4);
+      transform: scale(1.15);
+    }
+
+    .flow-step-label {
+      position: absolute;
+      top: 45px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--gray-500);
+      white-space: nowrap;
+      text-align: center;
+      transform: translateX(-5px);
+      display: none;
+    }
+
+    @media (min-width: 576px) {
+      .flow-step-label {
+        display: block;
+      }
+    }
+
+    /* Tarjeta Detalle del Flujo */
+    .flow-card {
+      background: #ffffff;
+      border-radius: var(--r);
+      border: 1px solid var(--border);
+      box-shadow: var(--sh);
+      padding: 1.5rem;
+      min-height: 220px;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      position: relative;
+    }
+
+    .flow-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      border-bottom: 1px dashed var(--border);
+      padding-bottom: 8px;
+    }
+
+    .flow-card-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--pri-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .flow-card-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--pri);
+      background: var(--pri-50);
+      padding: 2px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+    }
+
+    .flow-card-desc {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--gray-600);
+      margin-bottom: 12px;
+    }
+
+    .flow-card-code {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--r);
+      padding: 10px 14px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 11.5px;
+      color: var(--pri-dark);
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    /* Sidebar Styles */
+    .sidebar-card {
+      background: var(--card);
+      border-radius: var(--r);
+      border: 1px solid var(--border);
+      box-shadow: var(--sh);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .sidebar-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--pri-dark);
+      margin-bottom: 1rem;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .sidebar-post-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sidebar-post-item {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .sidebar-post-item a {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+
+    .sidebar-post-item a:hover {
+      color: var(--pri);
+    }
+
+    .sidebar-post-active {
+      font-weight: 700 !important;
+      color: var(--pri) !important;
+    }
+
+    .cta-button {
+      display: block;
+      width: 100%;
+      background: var(--pri);
+      color: white;
+      text-align: center;
+      padding: 12px;
+      border-radius: var(--r);
+      font-weight: 700;
+      font-size: 14px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(22, 119, 200, 0.2);
+    }
+
+    .cta-button:hover {
+      background: var(--pri-dark);
+      text-decoration: none;
+      transform: translateY(-2px);
+    }
+
+    .back-nav {
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      color: var(--pri);
+      font-size: 14.5px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <div class="hero" id="heroSection">
+    <div class="hero-blob hero-blob-1"></div>
+    <div class="hero-blob hero-blob-2"></div>
+    <h1 class="hero-logo-container" style="font-size: inherit; font-weight: inherit; margin: 0; line-height: inherit;">
+      <a href="index.html" style="color: inherit; text-decoration: none;">
+        <img src="logo.png" alt="Calcula Tu Agua" class="hero-logo-img" onerror="this.style.display='none'; document.getElementById('fallbackLogoText').style.display='block';">
+        <span id="fallbackLogoText" class="hero-logo" style="display: none;"><span class="drop">💧</span> Calcula Tu Agua</span>
+      </a>
+    </h1>
+    <p class="hero-sub">Blog Educativo & Recursos de Apoyo para Familias</p>
+    <div class="hero-badge">Aprende cómo funciona el agua y la calculadora</div>
+    <div class="wave-bottom">
+      <svg viewBox="0 0 1440 70" preserveAspectRatio="none">
+        <path d="M0,35 C240,70 480,0 720,35 C960,70 1200,0 1440,35 L1440,70 L0,70 Z" fill="var(--bg)" />
+      </</svg>
+    </div>
+  </div>
+
+  <div class="container">
+    
+    <a href="blog.html" class="back-nav">&larr; Volver al Portal del Blog</a>
+
+    <div class="blog-container">
+
+      <!-- MAIN CONTENT: ARTICLE -->
+      <main class="article-card">
+        
+        <header class="article-header">
+          <h1 class="article-title">¿Cómo funciona la web de Calcula Tu Agua por dentro? (El viaje del dato)</h1>
+          <div class="article-meta">
+            <span>📅 26 de Mayo, 2026</span>
+            <span>✍️ Equipo Calcula Tu Agua</span>
+            <span>⏱️ 4 min de lectura</span>
+            <span>🛠️ Tecnología y Código</span>
+          </div>
+        </header>
+
+        <section class="article-body">
+          <p>
+            Calcula Tu Agua fue diseñada con una filosofía clara: **ser 100% interactiva, ultraliviana y capaz de funcionar sin conexión a internet (offline)**. Para cumplir esto en sectores vulnerables o campamentos con poca señal, la aplicación no utiliza bases de datos complejas en servidores lejanos ni consume tus datos móviles cargando código pesado.
+          </p>
+          <p>
+            Toda la matemática, las tarifas del agua de Chile y la lógica inteligente de consejos se procesan directamente en el navegador de tu teléfono o computador usando **JavaScript puro**. Aquí te explicamos paso a paso cómo viajan tus respuestas por el código de la web para armar tus resultados personalizados.
+          </p>
+
+          <h2><span class="icon-badge sm"><img src="icon_tips.png" alt="" style="height:14px; width:auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display:none">📊</span></span>Diagrama de Flujo Interactivo</h2>
+          <p>
+            Presiona los números en la barra de tiempo a continuación para seguir el recorrido de los datos desde que inicias la encuesta hasta que obtienes tu reporte final:
+          </p>
+
+          <!-- FLOW DIAGRAM INTERACTIVE PANEL -->
+          <div class="flow-container">
+            <div class="flow-title">
+              <span class="icon-badge sm"><img src="icon_settings.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display:none">⚙️</span></span>
+              <span>Viaje de la Información Paso a Paso</span>
+            </div>
+
+            <!-- Timeline nodes -->
+            <div class="flow-timeline">
+              <button class="flow-step-node active" onclick="selectFlowStep(1)" aria-label="Paso 1: Onboarding">1<span class="flow-step-label" style="left: -15px;">Onboarding</span></button>
+              <button class="flow-step-node" onclick="selectFlowStep(2)" aria-label="Paso 2: Ubicación">2<span class="flow-step-label" style="left: -10px;">Ubicación</span></button>
+              <button class="flow-step-node" onclick="selectFlowStep(3)" aria-label="Paso 3: Hábitos">3<span class="flow-step-label" style="left: -5px;">Hábitos</span></button>
+              <button class="flow-step-node" onclick="selectFlowStep(4)" aria-label="Paso 4: Tarifas">4<span class="flow-step-label" style="left: -5px;">Tarifas SISS</span></button>
+              <button class="flow-step-node" onclick="selectFlowStep(5)" aria-label="Paso 5: Algoritmo">5<span class="flow-step-label" style="left: -10px;">Consejos</span></button>
+              <button class="flow-step-node" onclick="selectFlowStep(6)" aria-label="Paso 6: Reporte">6<span class="flow-step-label" style="left: -10px;">Reportes</span></button>
+            </div>
+
+            <!-- Detail display card -->
+            <div class="flow-card" id="flowCard">
+              <div class="flow-card-header">
+                <div class="flow-card-title" id="flowTitle">Cargando...</div>
+                <div class="flow-card-tag" id="flowTag">Paso 1</div>
+              </div>
+              <div class="flow-card-desc" id="flowDesc">Cargando descripción...</div>
+              <div class="flow-card-code" id="flowCode">Cargando código...</div>
+            </div>
+          </div>
+
+          <h2>Filosofía Client-side y Privacidad</h2>
+          <p>
+            Al procesar toda la información de forma local (dentro de tu propio dispositivo), Calcula Tu Agua garantiza **privacidad absoluta**. No guardamos tus hábitos de consumo ni tu comuna en servidores externos. 
+          </p>
+          <p>
+            Además, gracias a esta arquitectura, una vez que cargas la página, puedes apagar tu conexión a internet o el plan de datos y la calculadora continuará simulando consumos y mostrando los consejos de forma idéntica, permitiendo llevar esta herramienta de educación ambiental a cualquier rincón de Chile.
+          </p>
+
+        </section>
+
+      </main>
+
+      <!-- SIDEBAR -->
+      <aside>
+        
+        <!-- About Project -->
+        <div class="sidebar-card">
+          <div class="sidebar-title">Sobre la Iniciativa</div>
+          <p style="font-size: 13px; color: var(--gray-600); line-height: 1.6; margin: 0;">
+            <strong>Calcula Tu Agua</strong> es una herramienta digital desarrollada en conjunto con la <strong>Universidad San Sebastián</strong> para empoderar a los hogares chilenos, facilitando el control de presupuestos y fomentando el ahorro consciente en comunidades vulnerables.
+          </p>
+        </div>
+
+        <!-- Recent Articles -->
+        <div class="sidebar-card">
+          <div class="sidebar-title">Recursos y Guías</div>
+          <nav class="sidebar-post-list">
+            <div class="sidebar-post-item">
+              <span>📖</span>
+              <a href="como-se-calcula-el-agua.html">Cómo se calcula tu agua</a>
+            </div>
+            <div class="sidebar-post-item">
+              <span>🛠️</span>
+              <a href="#" class="sidebar-post-active">Cómo funciona la web</a>
+            </div>
+            <div class="sidebar-post-item">
+              <span>🏛️</span>
+              <a href="subsidio-sap.html">Guía de postulación al Subsidio SAP</a>
+            </div>
+          </nav>
+        </div>
+
+        <!-- CTA Box -->
+        <div class="sidebar-card" style="background: var(--pri-50); border-color: var(--pri-200); text-align: center;">
+          <h4 style="font-size: 15px; font-weight: 800; color: var(--pri-dark); margin-bottom: 8px;">¿Quieres simular tu cuenta?</h4>
+          <p style="font-size: 12px; color: var(--gray-600); margin-bottom: 1rem;">
+            Ajusta los sliders de ducha, cocina, jardín o lavado según el uso diario de tu familia.
+          </p>
+          <a href="index.html" class="cta-button">Ir al Calculador Interactiva &rarr;</a>
+        </div>
+
+      </aside>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <strong><img src="logo.png" alt="" style="height: 1.5em; vertical-align: middle; margin-right: 4px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">💧</span>Calcula Tu Agua</strong> — calculatuagua.cl<br>
+      Tarifas basadas en los decretos oficiales de la SISS.<br>
+      Este cálculo es didáctico y educativo. No reemplaza a la boleta oficial de cobro emitida por tu sanitaria.
+    </div>
+
+  </div>
+
+  <script>
+    // Datos del flujo didáctico en JS
+    const FLOW_STEPS = {
+      1: {
+        title: "Test de Onboarding (Arquetipos psicométricos)",
+        tag: "Scoring y Psicometría",
+        desc: "Al iniciar, respondes 3 preguntas psicométricas. El sistema suma los puntajes de tus respuestas para asignarte uno de los 7 arquetipos de comportamiento del proyecto WHY. Esto personaliza el tono de la interfaz y la prioridad del ahorro.",
+        code: "// Lógica de scoring en JS\nconst scores = { stubborn: 0, economicus: 0, fearful: 0, ... };\n// Determina el perfil con mayor puntaje\nconst assignedProfile = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);\nlocalStorage.setItem('cta_profile', assignedProfile);"
+      },
+      2: {
+        title: "Geolocalización Tarifaria (Ubicación SISS)",
+        tag: "Base de Datos",
+        desc: "Seleccionas tu región y comuna. La web filtra dinámicamente el listado de empresas sanitarias de la base tarifas.js. Si solo hay una sanitaria que atiende tu comuna, la asigna automáticamente; de lo contrario, te da a elegir tu sector.",
+        code: "// Filtrado dinámico client-side\nconst matchingTariffs = TARIFF_DB.filter(\n  t => t.r === selectedRegion && t.m.includes(selectedCommune)\n);\nif (matchingTariffs.length === 1) {\n  selectedTariff = matchingTariffs[0]; // Auto-asignación\n}"
+      },
+      3: {
+        title: "Consumo de Agua Diario (Constantes LPU)",
+        tag: "Hábitos a Litros",
+        desc: "Ajustas los sliders de hábitos. El sistema multiplica los valores por constantes predefinidas de Litros por Unidad (LPU) basadas en estudios de la SISS. Si el hábito es per cápita, lo multiplica por el número de personas; si es del hogar, se mantiene constante.",
+        code: "// Valores estándar LPU (Litros por unidad / uso)\nconst LPU = { ducha: 8, wc: 6, dientes: 0.5, platos: 12, ropa: 100 };\n\n// Fórmula de conversión diaria\nconst consumoDiario = valorSlider * LPU[actName] * (esPerCapita ? personas : 1);"
+      },
+      4: {
+        title: "Motor de Cálculo Tarifario (Fórmula SISS)",
+        tag: "Lógica de Cobro",
+        desc: "La web suma los litros de todos tus hábitos, los multiplica por 30 para proyectar el volumen mensual y los divide entre 1.000 para obtener metros cúbicos (m³). Luego, aplica las tarifas de cargo fijo, alcantarillado, sobreconsumo e IVA correspondientes.",
+        code: "// Ecuación matemática interna de la boleta\nconst cargoFijo = selectedTariff.f;\nconst consumoAP = metrosCubicos * selectedTariff.t1;\nconst alcantarillado = incluyeAlcantarillado ? (metrosCubicos * selectedTariff.al) : 0;\nconst subtotalNeto = cargoFijo + consumoAP + alcantarillado;\nconst totalIVA = incluyeIva ? (subtotalNeto * 0.19) : 0;"
+      },
+      5: {
+        title: "Algoritmo de Consejos (Priorización de Tips)",
+        tag: "Inteligencia Local",
+        desc: "Evaluamos tus hábitos y perfil. El sistema calcula en litros el ahorro potencial mensual de cada tip. Luego, multiplica ese ahorro por un ponderador según tu arquetipo (ej: el Austero valora más los consejos gratis) y los ordena de mayor a menor beneficio real.",
+        code: "// Ordenación adaptativa de Smart Tips\ntips.forEach(t => {\n  const ahorroLitros = (consumoActual - consumoEficiente) * 30;\n  t.score = ahorroLitros * perfilMultiplicador[assignedProfile][t.categoria];\n});\ntips.sort((a, b) => b.score - a.score); // El mayor impacto primero"
+      },
+      6: {
+        title: "Salida y Acciones (Reportes y Compartido)",
+        tag: "Acciones del Usuario",
+        desc: "Al guardar o compartir, los datos estructurados se serializan. Si descargas el reporte, aplicamos estilos CSS de impresión (@media print) nativos para renderizar en PDF. Para WhatsApp, codificamos una cadena de texto y ejecutamos un enlace de URI profundo.",
+        code: "// Enlace profundo de WhatsApp para celulares\nconst msg = `Mi consumo: ${m3} m3. ¡Ahorro $${ahorro} al año!`;\nconst waUri = `whatsapp://send?text=${encodeURIComponent(msg)}`;\nwindow.location.href = waUri; // Abre la app nativa"
+      }
+    };
+
+    function selectFlowStep(stepNum) {
+      // Update active classes on bubbles
+      const nodes = document.querySelectorAll('.flow-step-node');
+      nodes.forEach((node, idx) => {
+        if (idx + 1 === stepNum) {
+          node.classList.add('active');
+        } else {
+          node.classList.remove('active');
+        }
+      });
+
+      // Update card content with fade animation
+      const card = document.getElementById('flowCard');
+      card.style.opacity = 0;
+      card.style.transform = 'translateY(5px)';
+
+      setTimeout(() => {
+        const stepData = FLOW_STEPS[stepNum];
+        document.getElementById('flowTitle').textContent = stepData.title;
+        document.getElementById('flowTag').textContent = stepData.tag;
+        document.getElementById('flowDesc').textContent = stepData.desc;
+        document.getElementById('flowCode').textContent = stepData.code;
+
+        card.style.opacity = 1;
+        card.style.transform = 'translateY(0)';
+      }, 200);
+    }
+
+    // Initialize first step
+    selectFlowStep(1);
+  </script>
+</body>
+
+</html>

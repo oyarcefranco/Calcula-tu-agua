@@ -107,7 +107,9 @@ Para personalizar la experiencia de usuario y optimizar la efectividad de las re
 ### Estructura y Distribución de Archivos
 
 - **index.html** — Calculadora interactiva principal, onboarding y visualización de resultados (~50 KB)
-- **blog.html** — Sección de blog y artículo educativo con simulador Sandbox didáctico (~30 KB)
+- **blog.html** — Portal e índice principal del blog con tarjetas de acceso a artículos (~10 KB)
+- **como-se-calcula-el-agua.html** — Artículo educativo del cálculo tarifario SISS y simulador Sandbox (~33 KB)
+- **como-funciona-la-web.html** — Artículo técnico explicativo del viaje de datos y diagrama de flujo interactivo (~20 KB)
 - **subsidio-sap.html** — Landing page informativa interactiva sobre requisitos del subsidio SAP (~17 KB)
 - **estilos_branding.css** — Hoja de estilos externa que unifica la paleta Canva, tipografía y responsive (~42 KB)
 - **tarifas.js** — Base de datos SISS con tarifas vigentes de 111 sanitarias chilenas (~28 KB)

@@ -4,23 +4,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>¿Cómo se calcula el consumo de agua? — Blog EducaCalcula</title>
+  <title>Blog EducaCalcula — Calcula Tu Agua</title>
   <meta name="description"
-    content="Guía educativa didáctica que explica paso a paso cómo se calcula la boleta del agua potable en Chile. Incluye simulador interactivo Sandbox y desglose en tiempo real.">
-  <meta name="keywords" content="como se calcula el agua chile, formulas agua siss, cobro agua potable chile, sobreconsumo verano chile, alcantarillado agua potable">
+    content="Portal educativo de Calcula Tu Agua. Artículos prácticos, guías de subsidios y explicaciones detalladas para ayudarte a entender tu consumo de agua y ahorrar dinero.">
+  <meta name="keywords" content="blog calcula tu agua, educacion sanitaria chile, como ahorrar agua chile, subsidios municipales agua potable">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://calculatuagua.cl/blog.html">
-  <meta property="og:title" content="¿Cómo se calcula el consumo de agua? — Blog EducaCalcula">
-  <meta property="og:description" content="Aprende cómo se desglosa el cobro del agua potable, alcantarillado e IVA en Chile mediante un simulador interactivo de boleta en tiempo real.">
+  <meta property="og:title" content="Blog EducaCalcula — Calcula Tu Agua">
+  <meta property="og:description" content="Portal educativo de Calcula Tu Agua. Artículos prácticos, guías de subsidios y explicaciones detalladas para ayudarte a entender tu consumo de agua y ahorrar dinero.">
   <meta property="og:image" content="https://calculatuagua.cl/logo.png">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://calculatuagua.cl/blog.html">
-  <meta property="twitter:title" content="¿Cómo se calcula el consumo de agua? — Blog EducaCalcula">
-  <meta property="twitter:description" content="Aprende cómo se desglosa el cobro del agua potable, alcantarillado e IVA en Chile mediante un simulador interactivo de boleta en tiempo real.">
+  <meta property="twitter:title" content="Blog EducaCalcula — Calcula Tu Agua">
+  <meta property="twitter:description" content="Portal educativo de Calcula Tu Agua. Artículos prácticos, guías de subsidios y explicaciones detalladas para ayudarte a entender tu consumo de agua y ahorrar dinero.">
   <meta property="twitter:image" content="https://calculatuagua.cl/logo.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,12 +28,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="estilos_branding.css">
   <link rel="icon" type="image/png" href="logo.png">
-  
-  <!-- Base de datos de tarifas compartida -->
-  <script src="tarifas.js"></script>
 
   <style>
-    /* Estilos específicos para la sección del Blog */
+    /* Estilos específicos para la página índice del Blog */
     .blog-container {
       display: grid;
       grid-template-columns: 1fr;
@@ -48,34 +45,53 @@
       }
     }
 
-    .article-card {
+    .blog-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+    }
+
+    .article-preview-card {
       background: var(--card);
       border-radius: var(--r-lg);
       border: 1px solid var(--border);
       box-shadow: var(--sh-md);
       padding: 2rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
     }
 
-    .article-header {
-      margin-bottom: 2rem;
-      border-bottom: 1.5px solid var(--border);
-      padding-bottom: 1.5rem;
+    .article-preview-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--sh-lg);
+      border-color: var(--pri-light);
     }
 
-    .article-title {
-      font-size: 26px;
+    .article-preview-title {
+      font-size: 22px;
       font-weight: 900;
       color: var(--pri-dark);
       line-height: 1.3;
       margin-bottom: 10px;
     }
 
+    .article-preview-title a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .article-preview-title a:hover {
+      color: var(--pri);
+    }
+
     .article-meta {
       display: flex;
-      gap: 15px;
-      font-size: 13px;
+      gap: 12px;
+      font-size: 12.5px;
       color: var(--gray-500);
       font-weight: 500;
+      margin-bottom: 12px;
       align-items: center;
       flex-wrap: wrap;
     }
@@ -86,148 +102,44 @@
       gap: 4px;
     }
 
-    .article-body {
-      font-size: 15px;
-      line-height: 1.8;
-      color: var(--gray-700);
+    .article-tag {
+      background: var(--pri-50);
+      color: var(--pri);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-block;
     }
 
-    .article-body p {
+    .article-excerpt {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--gray-600);
       margin-bottom: 1.5rem;
     }
 
-    .article-body h2 {
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--pri-dark);
-      margin-top: 2rem;
-      margin-bottom: 1rem;
-      display: flex;
+    .read-more-btn {
+      display: inline-flex;
       align-items: center;
-      gap: 8px;
-    }
-
-    /* Estilos del Sandbox / Simulador Didáctico */
-    .sandbox-container {
+      gap: 6px;
       background: var(--bg);
       border: 1.5px solid var(--border);
-      border-radius: var(--r);
-      padding: 1.5rem;
-      margin: 2rem 0;
-    }
-
-    .sandbox-title {
-      font-size: 16px;
-      font-weight: 800;
       color: var(--pri-dark);
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 8px;
+      padding: 8px 18px;
+      border-radius: var(--r);
+      font-weight: 700;
+      font-size: 13.5px;
+      transition: all 0.2s;
     }
 
-    .sandbox-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-
-    @media (min-width: 768px) {
-      .sandbox-grid {
-        grid-template-columns: 1.2fr 1fr;
-      }
-    }
-
-    .sandbox-controls {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    /* Boleta Física Simulada ("Ficha de Cobro") */
-    .bill-receipt {
-      background: #ffffff;
-      border: 1px solid var(--gray-300);
-      border-radius: 4px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      padding: 1.5rem 1.2rem;
-      font-family: 'Courier New', Courier, monospace;
-      color: var(--gray-800);
-      position: relative;
-      background-image: radial-gradient(var(--gray-200) 1px, transparent 1px);
-      background-size: 8px 8px;
-    }
-
-    .bill-receipt::before,
-    .bill-receipt::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      width: 100%;
-      height: 6px;
-      background-size: 10px 6px;
-    }
-
-    .bill-receipt::before {
-      top: -6px;
-      background-image: linear-gradient(135deg, transparent 50%, #ffffff 50%), linear-gradient(225deg, transparent 50%, #ffffff 50%);
-    }
-
-    .bill-receipt::after {
-      bottom: -6px;
-      background-image: linear-gradient(45deg, transparent 50%, #ffffff 50%), linear-gradient(315deg, transparent 50%, #ffffff 50%);
-    }
-
-    .receipt-header {
-      text-align: center;
-      margin-bottom: 1rem;
-      border-bottom: 1px dashed var(--gray-400);
-      padding-bottom: 8px;
-    }
-
-    .receipt-title {
-      font-weight: bold;
-      font-size: 14px;
-      letter-spacing: 1px;
-    }
-
-    .receipt-subtitle {
-      font-size: 11px;
-      color: var(--gray-500);
-    }
-
-    .receipt-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12.5px;
-      margin-bottom: 6px;
-    }
-
-    .receipt-divider {
-      border-top: 1px dashed var(--gray-400);
-      margin: 8px 0;
-    }
-
-    .receipt-total {
-      display: flex;
-      justify-content: space-between;
-      font-weight: bold;
-      font-size: 14.5px;
-      margin-top: 6px;
-      padding-top: 6px;
-      border-top: 1.5px solid var(--gray-800);
-      border-bottom: 1.5px solid var(--gray-800);
-      padding-bottom: 6px;
-    }
-
-    .receipt-footer {
-      text-align: center;
-      font-size: 10px;
-      color: var(--gray-500);
-      margin-top: 1.2rem;
-      line-height: 1.4;
+    .article-preview-card:hover .read-more-btn {
+      background: var(--pri);
+      color: #ffffff;
+      border-color: var(--pri);
+      box-shadow: 0 4px 10px rgba(22, 119, 200, 0.2);
     }
 
     /* Sidebar Styles */
@@ -273,11 +185,6 @@
       color: var(--pri);
     }
 
-    .sidebar-post-active {
-      font-weight: 700 !important;
-      color: var(--pri) !important;
-    }
-
     .cta-button {
       display: block;
       width: 100%;
@@ -308,18 +215,6 @@
       color: var(--pri);
       font-size: 14.5px;
     }
-
-    .formula-box {
-      background: var(--gray-50);
-      border: 1px solid var(--border);
-      padding: 10px 14px;
-      border-radius: var(--r);
-      font-family: monospace;
-      font-size: 12.5px;
-      margin: 10px 0;
-      color: var(--pri-dark);
-      text-align: center;
-    }
   </style>
 </head>
 
@@ -336,7 +231,7 @@
       </a>
     </h1>
     <p class="hero-sub">Blog Educativo & Recursos de Apoyo para Familias</p>
-    <div class="hero-badge">Aprende cómo funciona el agua en Chile</div>
+    <div class="hero-badge">Aprende cómo funciona el agua y la calculadora</div>
     <div class="wave-bottom">
       <svg viewBox="0 0 1440 70" preserveAspectRatio="none">
         <path d="M0,35 C240,70 480,0 720,35 C960,70 1200,0 1440,35 L1440,70 L0,70 Z" fill="var(--bg)" />
@@ -350,199 +245,46 @@
 
     <div class="blog-container">
 
-      <!-- MAIN CONTENT: ARTICLE -->
-      <main class="article-card">
+      <!-- MAIN CONTENT: ARTICLE LIST -->
+      <main class="blog-grid">
         
-        <header class="article-header">
-          <h1 class="article-title">¿Cómo se calcula el consumo de agua en tu boleta de servicios sanitarios?</h1>
-          <div class="article-meta">
-            <span>📅 26 de Mayo, 2026</span>
-            <span>✍️ Equipo Calcula Tu Agua</span>
-            <span>⏱️ 5 min de lectura</span>
-            <span>📚 Metodología SISS</span>
-          </div>
-        </header>
-
-        <section class="article-body">
-          <p>
-            Al abrir la boleta del agua, la mayoría de nosotros va directamente al total a pagar en pesos. Sin embargo, ese número no sale de la nada. En Chile, la tarifa que pagas está regulada por la <strong>Superintendencia de Servicios Sanitarios (SISS)</strong> y depende de tu ubicación geográfica y de la empresa sanitaria que te preste el servicio.
-          </p>
-          <p>
-            Para ayudarte a comprender con precisión qué estás pagando y cómo cada litro que ahorras impacta positivamente a tu bolsillo, a continuación te explicamos en palabras sencillas los componentes que forman tu boleta mensual.
-          </p>
-
-          <h2><span class="icon-badge sm"><img src="icon_calc.png" alt="" style="height:14px; width:auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display:none">🧮</span></span>La Fórmula Oficial de Cobro</h2>
-          <p>
-            El cobro total mensual de agua potable y alcantarillado se estructura a partir de la siguiente ecuación:
-          </p>
-          <div class="formula-box">
-            Total Boleta = (Cargo Fijo + Consumo Agua Potable + Alcantarillado) &times; (1 + IVA)
-          </div>
-          <p>
-            A continuación, desglosamos cada uno de estos cinco términos para que sepas qué significan y cómo se calculan.
-          </p>
-
-          <!-- INTERACTIVE SANDBOX -->
-          <div class="sandbox-container">
-            <div class="sandbox-title">
-              <span class="icon-badge sm"><img src="icon_settings.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display:none">⚙️</span></span>
-              <span>Calculadora Didáctica: ¡Prueba la Fórmula!</span>
+        <!-- CARD 1 -->
+        <article class="article-preview-card">
+          <header style="margin-bottom: 10px;">
+            <div class="article-tag" style="margin-bottom: 8px;">Metodología SISS</div>
+            <h2 class="article-preview-title">
+              <a href="como-se-calcula-el-agua.html">¿Cómo se calcula el consumo de agua en tu boleta de servicios sanitarios?</a>
+            </h2>
+            <div class="article-meta">
+              <span>📅 26 de Mayo, 2026</span>
+              <span>⏱️ 5 min de lectura</span>
+              <span>🗣️ Didáctico / Sandbox</span>
             </div>
-            <p style="font-size: 13px; color: var(--gray-500); margin-bottom: 1rem; line-height: 1.5;">
-              Modifica la ubicación, el consumo en metros cúbicos (m³) y las opciones adicionales para ver en tiempo real cómo se arma y calcula una boleta real paso a paso.
-            </p>
+          </header>
+          <p class="article-excerpt">
+            Desglosamos detalladamente en pesos y m³ la fórmula oficial de cobros regulada por la SISS en Chile. Descubre qué significan el cargo fijo, agua potable, alcantarillado, IVA y sobreconsumo de verano mediante una boleta simulada en tiempo real.
+          </p>
+          <a href="como-se-calcula-el-agua.html" class="read-more-btn">Leer artículo &rarr;</a>
+        </article>
 
-            <div class="sandbox-grid">
-              
-              <!-- Controls -->
-              <div class="sandbox-controls">
-                <div>
-                  <label for="regionSelect" style="font-size: 11px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; margin-bottom: 4px; display: block;">Región</label>
-                  <select id="regionSelect" class="region-select" style="padding: 6px 10px; font-size: 13.5px;" aria-label="Región"></select>
-                </div>
-                <div>
-                  <label for="communeSelect" style="font-size: 11px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; margin-bottom: 4px; display: block;">Comuna</label>
-                  <select id="communeSelect" class="region-select" style="padding: 6px 10px; font-size: 13.5px;" aria-label="Comuna"></select>
-                </div>
-                
-                <div id="companyAutoInfo" style="display: none;">
-                  <label style="font-size: 11px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; margin-bottom: 4px; display: block;">Empresa Sanitaria</label>
-                  <div style="background: var(--gray-100); border: 1px solid var(--gray-200); border-radius: var(--r); padding: 8px 12px; font-size: 13px; font-weight: 600; color: var(--pri-dark); display: flex; align-items: center; gap: 8px;">
-                    <span id="companyAutoText"></span>
-                  </div>
-                </div>
-
-                <div id="companySelectContainer" style="display: none;">
-                  <label for="companySelect" style="font-size: 11px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; margin-bottom: 4px; display: block;">Empresa Sanitaria / Sector</label>
-                  <select id="companySelect" class="region-select" style="padding: 6px 10px; font-size: 13.5px;" aria-label="Empresa sanitaria"></select>
-                </div>
-
-                <div style="margin-top: 6px;">
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                    <label for="rangeM3" style="font-size: 11px; font-weight: 700; color: var(--gray-500); text-transform: uppercase;">Consumo Mensual</label>
-                    <span id="valM3" style="font-size: 14px; font-weight: 700; color: var(--pri-dark);">15 m³</span>
-                  </div>
-                  <input type="range" id="rangeM3" min="0" max="60" value="15" style="width: 100%; accent-color: var(--pri); cursor: pointer;">
-                  <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--gray-400); margin-top: 2px;">
-                    <span>0 m³ (Eficiente)</span>
-                    <span>15 m³ (Promedio)</span>
-                    <span>40 m³ (Umbral Verano)</span>
-                    <span>60 m³</span>
-                  </div>
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px; border-top: 1px solid var(--border); padding-top: 8px;">
-                  <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--gray-700); cursor: pointer;">
-                    <input type="checkbox" id="chkSewer" checked style="width: 16px; height: 16px; accent-color: var(--pri);">
-                    <span>Incluir Agua Sucia (Alcantarillado)</span>
-                  </label>
-                  <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--gray-700); cursor: pointer;">
-                    <input type="checkbox" id="chkIva" checked style="width: 16px; height: 16px; accent-color: var(--pri);">
-                    <span>Incluir IVA (19%)</span>
-                  </label>
-                  <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--gray-700); cursor: pointer;">
-                    <input type="checkbox" id="chkSummer" style="width: 16px; height: 16px; accent-color: var(--pri);">
-                    <span>Período de Verano (Sobreconsumo)</span>
-                  </label>
-                </div>
-              </div>
-
-              <!-- Ticket / Simulated Bill -->
-              <div style="display: flex; flex-direction: column; justify-content: center;">
-                <div class="bill-receipt" id="receipt">
-                  <div class="receipt-header">
-                    <div class="receipt-title">BOLETA SIMULADA</div>
-                    <div class="receipt-subtitle">Calcula Tu Agua - Didáctico</div>
-                    <div class="receipt-subtitle" id="receiptCompany" style="font-weight: bold; margin-top: 4px;">Aguas Andinas — G1</div>
-                  </div>
-                  
-                  <div class="receipt-row">
-                    <span>Consumo Mensual:</span>
-                    <span id="receiptM3" style="font-weight: bold;">15.0 m³</span>
-                  </div>
-                  
-                  <div class="receipt-divider"></div>
-                  
-                  <div class="receipt-row">
-                    <span>Cargo Fijo Mensual</span>
-                    <span id="receiptFixed">$0</span>
-                  </div>
-                  
-                  <div class="receipt-row">
-                    <span>Consumo AP Normal</span>
-                    <span id="receiptWater">$0</span>
-                  </div>
-                  
-                  <div class="receipt-row" id="receiptSewerRow">
-                    <span>Serv. Alcantarillado</span>
-                    <span id="receiptSewer">$0</span>
-                  </div>
-                  
-                  <div class="receipt-row" id="receiptSummerRow" style="display: none; color: var(--accent-dark);">
-                    <span>Sobreconsumo Verano</span>
-                    <span id="receiptSummer">$0</span>
-                  </div>
-
-                  <div class="receipt-divider"></div>
-
-                  <div class="receipt-row" id="receiptSubtotalRow">
-                    <span>Subtotal Neto</span>
-                    <span id="receiptSubtotal">$0</span>
-                  </div>
-
-                  <div class="receipt-row" id="receiptIvaRow">
-                    <span>IVA (19%)</span>
-                    <span id="receiptIva">$0</span>
-                  </div>
-
-                  <div class="receipt-total">
-                    <span>TOTAL A PAGAR</span>
-                    <span id="receiptTotal">$0</span>
-                  </div>
-
-                  <div class="receipt-footer font-monospace">
-                    * Valorado en pesos chilenos (CLP) *<br>
-                    Tarifas oficiales reguladas por SISS
-                  </div>
-                </div>
-              </div>
-
+        <!-- CARD 2 -->
+        <article class="article-preview-card">
+          <header style="margin-bottom: 10px;">
+            <div class="article-tag" style="margin-bottom: 8px; background: var(--green-50); color: var(--green);">Tecnología y Código</div>
+            <h2 class="article-preview-title">
+              <a href="como-funciona-la-web.html">¿Cómo funciona la web de Calcula Tu Agua por dentro? (Viaje del dato)</a>
+            </h2>
+            <div class="article-meta">
+              <span>📅 26 de Mayo, 2026</span>
+              <span>⏱️ 4 min de lectura</span>
+              <span>🛠️ Lógica / Algoritmos</span>
             </div>
-          </div>
-
-          <h2>1. Cargo Fijo Mensual</h2>
-          <p>
-            Es un cargo de costo constante e independiente del volumen de agua que utilices. Sirve para cubrir los gastos de administración, facturación, despacho de la boleta y mantenimiento del medidor de tu hogar. Incluso si no consumes un solo litro en el mes, verás este cobro reflejado en tu boleta.
+          </header>
+          <p class="article-excerpt">
+            Explicamos con peras y manzanas la arquitectura lógica detrás del simulador: desde cómo el test de onboarding determina tu arquetipo conductual hasta la priorización inteligente de consejos en litros/mes. Incluye diagrama de flujo animado paso a paso.
           </p>
-
-          <h2>2. Consumo de Agua Potable</h2>
-          <p>
-            Representa el volumen de agua apta para el consumo humano que ha ingresado a tu hogar desde la red de distribución. Se mide a través del medidor en <strong>metros cúbicos (m³)</strong>. Un metro cúbico equivale exactamente a <strong>1.000 litros</strong>. Para calcular este cobro, se multiplica el total de m³ por la tarifa por metro cúbico asignada a tu sector sanitario.
-          </p>
-
-          <h2>3. Servicio de Alcantarillado y Tratamiento</h2>
-          <p>
-            Al usar agua para ducharte, lavar ropa o descargar el inodoro, esta se transforma en agua servida o residual. El servicio de alcantarillado cubre el costo de recolectar esa agua sucia a través de tuberías subterráneas y transportarla hacia las plantas de tratamiento, donde es filtrada y purificada antes de volver de manera segura a los ríos o al océano. Habitualmente representa entre el <strong>40% y 50%</strong> del costo total de tu boleta.
-          </p>
-
-          <h2>4. Recargo de Verano (Sobreconsumo Punta)</h2>
-          <p>
-            Durante los meses cálidos de verano (de diciembre a marzo), la demanda por agua a nivel de la población sube notablemente por riego y piscinas. Para incentivar el cuidado del recurso, las sanitarias aplican una tarifa de sobreconsumo. Si tu consumo excede el límite oficial (que suele ser <strong>40 m³/mes</strong> o el promedio de tus consumos de invierno), los metros cúbicos excedentes se cobran a un valor mucho más alto.
-          </p>
-
-          <h2>5. IVA (Impuesto al Valor Agregado)</h2>
-          <p>
-            Como casi todos los servicios de consumo básico en el país, el agua potable está sujeta al pago del <strong>19% de IVA</strong>. Este impuesto se calcula directamente sobre la suma neta acumulada de todos tus cobros (Cargo fijo + Agua potable + Alcantarillado + Recargos).
-          </p>
-
-          <div style="background: var(--pri-50); border: 1.5px solid var(--border); padding: 1.2rem; border-radius: var(--r); margin-top: 2rem;">
-            <strong style="color: var(--pri-dark); display: block; margin-bottom: 6px;">💡 ¿Por qué es importante saber esto?</strong>
-            <p style="margin: 0; font-size: 13.5px; color: var(--gray-700);">
-              Cuando reduces tu consumo bajando solo un poco la llave de agua, no solo ahorras en metros cúbicos de agua limpia; también reduces proporcionalmente el cobro de alcantarillado, evitas los tramos altos de sobreconsumo de verano y pagas menos impuestos de IVA. ¡Por eso cada litro cuenta el doble!
-            </p>
-          </div>
-
-        </section>
+          <a href="como-funciona-la-web.html" class="read-more-btn">Leer artículo &rarr;</a>
+        </article>
 
       </main>
 
@@ -563,19 +305,15 @@
           <nav class="sidebar-post-list">
             <div class="sidebar-post-item">
               <span>📖</span>
-              <a href="#" class="sidebar-post-active">Cómo calculamos tu agua</a>
+              <a href="como-se-calcula-el-agua.html">Cómo se calcula tu agua</a>
+            </div>
+            <div class="sidebar-post-item">
+              <span>🛠️</span>
+              <a href="como-funciona-la-web.html">Cómo funciona la web</a>
             </div>
             <div class="sidebar-post-item">
               <span>🏛️</span>
               <a href="subsidio-sap.html">Guía de postulación al Subsidio SAP</a>
-            </div>
-            <div class="sidebar-post-item">
-              <span>☀️</span>
-              <span style="font-size: 13px; color: var(--gray-400);">¿Qué es la Tarifa de Verano? (Próximamente)</span>
-            </div>
-            <div class="sidebar-post-item">
-              <span>🌱</span>
-              <span style="font-size: 13px; color: var(--gray-400);">5 Tips de Ahorro costo cero (Próximamente)</span>
             </div>
           </nav>
         </div>
@@ -602,189 +340,6 @@
 
   </div>
 
-  <script>
-    // Nombres regionales
-    const REGION_NAMES = {
-      "RM": "Región Metropolitana de Santiago",
-      "XV": "Región de Arica y Parinacota",
-      "I": "Región de Tarapacá",
-      "II": "Región de Antofagasta",
-      "III": "Región de Atacama",
-      "IV": "Región de Coquimbo",
-      "V": "Región de Valparaíso",
-      "VI": "Región del Libertador Gral. Bernardo O'Higgins",
-      "VII": "Región del Maule",
-      "XVI": "Región de Ñuble",
-      "VIII": "Región del Biobío",
-      "IX": "Región de la Araucanía",
-      "XIV": "Región de Los Ríos",
-      "X": "Región de Los Lagos",
-      "XI": "Región de Aysén del Gral. Carlos Ibáñez del Campo",
-      "XII": "Región de Magallanes y de la Antártica Chilena"
-    };
-
-    let selectedTariff = null;
-
-    // Helper de formateo de moneda CLP
-    function fm(val) {
-      return val.toLocaleString('es-CL');
-    }
-
-    function setCompanyDisplay(mode, label) {
-      const autoInfo = document.getElementById('companyAutoInfo');
-      const autoText = document.getElementById('companyAutoText');
-      const compCont = document.getElementById('companySelectContainer');
-      
-      if (mode === 'auto') {
-        autoText.textContent = label;
-        autoInfo.style.display = 'block';
-        compCont.style.display = 'none';
-      } else if (mode === 'multi') {
-        autoInfo.style.display = 'none';
-        compCont.style.display = 'block';
-      } else {
-        autoInfo.style.display = 'none';
-        compCont.style.display = 'none';
-      }
-    }
-
-    function buildSelectors() {
-      const regSel = document.getElementById('regionSelect');
-      const comSel = document.getElementById('communeSelect');
-      const compSel = document.getElementById('companySelect');
-      
-      const presentRegions = [...new Set(TARIFF_DB.map(t => t.r))];
-      presentRegions.sort((a, b) => REGION_NAMES[a].localeCompare(REGION_NAMES[b]));
-      
-      regSel.innerHTML = presentRegions.map(r => `<option value="${r}">${REGION_NAMES[r]}</option>`).join('');
-      
-      regSel.onchange = () => {
-        const rCode = regSel.value;
-        const filtered = TARIFF_DB.filter(t => t.r === rCode);
-        
-        const communes = new Set();
-        filtered.forEach(t => {
-          if (t.m && Array.isArray(t.m)) {
-            t.m.forEach(m => communes.add(m));
-          }
-        });
-        const sortedCommunes = [...communes].sort((a, b) => a.localeCompare(b));
-        
-        comSel.innerHTML = sortedCommunes.map(c => `<option value="${c}">${c}</option>`).join('');
-        comSel.onchange();
-      };
-      
-      comSel.onchange = () => {
-        const rCode = regSel.value;
-        const cName = comSel.value;
-        
-        const matchingTariffs = TARIFF_DB.filter(t => t.r === rCode && t.m && t.m.includes(cName));
-        
-        if (matchingTariffs.length === 1) {
-          const globalIdx = TARIFF_DB.indexOf(matchingTariffs[0]);
-          compSel.innerHTML = `<option value="${globalIdx}">${matchingTariffs[0].c} — ${matchingTariffs[0].g}</option>`;
-          selectedTariff = matchingTariffs[0];
-          setCompanyDisplay('auto', `${matchingTariffs[0].c} — ${matchingTariffs[0].g}`);
-          updateSandboxBill();
-        } else if (matchingTariffs.length > 1) {
-          setCompanyDisplay('multi');
-          compSel.innerHTML = matchingTariffs.map(t => `<option value="${TARIFF_DB.indexOf(t)}">${t.c} — ${t.g}</option>`).join('');
-          compSel.onchange();
-        } else {
-          setCompanyDisplay('multi');
-          const filtered = TARIFF_DB.filter(t => t.r === rCode);
-          compSel.innerHTML = filtered.map(t => `<option value="${TARIFF_DB.indexOf(t)}">${t.c} — ${t.g}</option>`).join('');
-          compSel.onchange();
-        }
-      };
-      
-      compSel.onchange = () => {
-        const globalIdx = +compSel.value;
-        selectedTariff = TARIFF_DB[globalIdx];
-        updateSandboxBill();
-      };
-      
-      if (presentRegions.includes("RM")) {
-        regSel.value = "RM";
-      }
-      regSel.onchange();
-    }
-
-    function updateSandboxBill() {
-      if (!selectedTariff) return;
-
-      const m3 = +document.getElementById('rangeM3').value;
-      const includeSewer = document.getElementById('chkSewer').checked;
-      const includeIva = document.getElementById('chkIva').checked;
-      const includeSummer = document.getElementById('chkSummer').checked;
-
-      // Update text labels
-      document.getElementById('valM3').textContent = `${m3} m³`;
-      document.getElementById('receiptM3').textContent = `${m3.toFixed(1)} m³`;
-      document.getElementById('receiptCompany').textContent = `${selectedTariff.c} — ${selectedTariff.g}`;
-
-      // Math
-      const fixedCharge = selectedTariff.f;
-      let baseVariableCharge = 0;
-      let summerSurcharge = 0;
-
-      if (includeSummer) {
-        if (m3 <= 40) {
-          baseVariableCharge = m3 * selectedTariff.t2;
-          summerSurcharge = 0;
-        } else {
-          baseVariableCharge = 40 * selectedTariff.t2;
-          summerSurcharge = (m3 - 40) * selectedTariff.t3;
-        }
-      } else {
-        baseVariableCharge = m3 * selectedTariff.t1;
-        summerSurcharge = 0;
-      }
-
-      let sewerageCharge = 0;
-      if (includeSewer) {
-        sewerageCharge = m3 * selectedTariff.al;
-        document.getElementById('receiptSewerRow').style.display = 'flex';
-      } else {
-        document.getElementById('receiptSewerRow').style.display = 'none';
-      }
-
-      if (includeSummer && m3 > 40) {
-        document.getElementById('receiptSummerRow').style.display = 'flex';
-      } else {
-        document.getElementById('receiptSummerRow').style.display = 'none';
-      }
-
-      const subtotal = fixedCharge + baseVariableCharge + summerSurcharge + sewerageCharge;
-      let iva = 0;
-      if (includeIva) {
-        iva = subtotal * 0.19;
-        document.getElementById('receiptIvaRow').style.display = 'flex';
-      } else {
-        document.getElementById('receiptIvaRow').style.display = 'none';
-      }
-
-      const total = subtotal + iva;
-
-      // Render items on simulated bill
-      document.getElementById('receiptFixed').textContent = `$${fm(Math.round(fixedCharge))}`;
-      document.getElementById('receiptWater').textContent = `$${fm(Math.round(baseVariableCharge))}`;
-      document.getElementById('receiptSewer').textContent = `$${fm(Math.round(sewerageCharge))}`;
-      document.getElementById('receiptSummer').textContent = `$${fm(Math.round(summerSurcharge))}`;
-      document.getElementById('receiptSubtotal').textContent = `$${fm(Math.round(subtotal))}`;
-      document.getElementById('receiptIva').textContent = `$${fm(Math.round(iva))}`;
-      document.getElementById('receiptTotal').textContent = `$${fm(Math.round(total))}`;
-    }
-
-    // Bind event listeners
-    document.getElementById('rangeM3').oninput = updateSandboxBill;
-    document.getElementById('chkSewer').onchange = updateSandboxBill;
-    document.getElementById('chkIva').onchange = updateSandboxBill;
-    document.getElementById('chkSummer').onchange = updateSandboxBill;
-
-    // Start
-    buildSelectors();
-  </script>
 </body>
 
 </html>
