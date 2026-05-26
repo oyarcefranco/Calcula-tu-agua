@@ -29,24 +29,81 @@
   <link rel="stylesheet" href="estilos_branding.css">
   <link rel="icon" type="image/png" href="logo.png">
   <style>
-    .article-section {
-      margin-bottom: 2rem;
+    /* Estilos específicos para la sección del Blog */
+    .blog-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+      margin-bottom: 3rem;
     }
-    .article-section h2 {
+
+    @media (min-width: 992px) {
+      .blog-container {
+        grid-template-columns: 2.2fr 1fr;
+      }
+    }
+
+    .article-card {
+      background: var(--card);
+      border-radius: var(--r-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--sh-md);
+      padding: 2rem;
+    }
+
+    .article-header {
+      margin-bottom: 2rem;
+      border-bottom: 1.5px solid var(--border);
+      padding-bottom: 1.5rem;
+    }
+
+    .article-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--pri-dark);
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+
+    .article-meta {
+      display: flex;
+      gap: 15px;
+      font-size: 13px;
+      color: var(--gray-500);
+      font-weight: 500;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .article-meta span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .article-body {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--gray-700);
+    }
+
+    .article-body p {
+      margin-bottom: 1.5rem;
+    }
+
+    .article-body h2 {
       font-size: 20px;
       font-weight: 800;
       color: var(--pri-dark);
-      margin-bottom: 12px;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
-    .article-section p {
-      font-size: 14.5px;
-      color: var(--gray-600);
-      line-height: 1.8;
-      margin-bottom: 1rem;
-    }
+
+    /* Elementos específicos del Subsidio SAP */
     .req-list {
       list-style: none;
       padding: 0;
@@ -125,54 +182,73 @@
       color: var(--gray-500);
       line-height: 1.6;
     }
-    .badge-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px;
-      margin-top: 12px;
-    }
-    .badge-card {
-      background: white;
-      border: 1px solid var(--border);
+
+    /* Sidebar Styles */
+    .sidebar-card {
+      background: var(--card);
       border-radius: var(--r);
-      padding: 16px;
-      text-align: center;
+      border: 1px solid var(--border);
       box-shadow: var(--sh);
-      transition: all 0.2s;
-    }
-    .badge-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--sh-md);
-      border-color: var(--pri-light);
-    }
-    .badge-val {
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--pri);
-      margin-bottom: 4px;
-    }
-    .badge-lbl {
-      font-size: 12.5px;
-      color: var(--gray-600);
-      font-weight: 600;
-    }
-    .back-btn-top {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: none;
-      border: none;
-      font-family: inherit;
-      color: var(--gray-600);
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
+      padding: 1.5rem;
       margin-bottom: 1.5rem;
-      text-decoration: none;
-      transition: color 0.2s;
     }
-    .back-btn-top:hover {
+
+    .sidebar-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--pri-dark);
+      margin-bottom: 1rem;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .sidebar-post-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sidebar-post-item {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .sidebar-post-item a {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+
+    .sidebar-post-item a:hover {
       color: var(--pri);
+    }
+
+    .sidebar-post-active {
+      font-weight: 700 !important;
+      color: var(--pri) !important;
+    }
+
+    .cta-button {
+      display: block;
+      width: 100%;
+      background: var(--pri);
+      color: white;
+      text-align: center;
+      padding: 12px;
+      border-radius: var(--r);
+      font-weight: 700;
+      font-size: 14px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(22, 119, 200, 0.2);
+    }
+
+    .cta-button:hover {
+      background: var(--pri-dark);
+      text-decoration: none;
+      transform: translateY(-2px);
     }
   </style>
 </head>
@@ -180,14 +256,17 @@
 <body>
 
   <!-- HERO -->
-  <div class="hero" id="heroSection" style="padding-top: 2rem; min-height: auto;">
+  <div class="hero" id="heroSection">
     <div class="hero-blob hero-blob-1"></div>
     <div class="hero-blob hero-blob-2"></div>
-    <div class="hero-logo-container">
-      <img src="logo.png" alt="Calcula Tu Agua" class="hero-logo-img" onerror="this.style.display='none'; document.getElementById('fallbackLogoText').style.display='block';">
-      <span id="fallbackLogoText" class="hero-logo" style="display: none;"><span class="drop">💧</span> Calcula Tu Agua</span>
-    </div>
-    <p class="hero-sub" style="font-size: 14px; margin-top: 0.5rem;">Guía del Subsidio al Pago del Consumo de Agua Potable y Alcantarillado (SAP)</p>
+    <h1 class="hero-logo-container" style="font-size: inherit; font-weight: inherit; margin: 0; line-height: inherit;">
+      <a href="index.html" style="color: inherit; text-decoration: none;">
+        <img src="logo.png" alt="Calcula Tu Agua" class="hero-logo-img" onerror="this.style.display='none'; document.getElementById('fallbackLogoText').style.display='block';">
+        <span id="fallbackLogoText" class="hero-logo" style="display: none;"><span class="drop">💧</span> Calcula Tu Agua</span>
+      </a>
+    </h1>
+    <p class="hero-sub">Blog Educativo & Recursos de Apoyo para Familias</p>
+    <div class="hero-badge">Aprende cómo funciona el agua en Chile</div>
     <div class="wave-bottom">
       <svg viewBox="0 0 1440 70" preserveAspectRatio="none">
         <path d="M0,35 C240,70 480,0 720,35 C960,70 1200,0 1440,35 L1440,70 L0,70 Z" fill="var(--bg)" />
@@ -195,142 +274,196 @@
     </div>
   </div>
 
-  <div class="container" style="max-width: 750px; margin-top: -1.5rem;">
-    <a href="index.html" class="back-btn-top">← Volver al Simulador</a>
+  <div class="container">
+    
+    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 1.5rem; margin-bottom: 1rem; align-items: center;">
+      <a href="blog.html" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--pri); font-size: 14.5px;">&larr; Volver al Blog</a>
+      <a href="index.html" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: var(--gray-600); font-size: 14.5px;">🖥️ Ir al Simulador de Consumo</a>
+    </div>
 
-    <div class="card card-featured stagger" style="margin-bottom: 2rem;">
-      <div class="panel-header" style="text-align: left; margin-bottom: 1.5rem;">
-        <span class="panel-emoji">
-          <img src="logo.png" alt="" style="height: 48px; width: auto; object-fit: contain; vertical-align: middle;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-          <span style="display: none;">🏛️</span>
-        </span>
-        <h1 class="panel-title" style="font-size: 24px; font-weight: 800; color: var(--pri-dark); margin-top: 8px;">Subsidio de Agua Potable (SAP): Todo lo que necesitas saber</h1>
-        <p style="font-size: 14px; color: var(--gray-500); margin-top: 6px; line-height: 1.6;">El Subsidio de Agua Potable (SAP) es un beneficio del Estado de Chile para ayudar a las familias más vulnerables a financiar parte de su cuenta mensual de agua limpia y alcantarillado.</p>
-      </div>
+    <div class="blog-container">
 
-      <div class="article-section">
-        <h2>❓ ¿De qué se trata el beneficio?</h2>
-        <p>El subsidio es otorgado y administrado por las <strong>Municipalidades</strong> de todo el país, financiado con fondos estatales. El dinero se entrega directamente a las empresas sanitarias de cada región, por lo que si te aprueban el beneficio, <strong>verás reflejado el descuento de inmediato en tu boleta física o digital</strong>, sin trámites adicionales.</p>
-      </div>
+      <!-- MAIN CONTENT: ARTICLE -->
+      <main class="article-card">
+        
+        <header class="article-header">
+          <h1 class="article-title">Subsidio de Agua Potable (SAP): Guía completa de requisitos y postulación</h1>
+          <div class="article-meta">
+            <span>📅 26 de Mayo, 2026</span>
+            <span>✍️ Equipo Calcula Tu Agua</span>
+            <span>⏱️ 5 min de lectura</span>
+            <span>🏛️ Subsidios del Estado</span>
+          </div>
+        </header>
 
-      <div class="article-section">
-        <h2>📊 Porcentajes de Cobertura y Topes</h2>
-        <p>El subsidio no cubre el total de la cuenta, sino una porción en base a tu nivel de consumo mensual:</p>
-        <ul class="req-list">
-          <li class="req-item">
-            <div class="req-icon"><img src="logo.png" alt="" style="height: 28px; width: 28px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">💧</span></div>
-            <div>
-              <div class="req-title">Tope Máximo de 15 Metros Cúbicos</div>
-              <div class="req-desc">El beneficio cubre un consumo máximo de hasta 15 m³ (15.000 litros) al mes. Si consumes más, los m³ adicionales se te cobrarán a tarifa normal.</div>
-            </div>
-          </li>
-          <li class="req-item">
-            <div class="req-icon"><img src="icon_subsidies.png" alt="" style="height: 28px; width: 28px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">🛡️</span></div>
-            <div>
-              <div class="req-title">Familias de "Chile Seguridades y Oportunidades"</div>
-              <div class="req-desc">Cubre el <strong>100%</strong> del costo de los primeros 15 m³ de consumo.</div>
-            </div>
-          </li>
-          <li class="req-item">
-            <div class="req-icon"><img src="icon_tips.png" alt="" style="height: 28px; width: 28px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">👪</span></div>
-            <div>
-              <div class="req-title">Tramo General del RSH</div>
-              <div class="req-desc">Cubre entre el <strong>25% y el 85%</strong> de la cuenta para los primeros 15 m³, dependiendo de la evaluación social de tu municipalidad.</div>
-            </div>
-          </li>
-        </ul>
-      </div>
+        <section class="article-body">
+          <p>
+            El Subsidio al Pago del Consumo de Agua Potable y Alcantarillado de Aguas Servidas (SAP) es un beneficio del Estado de Chile para ayudar a las familias más vulnerables a financiar parte de su cuenta mensual de servicios básicos sanitarios.
+          </p>
 
-      <div class="article-section">
-        <h2>📝 Requisitos de Postulación</h2>
-        <p>Para postular en el municipio correspondiente a tu domicilio, debes cumplir con los siguientes requisitos:</p>
-        <ul class="req-list">
-          <li class="req-item">
-            <div class="req-icon"><img src="icon_location.png" alt="" style="height: 28px; width: 28px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">🏠</span></div>
-            <div>
-              <div class="req-title">Ser Residente Permanente</div>
-              <div class="req-desc">Debes habitar de forma permanente la propiedad para la cual solicitas el beneficio (ya sea propietario, arrendatario o allegado).</div>
-            </div>
-          </li>
-          <li class="req-item">
-            <div class="req-icon"><img src="icon_calc.png" alt="" style="height: 28px; width: 28px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">📋</span></div>
-            <div>
-              <div class="req-title">Estar en el Registro Social de Hogares (RSH)</div>
-              <div class="req-desc">Tu hogar debe contar con una Ficha RSH vigente. Se prioriza de manera prioritaria al 40% de menores ingresos, pero todos los tramos pueden postular sujeto a cupos municipales.</div>
-            </div>
-          </li>
-          <li class="req-item">
-            <div class="req-icon"><img src="icon_savings.png" alt="" style="height: 28px; width: 28px; object-fit: contain;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">🧾</span></div>
-            <div>
-              <div class="req-title">Estar al día con la cuenta (o con convenio)</div>
-              <div class="req-desc">No debes tener deudas activas con la empresa sanitaria de tu zona. En caso de tener deuda acumulada, debes solicitar previamente un convenio de pago con la empresa para quedar al día.</div>
-            </div>
-          </li>
-        </ul>
-      </div>
+          <h2>❓ ¿De qué se trata el beneficio?</h2>
+          <p>
+            El subsidio es otorgado y administrado por las <strong>Municipalidades</strong> de todo el país, financiado con fondos del Ministerio de Desarrollo Social y Familia. El dinero del beneficio se entrega directamente a las empresas sanitarias de cada región, por lo que si te aprueban la postulación, <strong>verás reflejado el descuento de forma automática en tu boleta física o digital</strong>, sin necesidad de trámites adicionales de cobro.
+          </p>
 
-      <div class="article-section">
-        <h2>🚀 ¿Cómo postular paso a paso?</h2>
-        <div class="step-list">
-          <div class="step-item">
-            <div class="step-num">1</div>
-            <div class="step-content">
-              <div class="step-title">Reúne tus Documentos</div>
-              <div class="step-desc">Necesitas la última <strong>boleta de agua al día</strong> (física o digital), tu <strong>Cédula de Identidad</strong>, y conocer la comuna en que está inscrito tu Registro Social de Hogares.</div>
+          <h2>📊 Porcentajes de Cobertura y Topes</h2>
+          <p>El subsidio no cubre el total de la cuenta, sino una porción en base a tu nivel de consumo mensual:</p>
+          <ul class="req-list">
+            <li class="req-item">
+              <div class="req-icon"><img src="logo.png" alt="" style="height: 20px; width: auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">💧</span></div>
+              <div>
+                <div class="req-title">Tope Máximo de 15 Metros Cúbicos</div>
+                <div class="req-desc">El beneficio cubre un consumo máximo de hasta 15 m³ (15.000 litros) al mes. Si consumes más, los m³ adicionales se te cobrarán a tarifa normal.</div>
+              </div>
+            </li>
+            <li class="req-item">
+              <div class="req-icon"><img src="icon_subsidies.png" alt="" style="height: 20px; width: auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">🛡️</span></div>
+              <div>
+                <div class="req-title">Familias del subsistema "Seguridades y Oportunidades"</div>
+                <div class="req-desc">Cubre el <strong>100%</strong> del costo de los primeros 15 m³ de consumo.</div>
+              </div>
+            </li>
+            <li class="req-item">
+              <div class="req-icon"><img src="icon_tips.png" alt="" style="height: 20px; width: auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">👪</span></div>
+              <div>
+                <div class="req-title">Tramo General del Registro Social de Hogares (RSH)</div>
+                <div class="req-desc">Cubre entre el <strong>25% y el 85%</strong> de la cuenta para los primeros 15 m³, dependiendo de la evaluación social de tu municipalidad.</div>
+              </div>
+            </li>
+          </ul>
+
+          <h2>📝 Requisitos de Postulación</h2>
+          <p>Para postular en el municipio correspondiente a tu domicilio, debes cumplir con los siguientes requisitos:</p>
+          <ul class="req-list">
+            <li class="req-item">
+              <div class="req-icon"><img src="icon_location.png" alt="" style="height: 20px; width: auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">🏠</span></div>
+              <div>
+                <div class="req-title">Ser Residente Permanente</div>
+                <div class="req-desc">Debes habitar de forma permanente la propiedad para la cual solicitas el beneficio (ya sea como propietario, arrendatario o allegado).</div>
+              </div>
+            </li>
+            <li class="req-item">
+              <div class="req-icon"><img src="icon_calc.png" alt="" style="height: 20px; width: auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">📋</span></div>
+              <div>
+                <div class="req-title">Estar en el Registro Social de Hogares (RSH)</div>
+                <div class="req-desc">Tu hogar debe contar con una Ficha RSH vigente. Se prioriza de manera preferente al 40% de menores ingresos, pero todos los tramos pueden postular sujeto a cupos municipales.</div>
+              </div>
+            </li>
+            <li class="req-item">
+              <div class="req-icon"><img src="icon_savings.png" alt="" style="height: 20px; width: auto;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">🧾</span></div>
+              <div>
+                <div class="req-title">Estar al día con la cuenta (o con convenio firmado)</div>
+                <div class="req-desc">No debes tener deudas de arrastre con la empresa sanitaria de tu zona. En caso de tener deuda acumulada, debes solicitar previamente un convenio de pago para quedar al día.</div>
+              </div>
+            </li>
+          </ul>
+
+          <h2>🚀 ¿Cómo postular paso a paso?</h2>
+          <div class="step-list">
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <div class="step-title">Reúne tus Documentos</div>
+                <div class="step-desc">Necesitas la última <strong>boleta de agua al día</strong> (física o digital), tu <strong>Cédula de Identidad</strong>, y conocer la comuna en que está inscrito tu Registro Social de Hogares.</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <div class="step-title">Dirígete a tu Municipalidad</div>
+                <div class="step-desc">Acércate al departamento de asistencia social o de subsidios de la municipalidad correspondiente a tu comuna. Muchas municipalidades también permiten realizar este trámite de manera digital en sus plataformas web.</div>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <div class="step-title">Entrega la Solicitud</div>
+                <div class="step-desc">Completa la solicitud junto al personal del municipio. El beneficio se asigna por un período de 3 años, tras los cuales expira y debe ser renovado si continúas cumpliendo los requisitos.</div>
+              </div>
             </div>
           </div>
-          <div class="step-item">
-            <div class="step-num">2</div>
-            <div class="step-content">
-              <div class="step-title">Dirígete a tu Municipalidad</div>
-              <div class="step-desc">Acércate al departamento social o de subsidios de la municipalidad correspondiente a tu comuna. Muchas municipalidades permiten realizar este trámite de manera digital en su sitio web oficial.</div>
-            </div>
+
+          <div style="background: var(--pri-50); border: 1.5px solid var(--border); padding: 1.2rem; border-radius: var(--r); margin-top: 2.5rem;">
+            <strong style="color: var(--pri-dark); display: block; margin-bottom: 6px;">💡 ¿Quieres saber cuánto ahorrarías con el Subsidio?</strong>
+            <p style="margin: 0; font-size: 13.5px; color: var(--gray-700);">
+              Nuestra calculadora interactiva te permite configurar la cantidad de integrantes de tu familia, sus hábitos de consumo y el porcentaje del beneficio para ver el subsidio SAP estimado en pesos chilenos inmediatamente.
+            </p>
           </div>
-          <div class="step-item">
-            <div class="step-num">3</div>
-            <div class="step-content">
-              <div class="step-title">Entrega la Solicitud</div>
-              <div class="step-desc">Completa el formulario de postulación junto al asistente social del municipio. Tu solicitud será evaluada y, si es aprobada, el descuento se aplicará directamente en tu próxima facturación del mes siguiente.</div>
-            </div>
-          </div>
+
+        </section>
+
+      </main>
+
+      <!-- SIDEBAR -->
+      <aside>
+        
+        <!-- About Project -->
+        <div class="sidebar-card">
+          <div class="sidebar-title">Sobre la Iniciativa</div>
+          <p style="font-size: 13px; color: var(--gray-600); line-height: 1.6; margin: 0;">
+            <strong>Calcula Tu Agua</strong> es una herramienta digital desarrollada en conjunto con la <strong>Universidad San Sebastián</strong> para empoderar a los hogares chilenos, facilitando el control de presupuestos y fomentando el ahorro consciente en comunidades vulnerables.
+          </p>
         </div>
-      </div>
 
-      <div class="article-section" style="margin-top: 2rem;">
-        <div style="background: var(--pri-50); border: 1.5px solid var(--border); padding: 1.5rem; border-radius: var(--r-lg); text-align: center; box-shadow: var(--sh);">
-          <h3 style="font-size: 16px; font-weight: 800; color: var(--pri-dark); margin-bottom: 8px;">¿Quieres saber cuánto ahorrarías con el Subsidio?</h3>
-          <p style="font-size: 13.5px; color: var(--gray-600); margin-bottom: 1.25rem;">Nuestra calculadora te permite configurar tu cantidad de personas, tus hábitos, tu comuna y simular el subsidio SAP para ver el descuento estimado inmediatamente en pesos chilenos.</p>
-          <a href="index.html" class="cta-btn" style="text-decoration: none; display: inline-flex; justify-content: center; width: auto; padding: 12px 24px; font-size: 14.5px; font-weight: 700; background: var(--pri); color: white; border: none; border-radius: var(--r); cursor: pointer; transition: all 0.2s; align-items: center; gap: 6px;">
-            <img src="icon_calc.png" alt="" style="height: 1.6em; width: auto; vertical-align: middle;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">📊</span><span>Ir a la Calculadora e ingresar mis datos</span>
-          </a>
+        <!-- Recent Articles -->
+        <div class="sidebar-card">
+          <div class="sidebar-title">Recursos y Guías</div>
+          <nav class="sidebar-post-list">
+            <div class="sidebar-post-item">
+              <span>📖</span>
+              <a href="como-se-calcula-el-agua.html">Cómo se calcula tu agua</a>
+            </div>
+            <div class="sidebar-post-item">
+              <span>🛠️</span>
+              <a href="como-funciona-la-web.html">Cómo funciona la web</a>
+            </div>
+            <div class="sidebar-post-item">
+              <span>🏛️</span>
+              <a href="#" class="sidebar-post-active">Guía de postulación al Subsidio SAP</a>
+            </div>
+            <div class="sidebar-post-item">
+              <span>☀️</span>
+              <span style="font-size: 13px; color: var(--gray-400);">¿Qué es la Tarifa de Verano? (Próximamente)</span>
+            </div>
+            <div class="sidebar-post-item">
+              <span>🌱</span>
+              <span style="font-size: 13px; color: var(--gray-400);">5 Tips de Ahorro costo cero (Próximamente)</span>
+            </div>
+          </nav>
         </div>
-      </div>
+
+        <!-- CTA Box -->
+        <div class="sidebar-card" style="background: var(--pri-50); border-color: var(--pri-200); text-align: center;">
+          <h4 style="font-size: 15px; font-weight: 800; color: var(--pri-dark); margin-bottom: 8px;">¿Quieres simular tu cuenta?</h4>
+          <p style="font-size: 12px; color: var(--gray-600); margin-bottom: 1rem;">
+            Ajusta los sliders de ducha, cocina, jardín o lavado según el uso diario de tu familia.
+          </p>
+          <a href="index.html" class="cta-button">Ir al Calculador Interactiva &rarr;</a>
+        </div>
+
+      </aside>
 
     </div>
 
     <!-- Sección de Logos Institucionales Reorganizados y Llamativos (USS, SISS, ChileAtiende, RSH) -->
-    <div class="institutional-section stagger">
+    <div class="institutional-section stagger" style="margin-top: 1rem; margin-bottom: 3rem;">
       <p class="institutional-title">Con el respaldo y datos de instituciones de confianza</p>
       <div class="institutional-logos">
-        <!-- Logo SISS (Superintendencia de Servicios Sanitarios) -->
         <a href="https://www.siss.gob.cl" target="_blank" rel="noopener" class="inst-logo-card">
           <img src="logo_siss.png" alt="SISS" class="inst-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
           <span class="inst-logo-fallback" style="display: none;">SISS</span>
         </a>
 
-        <!-- Logo ChileAtiende -->
         <a href="https://www.chileatiende.gob.cl" target="_blank" rel="noopener" class="inst-logo-card">
           <img src="logo_chileatiende.png" alt="ChileAtiende" class="inst-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
           <span class="inst-logo-fallback" style="display: none;">ChileAtiende</span>
         </a>
 
-        <!-- Logo RSH (Registro Social de Hogares) -->
         <a href="https://rsh.ministeriodesarrollosocial.gob.cl" target="_blank" rel="noopener" class="inst-logo-card">
           <img src="logo_rsh.png" alt="Registro Social de Hogares" class="inst-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
           <span class="inst-logo-fallback" style="display: none;">RSH</span>
         </a>
 
-        <!-- Logo USS (Universidad San Sebastián) -->
         <a href="https://www.uss.cl" target="_blank" rel="noopener" class="inst-logo-card">
           <img src="logo_uss.png" alt="Universidad San Sebastián" class="inst-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
           <span class="inst-logo-fallback" style="display: none;">USS</span>
@@ -338,15 +471,14 @@
       </div>
     </div>
 
+    <!-- FOOTER -->
     <div class="footer">
       <strong><img src="logo.png" alt="" style="height: 1.5em; vertical-align: middle; margin-right: 4px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">💧</span>Calcula Tu Agua</strong> — calculatuagua.cl<br>
-      <a href="blog.html" style="font-weight: 700; color: var(--pri); margin-right: 15px;">📚 Blog Educativo</a>
-      <a href="index.html" style="font-weight: 700; color: var(--pri);">🖥️ Simulador de Consumo</a><br>
       Tarifas basadas en los decretos oficiales de la SISS.<br>
-      Este cálculo es referencial. No reemplaza a tu boleta oficial de cobro.
+      Este cálculo es didáctico y educativo. No reemplaza a la boleta oficial de cobro emitida por tu sanitaria.
     </div>
+
   </div>
 
 </body>
-
 </html>
