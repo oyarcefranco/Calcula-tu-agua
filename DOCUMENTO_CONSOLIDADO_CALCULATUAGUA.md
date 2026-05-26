@@ -93,22 +93,26 @@ Para personalizar la experiencia de usuario y optimizar la efectividad de las re
 | **Estructura**          | HTML5 semántico            | Compatibilidad universal               |
 | **Estilos**             | CSS3 con Variables CSS      | Mantenibilidad, tematización          |
 | **Lógica**             | JavaScript puro (ES6+)      | Sin dependencias, carga instantánea   |
-| **Tipografía**         | Google Fonts (Inter)        | Moderna, legible, gratis               |
+| **Tipografía**         | Google Fonts (Poppins)      | Moderna, legible, gratis               |
 | **Persistencia**        | localStorage                | Offline, sin servidor                  |
-| **Hosting planificado** | Cualquier hosting estático | GitHub Pages, Netlify, Hostinger, etc. |
+| **Hosting planificado** | Cualquier hosting estático | Cloudflare Pages, GitHub Pages, etc.   |
 
 ### Dependencias externas
 
-- **Google Fonts CDN** (`fonts.googleapis.com`) — Tipografía Inter
-- **WhatsApp API** (`wa.me`) — Compartir resultados (solo al hacer clic)
+- **Google Fonts CDN** (`fonts.googleapis.com`) — Tipografía Poppins
+- **WhatsApp API** (`wa.me` / `whatsapp://`) — Compartir resultados (esquema dinámico móvil/escritorio)
 - **Ningún framework JS** — 0 dependencias
-- **Ningún backend** — 100% cliente
+- **Ningún backend** — 100% cliente (procesamiento y persistencia en navegador)
 
-### Tamaño del archivo
+### Estructura y Distribución de Archivos
 
-- **1 archivo HTML** autocontenido (~60 KB)
-- **0 imágenes** (todo SVG inline + emojis)
-- **Carga estimada**: < 1 segundo en 3G
+- **index.html** — Calculadora interactiva principal, onboarding y visualización de resultados (~50 KB)
+- **blog.html** — Sección de blog y artículo educativo con simulador Sandbox didáctico (~30 KB)
+- **subsidio-sap.html** — Landing page informativa interactiva sobre requisitos del subsidio SAP (~17 KB)
+- **estilos_branding.css** — Hoja de estilos externa que unifica la paleta Canva, tipografía y responsive (~42 KB)
+- **tarifas.js** — Base de datos SISS con tarifas vigentes de 111 sanitarias chilenas (~28 KB)
+- **Iconos 3D y Branding** — Archivos de imagen PNG transparentes para hábitos e interfaz (`logo.png`, `icon_*.png`)
+- **Carga estimada**: < 1 segundo en 3G debido al desacople de archivos y carga asíncrona de fuentes
 
 ---
 
@@ -794,61 +798,40 @@ La página de resultados usa un **carrusel horizontal** que presenta la informac
 
 ---
 
-## Apéndice: Estructura del Archivo HTML
+## Apéndice: Estructura de Archivos del Proyecto
 
 ```
-index.html (~60 KB, autocontenido)
-├── <head>
-│   ├── Meta tags (charset, viewport, SEO)
-│   ├── Google Fonts (Inter)
-│   └── <style> (~980 líneas CSS)
-│       ├── Variables CSS (paleta acuática: --pri #0891B2, fondo #F0F9FF)
-│       ├── Reset y base
-│       ├── Hero + blobs orgánicos + wave SVG
-│       ├── Sistema de cards (border: --border #BAE6FD)
-│       ├── Controles (select, buttons, custom range sliders)
-│       ├── Carrusel (viewport, panel absolute/relative, transitions)
-│       ├── Panel-specific (p-stats, tramo, avg bar, subsidy, tips)
-│       ├── Navegación (carousel-nav, buttons grid, dots, progress)
-│       ├── Share section (WhatsApp btn, secondary actions)
-│       ├── Toast y tooltips
-│       ├── @media (prefers-reduced-motion: reduce)
-│       ├── @media (max-width: 640px) — mobile-first optimizations
-│       └── @media (min-width: 641px) — desktop enhancements
+CalculaTuAgua (Directorio Principal)
+├── index.html (~50 KB)
+│   ├── Head (Metas SEO, Google Fonts Poppins, Carga de tarifas.js y estilos_branding.css)
+│   ├── Body (Hero, Cuestionario Onboarding, Calculadora de 7 hábitos, Resultados con 5 paneles)
+│   └── Script (Lógica de sliders, perfilamiento psicométrico y formateo)
 │
-├── <body>
-│   ├── Hero section (blobs, logo con drop, subtítulo, badge, wave SVG)
-│   ├── Container (max-width: 800px)
-│   │   ├── PAGE 1: Input
-│   │   │   ├── Selector Inteligente (Región -> Comuna -> Sanitaria)
-│   │   │   ├── Personas (buttons 1-8, staggered animation)
-│   │   │   ├── Actividades (7 rows con semáforo pulse + custom slider + ±)
-│   │   │   └── CTA "Calcular mi consumo" (ripple effect)
-│   │   │
-│   │   ├── PAGE 2: Results Carousel (hidden por defecto)
-│   │   │   ├── Topbar (← Volver + counter "2/5")
-│   │   │   ├── Carousel viewport
-│   │   │   │   ├── Panel 1: 💧 Tu Consumo (stats + tramo)
-│   │   │   │   ├── Panel 2: 📊 ¿Cómo te comparas? (avg + tabla)
-│   │   │   │   ├── Panel 3: 🏛️ Subsidios (SAP + programas)
-│   │   │   │   ├── Panel 4: 💰 ¡Puedes Ahorrar! (eficiente + ahorro)
-│   │   │   │   └── Panel 5: 🌟 Consejos (tips + WhatsApp + acciones)
-│   │   │   ├── Progress bar (5px, gradiente cyan)
-│   │   │   └── Navigation (dots + buttons grid 2 cols)
-│   │   │
-│   │   └── Footer (branding + links SISS/ChileAtiende/RSH)
-│   │
-│   ├── Toast (notificaciones)
-│   │
-│   └── <script> (~280 líneas JS)
-│       ├── DATA: empresas (7), actividades (7), subsidio (3 tramos), constantes
-│       ├── HELPERS: tariff(), actDaily(), totalDaily(), semaphore(), equivs()
-│       ├── BUILD: buildCompany(), buildPeople(), buildActs()
-│       ├── CAROUSEL: updateCarousel(), carouselNext/Prev(), buildDots(), setupSwipe()
-│       ├── NAVIGATION: showResults(), goBack()
-│       ├── RENDER: renderResults() → 5 paneles (consumo, compara, subsidio, ahorro, consejos)
-│       ├── ACTIONS: saveScen(), loadScen(), resetAll(), shareWA() (con tips)
-│       └── INIT: build + auto-load saved scenario
+├── blog.html (~30 KB)
+│   ├── Head (Metas SEO, Carga de tarifas.js y estilos_branding.css)
+│   ├── Body (Hero, Artículo didáctico, Simulador Sandbox con doble selector y Boleta Física Simulada)
+│   └── Script (Lógica reactiva de la boleta didáctica y filtrado geográfico)
+│
+├── subsidio-sap.html (~17 KB)
+│   ├── Head (Metas SEO, Carga de estilos_branding.css)
+│   └── Body (Detalles y requisitos de postulación RSH/SAP)
+│
+├── estilos_branding.css (~42 KB, desacoplado)
+│   ├── Variables CSS (Paleta Canva: --pri #1677C8, --bg #F5F7FA, --border #C2EDFF)
+│   ├── Reset y Layout Base
+│   ├── Estilos de Cards, Grid, Carrusel, Sliders, Icon Badges y Recibo de Boleta
+│   └── @media print (Estilos de impresión nativa y exportación a PDF)
+│
+├── tarifas.js (~28 KB, modular)
+│   └── Constant TARIFF_DB (111 sanitarias chilenas, sectores y comunas asociadas)
+│
+└── Activos de Imagen (PNG con canal alfa transparente)
+    ├── logo.png (Favicon y logo del sitio)
+    ├── logo_siss.png, logo_chileatiende.png, logo_rsh.png, logo_uss.png (Logos institucionales)
+    ├── icon_shower.png, icon_toilet.png, icon_teeth.png (Iconos 3D de hábitos)
+    ├── icon_dishes.png, icon_laundry.png, icon_cook.png, icon_garden.png
+    ├── icon_location.png, icon_settings.png, icon_calc.png (Iconos 3D de interfaz)
+    └── icon_comparison.png, icon_subsidies.png, icon_savings.png, icon_tips.png, icon_summer.png, icon_check.png, icon_alert.png
 ```
 
 ---
