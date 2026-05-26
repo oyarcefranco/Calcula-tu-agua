@@ -1462,22 +1462,35 @@
   gap: 10px;
 }
 
+.header-logo-icon {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+}
+
+.header-logo-text {
+  height: 18px;
+  width: auto;
+  object-fit: contain;
+}
+
 .instagram-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
-  color: white;
-  transition: transform 0.2s;
-  font-size: 16px;
+  background: var(--gray-200);
+  color: var(--gray-500);
+  transition: all 0.2s ease;
+  font-size: 12px;
   text-decoration: none;
 }
 
 .instagram-btn:hover {
   transform: scale(1.1);
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
   color: white;
   text-decoration: none;
 }

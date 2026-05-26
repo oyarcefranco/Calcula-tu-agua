@@ -39,8 +39,8 @@
   <!-- HEADER PRINCIPAL -->
   <header class="home-header">
     <a href="index.html" class="header-brand">
-      <img src="logo.png" alt="Calcula Tu Agua" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-      <span>💧 Calcula Tu Agua</span>
+      <img src="logo.png" alt="Logo" class="header-logo-icon">
+      <img src="logo_letras.png" alt="Calcula Tu Agua" class="header-logo-text">
     </a>
     <nav class="header-nav">
       <a href="index.html">Inicio</a>
@@ -50,7 +50,7 @@
     </nav>
     <div class="header-social">
       <a href="https://instagram.com" target="_blank" rel="noopener" class="instagram-btn" aria-label="Instagram" title="Síguenos en Instagram">
-        <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+        <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
           <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/>
         </svg>
       </a>
@@ -61,10 +61,9 @@
   <div class="hero" id="heroSection">
     <div class="hero-blob hero-blob-1"></div>
     <div class="hero-blob hero-blob-2"></div>
-    <h1 class="hero-logo-container" style="font-size: inherit; font-weight: inherit; margin: 0; line-height: inherit;">
-      <!-- Reemplaza logo.png por la ruta del logo en alta calidad si la dejas en esta misma carpeta -->
-      <img src="logo.png" alt="Calcula Tu Agua" class="hero-logo-img" onerror="this.style.display='none'; document.getElementById('fallbackLogoText').style.display='block';">
-      <span id="fallbackLogoText" class="hero-logo" style="display: none;"><span class="drop">💧</span> Calcula Tu Agua</span>
+    <h1 class="hero-logo-container" style="font-size: inherit; font-weight: inherit; margin: 0; line-height: inherit; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
+      <img src="logo.png" alt="Logo" class="hero-logo-img" style="height: 52px; width: auto; object-fit: contain;">
+      <img src="logo_letras.png" alt="Calcula Tu Agua" class="hero-logo-text" style="height: 46px; width: auto; object-fit: contain;">
     </h1>
     <p class="hero-sub">Descubre cuánto gastas en agua, cuánto puedes ahorrar y qué subsidios tienes disponibles</p>
     <div class="hero-badge" id="heroBadge"> calculatuagua.cl — Herramienta  para familias chilenas</div>
@@ -319,7 +318,10 @@
     </div>
 
     <div class="footer">
-      <strong><img src="logo.png" alt="" style="height: 1.5em; vertical-align: middle; margin-right: 4px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"><span style="display: none;">💧</span>Calcula Tu Agua</strong> — calculatuagua.cl<br>
+      <strong style="display: inline-flex; align-items: center; gap: 6px; vertical-align: middle;">
+        <img src="logo.png" alt="Logo" style="height: 24px; width: auto; object-fit: contain;">
+        <img src="logo_letras.png" alt="Calcula Tu Agua" style="height: 18px; width: auto; object-fit: contain;">
+      </strong> — calculatuagua.cl<br>
       <a href="blog.html" style="font-weight: 700; color: var(--pri); margin-right: 15px;">📚 Blog Educativo</a>
       <a href="subsidio-sap.html" style="font-weight: 700; color: var(--pri);">🏛️ Guía Subsidio SAP</a><br>
       Tarifas basadas en los decretos oficiales de la SISS.<br>
