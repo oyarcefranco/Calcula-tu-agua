@@ -233,13 +233,6 @@
     <!-- ═══ PAGE 2: RESULTS CAROUSEL ═══ -->
     <div class="page" id="pageResults">
       <div class="carousel-wrapper">
-        <div class="carousel-topbar">
-          <button class="carousel-back" onclick="goBack()">← Volver a editar</button>
-          <img src="logo.png" alt="" style="height: 28px; width: auto; object-fit: contain;"
-            onerror="this.style.display='none';">
-          <div class="carousel-counter" id="carouselCounter">1 / 5</div>
-        </div>
-
         <div class="carousel-viewport" id="carouselViewport">
 
           <!-- PANEL 1: Tu Consumo -->
@@ -334,10 +327,13 @@
         </div>
 
         <div class="carousel-nav">
-          <div class="carousel-dots" id="carouselDots"></div>
+          <div style="display: flex; align-items: center; gap: 12px; justify-content: center; margin-bottom: 4px; width: 100%;">
+            <div class="carousel-dots" id="carouselDots"></div>
+            <span id="carouselCounter" style="font-size: 12px; font-weight: 700; color: var(--gray-400); background: var(--gray-100); padding: 2px 8px; border-radius: 12px;">1 / 5</span>
+          </div>
           <div class="carousel-buttons">
-            <button class="carousel-arrow carousel-prev" id="btnPrev" onclick="carouselPrev()" disabled>
-              ← Anterior
+            <button class="carousel-arrow carousel-prev" id="btnPrev" onclick="carouselPrev()">
+              ← Volver a editar
             </button>
             <button class="carousel-arrow carousel-next" id="btnNext" onclick="carouselNext()">
               Siguiente →
@@ -848,7 +844,15 @@
     function updateCarousel() {
       document.getElementById('carouselCounter').textContent = `${currentPanel + 1} / ${TOTAL_PANELS}`;
       document.getElementById('progressFill').style.width = `${((currentPanel + 1) / TOTAL_PANELS) * 100}%`;
-      document.getElementById('btnPrev').disabled = currentPanel === 0;
+      
+      const btnPrev = document.getElementById('btnPrev');
+      if (currentPanel === 0) {
+        btnPrev.textContent = '← Volver a editar';
+        btnPrev.disabled = false;
+      } else {
+        btnPrev.textContent = '← Anterior';
+        btnPrev.disabled = false;
+      }
       document.getElementById('btnNext').disabled = currentPanel === TOTAL_PANELS - 1;
 
       document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
@@ -878,7 +882,12 @@
     }
 
     function carouselPrev() {
-      if (currentPanel > 0) { currentPanel--; updateCarousel(); }
+      if (currentPanel > 0) {
+        currentPanel--;
+        updateCarousel();
+      } else {
+        goBack();
+      }
     }
 
     function carouselGoTo(idx) {
