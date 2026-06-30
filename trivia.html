@@ -628,6 +628,12 @@
             Siguiente Pregunta →
           </button>
         </div>
+
+        <div style="margin-top: 1.5rem; text-align: center;">
+          <button onclick="if(confirm('¿Seguro que deseas salir del juego actual? Perderás tu progreso.')) goToIntro();" style="background: none; border: none; color: rgba(255,255,255,0.45); text-decoration: underline; font-size: 11px; cursor: pointer; font-weight: 700; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.45)'">
+            Abandonar juego y volver al inicio de la trivia
+          </button>
+        </div>
       </div>
 
       <!-- ════ PANTALLA 3: GANADOR (4/4 CORRECTAS) ════ -->
@@ -653,6 +659,9 @@
             <button class="trivia-btn accent-btn" onclick="initGame()">
               Jugar de Nuevo 🔄
             </button>
+            <button class="trivia-btn secondary-btn" onclick="goToIntro()">
+              Inicio de la Trivia 🏠
+            </button>
             <a href="index.html" class="trivia-btn secondary-btn">
               Volver a la Calculadora
             </a>
@@ -671,6 +680,9 @@
           <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
             <button class="trivia-btn accent-btn" onclick="initGame()">
               Intentarlo de Nuevo 🔄
+            </button>
+            <button class="trivia-btn secondary-btn" onclick="goToIntro()">
+              Inicio de la Trivia 🏠
             </button>
             <a href="index.html" class="trivia-btn secondary-btn">
               Volver a la Calculadora
@@ -1257,6 +1269,14 @@
     let currentQuestionIndex = 0;
     let score = 0;
     let isOptionSelected = false;
+
+    // VOLVER A LA PANTALLA DE INICIO (INTRO)
+    function goToIntro() {
+      document.getElementById('screenWin').classList.remove('active');
+      document.getElementById('screenLose').classList.remove('active');
+      document.getElementById('screenGame').classList.remove('active');
+      document.getElementById('screenIntro').classList.add('active');
+    }
 
     // INICIAR JUEGO (SELECCIÓN ALEATORIA DE PREGUNTAS)
     function initGame() {
