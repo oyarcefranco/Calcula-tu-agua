@@ -737,7 +737,8 @@
       const subtotal = fixedCharge + baseVariableCharge + summerSurcharge + sewerageCharge;
       let iva = 0;
       if (includeIva) {
-        iva = subtotal * 0.19;
+        // El IVA no se aplica sobre el cargo fijo (f), ya que las boletas oficiales lo incluyen en el cargo fijo.
+        iva = (baseVariableCharge + summerSurcharge + sewerageCharge) * 0.19;
       }
 
       const total = subtotal + iva;
@@ -2134,18 +2135,17 @@ ${tipsMsg}
             (SISS)</strong> para simular el cobro de tu boleta de agua:</p>
         <div
           style="background: var(--gray-50); padding: 10px; border-radius: var(--r); font-family: monospace; font-size: 12px; border: 1px solid var(--gray-200); text-align: center;">
-          Total a pagar = (Cargo Fijo + Consumo de Agua + Alcantarillado) * (1 + IVA)
+          Total a pagar = Cargo Fijo (con IVA) + (Consumo de Agua + Alcantarillado) * (1 + IVA)
         </div>
         <p><strong>1. Cargo Fijo:</strong> Un valor fijo al mes por administración y lectura del medidor, sin importar
-          cuánta agua consumas.</p>
+          cuánta agua consumas (ya incluye IVA en su tarifa base).</p>
         <p><strong>2. Consumo de Agua:</strong> La cantidad de agua limpia que usas (medida en metros cúbicos)
           multiplicada por la tarifa variable autorizada en tu zona.</p>
         <p><strong>3. Recargo de Verano (si corresponde):</strong> Si en los meses de verano consumes más de 40 metros
           cúbicos mensuales, cada metro cúbico extra tiene un precio mayor (sobreconsumo).</p>
         <p><strong>4. Alcantarillado y Limpieza (si corresponde):</strong> El cobro por retirar el agua usada del hogar
           y limpiarla antes de devolverla a la naturaleza.</p>
-        <p><strong>5. IVA (si corresponde):</strong> El impuesto de ley del 19% aplicado sobre la suma de los cobros
-          anteriores.</p>
+        <p><strong>5. IVA (si corresponde):</strong> El impuesto de ley del 19% aplicado sobre los cobros variables (Consumo, Sobreconsumo y Alcantarillado), ya que el Cargo Fijo incluye IVA.</p>
         <p style="margin-top: 8px; border-top: 1px solid var(--border); padding-top: 8px; text-align: center;">
           <a href="como-se-calcula-el-agua.html" style="font-weight: 700; color: var(--pri);">📚 Ver explicación
             didáctica con simulador Sandbox &rarr;</a>

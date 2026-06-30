@@ -599,7 +599,7 @@
         title: "Motor de Cálculo Tarifario (Fórmula SISS)",
         tag: "Lógica de Cobro",
         desc: "La web suma los litros de todos tus hábitos, los multiplica por 30 para proyectar el volumen mensual y los divide entre 1.000 para obtener metros cúbicos (m³). Luego, aplica las tarifas de cargo fijo, alcantarillado, sobreconsumo e IVA correspondientes.",
-        code: "// Ecuación matemática interna de la boleta\nconst cargoFijo = selectedTariff.f;\nconst consumoAP = metrosCubicos * selectedTariff.t1;\nconst alcantarillado = incluyeAlcantarillado ? (metrosCubicos * selectedTariff.al) : 0;\nconst subtotalNeto = cargoFijo + consumoAP + alcantarillado;\nconst totalIVA = incluyeIva ? (subtotalNeto * 0.19) : 0;"
+        code: "// Ecuación matemática interna de la boleta\nconst cargoFijo = selectedTariff.f;\nconst consumoAP = metrosCubicos * selectedTariff.t1;\nconst alcantarillado = incluyeAlcantarillado ? (metrosCubicos * selectedTariff.al) : 0;\nconst subtotalNeto = cargoFijo + consumoAP + alcantarillado;\nconst totalIVA = incluyeIva ? ((consumoAP + alcantarillado) * 0.19) : 0; // Excluye cargoFijo"
       },
       5: {
         title: "Algoritmo de Consejos (Priorización de Tips)",

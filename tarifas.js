@@ -1,4 +1,4 @@
-    const TARIFF_DB = [
+const TARIFF_DB = [
   {
     "r": "I",
     "c": "Aguas Del Altiplano",
@@ -415,7 +415,7 @@
   },
   {
     "r": "RM",
-    "c": "Aguas Manquehue",
+    "c": "Aguas Andinas",
     "g": "G1",
     "f": 1313,
     "t1": 1036.24,

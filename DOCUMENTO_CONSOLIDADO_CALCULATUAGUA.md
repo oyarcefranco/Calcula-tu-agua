@@ -305,21 +305,22 @@ cargo_alcantarillado = (variable_base + summer_surcharge) × ratio_sr
 ```
 
 #### 6.3.4 IVA (Opcional)
-Si la opción "Incluir IVA" está activa, se agrega el 19% al subtotal de la boleta:
+Si la opción "Incluir IVA" está activa, se agrega el 19% al subtotal de los cargos variables de la boleta (excluyendo el cargo fijo, que ya incluye IVA en su valor base):
 ```
+subtotal_variables = (costo_agua_total − cargo_fijo) + cargo_alcantarillado
+iva = subtotal_variables × 0.19
 subtotal = costo_agua_total + cargo_alcantarillado
-iva = subtotal × 0.19
 costo_final = subtotal + iva
 ```
 
 **Ejemplo:** 18.5 m³ con Aguas Andinas (r: 0.81), con alcantarillado e IVA activos:
-*   Cargo Fijo: $3.500
+*   Cargo Fijo: $3.500 (incluye IVA)
 *   Agua Potable Consumo: (15 × $680) + (3.5 × $980) = $10.200 + $3.430 = $13.630
 *   Surcharge Verano: $0 (18.5 m³ ≤ 40 m³)
 *   Alcantarillado (r: 0.81): $13.630 × 0.81 = $11.040
-*   Subtotal Neto: $3.500 + $13.630 + $11.040 = $28.170
-*   IVA (19%): $28.170 × 0.19 = $5.352
-*   **Total con todo: $33.522**
+*   Subtotal Neto (incluye Cargo Fijo): $3.500 + $13.630 + $11.040 = $28.170
+*   IVA (19% sobre cargos variables): ($13.630 + $11.040) × 0.19 = $24.670 × 0.19 = $4.687
+*   **Total con todo: $28.170 + $4.687 = $32.857**
 
 ### 6.4 Cálculo del ahorro
 ```

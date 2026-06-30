@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador de Validación Estocástica — Calcula Tu Agua</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos_branding.css">
+  <style>
+    :root {
+      --dark-blue: #0A2342;
+      --light-cyan: #E6F6FF;
+      --border-cyan: #C2EDFF;
+    }
+
+    body {
+      background-color: var(--bg);
+    }
+
+    .header-nav {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .btn-back-main {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--pri);
+      background: var(--pri-50);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    .btn-back-main:hover {
+      background: var(--pri-100);
+      transform: translateY(-1px);
+    }
+
+    .sim-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .sim-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .sim-panel {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 20px;
+      box-shadow: var(--sh);
+      height: fit-content;
+    }
+
+    .slider-group {
+      margin-bottom: 18px;
+    }
+
+    .slider-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-700);
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .slider-ctrl {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .slider-ctrl input[type="range"] {
+      flex: 1;
+      width: 100%;
+    }
+
+    .slider-val {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--pri-dark);
+      width: 65px;
+      text-align: right;
+    }
+
+    .btn-simulate {
+      width: 100%;
+      background: linear-gradient(135deg, var(--pri), var(--pri-light));
+      color: #ffffff;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      box-shadow: 0 4px 12px rgba(22, 119, 200, 0.2);
+      transition: all 0.2s;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .btn-simulate:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(22, 119, 200, 0.3);
+    }
+
+    .btn-simulate:active {
+      transform: translateY(0);
+    }
+
+    .stats-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-box {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 16px;
+      text-align: center;
+      box-shadow: var(--sh);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-box.success::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 4px; height: 100%;
+      background: var(--green);
+    }
+
+    .stat-box.warning::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 4px; height: 100%;
+      background: var(--accent);
+    }
+
+    .stat-box-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .stat-box-value {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--gray-800);
+      line-height: 1.2;
+    }
+
+    .stat-box-comparison {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-500);
+      margin-top: 4px;
+    }
+
+    .stat-box-comparison.green { color: var(--green); }
+    .stat-box-comparison.red { color: var(--red); }
+
+    .comparison-chart-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 24px;
+      box-shadow: var(--sh);
+      margin-bottom: 24px;
+    }
+
+    .comparison-row {
+      margin-bottom: 20px;
+    }
+
+    .comparison-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .comp-bar-container {
+      height: 24px;
+      background: var(--gray-100);
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      margin: 8px 0;
+      border: 1px solid var(--gray-200);
+    }
+
+    .comp-bar-fill {
+      height: 100%;
+      border-radius: 12px;
+      transition: width 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .comp-bar-fill.simulated {
+      background: linear-gradient(90deg, var(--pri), var(--pri-light));
+    }
+
+    .comp-bar-fill.historical {
+      background: linear-gradient(90deg, var(--gray-500), var(--gray-400));
+    }
+
+    .comp-bar-value {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--gray-800);
+      z-index: 10;
+    }
+
+    .walkthrough-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 24px;
+      box-shadow: var(--sh);
+      margin-bottom: 24px;
+    }
+
+    .walkthrough-step {
+      border-left: 3px dashed var(--pri-light);
+      padding-left: 20px;
+      margin-left: 10px;
+      position: relative;
+      padding-bottom: 20px;
+    }
+
+    .walkthrough-step:last-child {
+      border-left: none;
+      padding-bottom: 0;
+    }
+
+    .walkthrough-step::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 4px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: var(--pri);
+      border: 3px solid #ffffff;
+      box-shadow: 0 0 0 2px var(--pri-light);
+    }
+
+    .walkthrough-step-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--pri-dark);
+      margin-bottom: 4px;
+    }
+
+    .walkthrough-step-desc {
+      font-size: 13px;
+      color: var(--gray-600);
+      line-height: 1.5;
+    }
+
+    .h-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .h-table th, .h-table td {
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .h-table th {
+      background: var(--gray-50);
+      font-weight: 700;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-size {
+      background: var(--pri-50);
+      color: var(--pri);
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    .distribution-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .dist-box {
+      border: 1px solid var(--border);
+      background: var(--gray-50);
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .dist-box.active {
+      background: var(--pri-50);
+      border-color: var(--pri-light);
+    }
+
+    .dist-box-val {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--pri-dark);
+    }
+
+    .dist-box-lbl {
+      font-size: 10px;
+      color: var(--gray-400);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="header-nav">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span style="font-size: 24px;">💧</span>
+      <div>
+        <h1 style="font-size: 18px; font-weight: 800; color: var(--pri-dark); line-height: 1.2;">Calcula Tu Agua</h1>
+        <p style="font-size: 11px; color: var(--gray-400); font-weight: 600;">Consola de Validación Matemática</p>
+      </div>
+    </div>
+    <a href="index.html" class="btn-back-main">
+      ← Volver al Calculador
+    </a>
+  </header>
+
+  <main class="container" style="margin-top: 24px; max-width: 1100px;">
+    
+    <!-- Hero Banner -->
+    <div style="background: linear-gradient(135deg, var(--pri-dark) 0%, var(--pri) 100%); color: #ffffff; border-radius: var(--r-lg); padding: 30px; margin-bottom: 24px; box-shadow: var(--sh-md); position: relative; overflow: hidden;">
+      <div style="position: relative; z-index: 2; max-width: 700px;">
+        <span style="background: rgba(255,255,255,0.15); font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-block; margin-bottom: 12px;">Defensa de Proyecto e Innovación</span>
+        <h2 style="font-size: 26px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; line-height: 1.2;">Simulador de Validación de Monte Carlo</h2>
+        <p style="font-size: 14px; opacity: 0.9; line-height: 1.6;">
+          Esta herramienta corre un modelo estocástico de simulación que demuestra cómo el algoritmo de CalculaTuAgua coincide casi idénticamente con la realidad hídrica de Chile. Utiliza las probabilidades del censo <strong>CASEN</strong> para los tamaños de hogar y variables normales para simular hábitos reales.
+        </p>
+      </div>
+      <div style="position: absolute; right: 5%; bottom: -10%; font-size: 140px; opacity: 0.08; user-select: none; z-index: 1;">📊</div>
+    </div>
+
+    <div class="sim-layout">
+      
+      <!-- Left Sidebar: Controls -->
+      <aside class="sim-panel">
+        <h3 style="font-size: 15px; font-weight: 700; color: var(--gray-800); border-bottom: 1px solid var(--gray-100); padding-bottom: 8px; margin-bottom: 16px;">⚙️ Configuración del Modelo</h3>
+        
+        <!-- Simulations Count -->
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Hogares a simular (N)</span>
+          </div>
+          <select id="simCount" class="region-select" style="padding: 10px; font-weight: 700;">
+            <option value="10">10 Hogares (Demostrativo)</option>
+            <option value="100">100 Hogares</option>
+            <option value="1000">1.000 Hogares</option>
+            <option value="10000" selected>10.000 Hogares (Máx. Convergencia)</option>
+          </select>
+          <p style="font-size: 10px; color: var(--gray-400); margin-top: 4px; line-height: 1.3;">A mayor N, mayor es la precisión debido a la Ley de los Grandes Números.</p>
+        </div>
+
+        <!-- Ducha Parameters -->
+        <div class="slider-group" style="border-top: 1px solid var(--gray-100); padding-top: 12px;">
+          <div class="slider-label">
+            <span>Ducha Promedio (μ)</span>
+            <span class="slider-val" id="valDuchaMean">8 min</span>
+          </div>
+          <div class="slider-ctrl">
+            <input type="range" id="paramDuchaMean" min="5" max="15" step="0.5" value="8">
+          </div>
+        </div>
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Variación Ducha (σ)</span>
+            <span class="slider-val" id="valDuchaSD">2.5 min</span>
+          </div>
+          <div class="slider-ctrl">
+            <input type="range" id="paramDuchaSD" min="1" max="5" step="0.1" value="2.5">
+          </div>
+        </div>
+
+        <!-- WC Parameters -->
+        <div class="slider-group" style="border-top: 1px solid var(--gray-100); padding-top: 12px;">
+          <div class="slider-label">
+            <span>WC Promedio (μ)</span>
+            <span class="slider-val" id="valWCMean">5 veces</span>
+          </div>
+          <div class="slider-ctrl">
+            <input type="range" id="paramWCMean" min="3" max="8" step="0.5" value="5">
+          </div>
+        </div>
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Variación WC (σ)</span>
+            <span class="slider-val" id="valWCSD">1.2 veces</span>
+          </div>
+          <div class="slider-ctrl">
+            <input type="range" id="paramWCSD" min="0.5" max="3" step="0.1" value="1.2">
+          </div>
+        </div>
+
+        <!-- Leaks Parameters -->
+        <div class="slider-group" style="border-top: 1px solid var(--gray-100); padding-top: 12px;">
+          <div class="slider-label">
+            <span>Fugas del Hogar</span>
+            <span class="slider-val" id="valLeakMean">1.5 m³/mes</span>
+          </div>
+          <div class="slider-ctrl">
+            <input type="range" id="paramLeakMean" min="0" max="4" step="0.1" value="1.5">
+          </div>
+          <p style="font-size: 10px; color: var(--gray-400); margin-top: 4px;">Pérdida promedio residencial según estadísticas SISS.</p>
+        </div>
+
+        <button onclick="runSimulation()" class="btn-simulate" id="btnRunSim">
+          ⚡ Ejecutar Simulación
+        </button>
+      </aside>
+
+      <!-- Right Main Content: Results & Sandbox -->
+      <section style="display: flex; flex-direction: column; gap: 24px;">
+        
+        <!-- Stats Summary Widgets -->
+        <div class="stats-summary">
+          <div class="stat-box success" id="statBoxMean">
+            <div class="stat-box-label">Consumo Promedio</div>
+            <div class="stat-box-value" id="resMean">--</div>
+            <div class="stat-box-comparison" id="resMeanComp">vs 16.7 m³ Real</div>
+          </div>
+          <div class="stat-box success" id="statBoxSD">
+            <div class="stat-box-label">Desviación Estándar</div>
+            <div class="stat-box-value" id="resSD">--</div>
+            <div class="stat-box-comparison" id="resSDComp">vs 6.5 m³ Real</div>
+          </div>
+          <div class="stat-box success" id="statBoxOverlap">
+            <div class="stat-box-label">Solapamiento Real</div>
+            <div class="stat-box-value" id="resOverlap">--</div>
+            <div class="stat-box-comparison">Precisión Estadística</div>
+          </div>
+        </div>
+
+        <!-- Visual Convergence Dashboard -->
+        <div class="comparison-chart-card">
+          <h3 style="font-size: 16px; font-weight: 700; color: var(--gray-800); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">📈 Comparación de Distribución</h3>
+          <p style="font-size: 12px; color: var(--gray-500); margin-bottom: 16px;">
+            El gráfico de barras a continuación muestra cómo se compara el consumo promedio obtenido mediante la simulación estocástica de CalculaTuAgua con el consumo real histórico reportado por ANDESS A.G. en las boletas chilenas.
+          </p>
+
+          <div class="comparison-row">
+            <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: var(--gray-700);">
+              <span>Consumo Promedio Simulado (App + Fuga)</span>
+            </div>
+            <div class="comp-bar-container">
+              <div class="comp-bar-fill simulated" id="barSim" style="width: 0%;"></div>
+              <div class="comp-bar-value" id="valBarSim">--</div>
+            </div>
+          </div>
+
+          <div class="comparison-row">
+            <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: var(--gray-500);">
+              <span>Consumo Promedio Histórico Real (ANDESS A.G.)</span>
+            </div>
+            <div class="comp-bar-container">
+              <div class="comp-bar-fill historical" style="width: 83.5%;"></div> <!-- 16.7 m3 is 83.5% of max 20 m3 for scale -->
+              <div class="comp-bar-value">16.70 m³</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Demonstration Walkthrough step-by-step -->
+        <div class="walkthrough-card">
+          <h3 style="font-size: 16px; font-weight: 700; color: var(--gray-800); margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">🚶 Simulador Paso a Paso (Modo Demostración)</h3>
+          <p style="font-size: 12px; color: var(--gray-500); margin-bottom: 16px;">
+            Muestra al profesor exactamente cómo el computador genera un hogar de forma aleatoria basándose en las probabilidades reales de la CASEN y los rangos de hábitos.
+          </p>
+
+          <button onclick="generateSingleHouseholdWalkthrough()" class="carousel-back" style="margin-bottom: 20px; font-weight: 700; cursor: pointer;">
+            🎲 Generar 1 Hogar de Prueba
+          </button>
+
+          <div id="walkthroughOutput" style="display: none;">
+            <div class="walkthrough-step">
+              <div class="walkthrough-step-title">Paso 1: Generación de la Composición Familiar (Datos CASEN)</div>
+              <div class="walkthrough-step-desc" id="wtStep1">...</div>
+            </div>
+            <div class="walkthrough-step">
+              <div class="walkthrough-step-title">Paso 2: Generación Estocástica de Hábitos Personales</div>
+              <div class="walkthrough-step-desc" id="wtStep2">...</div>
+            </div>
+            <div class="walkthrough-step">
+              <div class="walkthrough-step-title">Paso 3: Incorporación de Pérdidas de Red (Estadística SISS)</div>
+              <div class="walkthrough-step-desc" id="wtStep3">...</div>
+            </div>
+            <div class="walkthrough-step">
+              <div class="walkthrough-step-title">Paso 4: Cálculo de Volumen Final del Hogar</div>
+              <div class="walkthrough-step-desc" id="wtStep4">...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sample Households Table -->
+        <div class="walkthrough-card">
+          <h3 style="font-size: 16px; font-weight: 700; color: var(--gray-800); margin-bottom: 12px;">📋 Primeros 10 Hogares Simulados en esta corrida</h3>
+          <div style="overflow-x: auto;">
+            <table class="h-table">
+              <thead>
+                <tr>
+                  <th>Hogar</th>
+                  <th>Personas (CASEN)</th>
+                  <th>Ducha Promedio</th>
+                  <th>WC Promedio</th>
+                  <th>Hábitos (m³/mes)</th>
+                  <th>Fuga (m³/mes)</th>
+                  <th>Total Registrado (m³)</th>
+                </tr>
+              </thead>
+              <tbody id="simTableBody">
+                <tr>
+                  <td colspan="7" style="text-align: center; color: var(--gray-400); padding: 20px;">Presiona "Ejecutar Simulación" para ver los hogares.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+  <script>
+    // Sliders UI Sync
+    const sliders = [
+      { id: 'paramDuchaMean', valId: 'valDuchaMean', suffix: ' min' },
+      { id: 'paramDuchaSD', valId: 'valDuchaSD', suffix: ' min' },
+      { id: 'paramWCMean', valId: 'valWCMean', suffix: ' veces' },
+      { id: 'paramWCSD', valId: 'valWCSD', suffix: ' veces' },
+      { id: 'paramLeakMean', valId: 'valLeakMean', suffix: ' m³/mes' }
+    ];
+
+    sliders.forEach(s => {
+      const input = document.getElementById(s.id);
+      const val = document.getElementById(s.valId);
+      input.oninput = () => {
+        val.textContent = input.value + s.suffix;
+      };
+    });
+
+    // Box-Muller transform for normal distribution
+    function sampleNormal(mu, sigma) {
+      let u1 = Math.random();
+      let u2 = Math.random();
+      let z = Math.sqrt(-2.0 * Math.log(Math.max(1e-9, u1))) * Math.cos(2.0 * Math.PI * u2);
+      return Math.max(0, mu + z * sigma);
+    }
+
+    // Exponential distribution for leaks
+    function sampleExponential(mean) {
+      let u = Math.random();
+      return -mean * Math.log(Math.max(1e-9, u));
+    }
+
+    // CASEN household size sampler
+    // 1: 15%, 2: 24%, 3: 25%, 4: 21%, 5: 10%, 6+: 5%
+    function sampleHouseholdSize() {
+      let r = Math.random();
+      if (r < 0.15) return 1;
+      if (r < 0.39) return 2;
+      if (r < 0.64) return 3;
+      if (r < 0.85) return 4;
+      if (r < 0.95) return 5;
+      return 6;
+    }
+
+    // Coefficients
+    const beta_shower = 10.0;
+    const beta_toilet = 8.0;
+    const beta_teeth = 6.0;
+    const beta_dishes = 15.0;
+    const beta_laundry = 65.0;
+    const beta_cook = 1.0;
+    const beta_garden = 30.0;
+
+    // Simulation Engine
+    function runSimulation() {
+      const N = parseInt(document.getElementById('simCount').value);
+      
+      const duchaMean = parseFloat(document.getElementById('paramDuchaMean').value);
+      const duchaSD = parseFloat(document.getElementById('paramDuchaSD').value);
+      
+      const wcMean = parseFloat(document.getElementById('paramWCMean').value);
+      const wcSD = parseFloat(document.getElementById('paramWCSD').value);
+      
+      const leakMean = parseFloat(document.getElementById('paramLeakMean').value);
+
+      const simulatedCons = [];
+      const sampleHouseholds = [];
+
+      for (let i = 0; i < N; i++) {
+        const p = sampleHouseholdSize();
+        
+        const h_shower = sampleNormal(duchaMean, duchaSD);
+        const h_toilet = sampleNormal(wcMean, wcSD);
+        const h_teeth = sampleNormal(3.0, 0.8);
+        const h_dishes = sampleNormal(2.2, 0.7);
+        const h_laundry = sampleNormal(4.0, 1.5);
+        const h_cook = sampleNormal(8.0, 2.0);
+        const h_garden = sampleNormal(2.5, 1.2);
+
+        const cons_shower = p * h_shower * beta_shower;
+        const cons_toilet = p * h_toilet * beta_toilet;
+        const cons_teeth = p * h_teeth * beta_teeth;
+        const cons_dishes = h_dishes * beta_dishes;
+        const cons_laundry = (h_laundry * beta_laundry) / 7.0;
+        const cons_cook = h_cook * beta_cook;
+        const cons_garden = (h_garden * beta_garden) / 7.0;
+
+        const total_daily = cons_shower + cons_toilet + cons_teeth + cons_dishes + cons_laundry + cons_cook + cons_garden;
+        const monthly_habits = (total_daily * 30.0) / 1000.0;
+
+        const leakage = sampleExponential(leakMean);
+        const total_m3 = monthly_habits + leakage;
+
+        simulatedCons.push(total_m3);
+
+        if (i < 10) {
+          sampleHouseholds.push({
+            id: i + 1,
+            people: p,
+            shower: h_shower.toFixed(1),
+            toilet: h_toilet.toFixed(1),
+            habits: monthly_habits.toFixed(2),
+            leak: leakage.toFixed(2),
+            total: total_m3.toFixed(2)
+          });
+        }
+      }
+
+      // Compute statistics
+      const mean = simulatedCons.reduce((a, b) => a + b, 0) / N;
+      
+      let variance = 0;
+      for (let i = 0; i < N; i++) {
+        variance += Math.pow(simulatedCons[i] - mean, 2);
+      }
+      const stdev = Math.sqrt(variance / N);
+
+      // Overlap calculation (approximation of Gaussian distribution overlap with ANDESS baseline)
+      const mean_hist = 16.70;
+      const stdev_hist = 6.50;
+
+      const diff = Math.abs(mean - mean_hist);
+      const denom = Math.sqrt(Math.pow(stdev, 2) + Math.pow(stdev_hist, 2));
+      const z = -diff / denom;
+      
+      // Approximation of standard normal CDF
+      const phi = 0.5 * (1.0 + erf(z / Math.sqrt(2.0)));
+      const overlap = 2.0 * phi * 100.0;
+
+      // Update UI
+      document.getElementById('resMean').textContent = `${mean.toFixed(2)} m³`;
+      document.getElementById('resSD').textContent = `${stdev.toFixed(2)} m³`;
+      document.getElementById('resOverlap').textContent = `${overlap.toFixed(1)}%`;
+
+      // Color coding boxes based on deviations
+      const meanBox = document.getElementById('statBoxMean');
+      const meanDev = Math.abs(mean - mean_hist) / mean_hist;
+      if (meanDev < 0.03) {
+        meanBox.className = "stat-box success";
+        document.getElementById('resMeanComp').className = "stat-box-comparison green";
+        document.getElementById('resMeanComp').textContent = `✅ Desviación de solo ${(meanDev*100).toFixed(2)}%`;
+      } else {
+        meanBox.className = "stat-box warning";
+        document.getElementById('resMeanComp').className = "stat-box-comparison red";
+        document.getElementById('resMeanComp').textContent = `⚠️ Desviación: ${(meanDev*100).toFixed(1)}%`;
+      }
+
+      // Chart bar width update
+      // Scale: 20 m3 corresponds to 100% width
+      const barWidth = Math.min(100, (mean / 20.0) * 100);
+      document.getElementById('barSim').style.width = `${barWidth}%`;
+      document.getElementById('valBarSim').textContent = `${mean.toFixed(2)} m³`;
+
+      // Render first 10 households table
+      const tbody = document.getElementById('simTableBody');
+      tbody.innerHTML = '';
+      sampleHouseholds.forEach(h => {
+        tbody.innerHTML += `
+          <tr>
+            <td><strong>Hogar ${h.id}</strong></td>
+            <td><span class="badge-size">${h.people} pers.</span></td>
+            <td>${h.shower} min/día</td>
+            <td>${h.toilet} veces/día</td>
+            <td>${h.habits} m³</td>
+            <td style="color: var(--red); font-weight: 600;">+${h.leak} m³</td>
+            <td style="font-weight: 800; font-size: 13px; color: var(--pri-dark);">${h.total} m³</td>
+          </tr>
+        `;
+      });
+    }
+
+    // Error function approximation for Gaussian math
+    function erf(x) {
+      const a1 =  0.254829592;
+      const a2 = -0.284496736;
+      const a3 =  1.421413741;
+      const a4 = -1.453152027;
+      const a5 =  1.061405429;
+      const p  =  0.3275911;
+
+      const sign = (x < 0) ? -1 : 1;
+      x = Math.abs(x);
+
+      const t = 1.0 / (1.0 + p * x);
+      const y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+
+      return sign * y;
+    }
+
+    // Step-by-Step Walkthrough Generator
+    function generateSingleHouseholdWalkthrough() {
+      // Step 1: CASEN size selection
+      const rSize = Math.random();
+      let p = 1;
+      let rangeText = "";
+      if (rSize < 0.15) { p = 1; rangeText = "r < 0.15 (15% de probabilidad)"; }
+      else if (rSize < 0.39) { p = 2; rangeText = "0.15 ≤ r < 0.39 (24% de probabilidad)"; }
+      else if (rSize < 0.64) { p = 3; rangeText = "0.39 ≤ r < 0.64 (25% de probabilidad)"; }
+      else if (rSize < 0.85) { p = 4; rangeText = "0.64 ≤ r < 0.85 (21% de probabilidad)"; }
+      else if (rSize < 0.95) { p = 5; rangeText = "0.85 ≤ r < 0.95 (10% de probabilidad)"; }
+      else { p = 6; rangeText = "r ≥ 0.95 (5% de probabilidad)"; }
+
+      document.getElementById('wtStep1').innerHTML = `
+        El computador arrojó un decimal aleatorio: <strong>r = ${rSize.toFixed(4)}</strong>.<br>
+        Según la distribución oficial del censo CASEN, este valor cae en el rango <code>${rangeText}</code>.<br>
+        Resultando en un <strong>hogar virtual de ${p} ${p === 1 ? 'persona' : 'personas'}</strong>.
+      `;
+
+      // Step 2: Sample habits
+      const showerMean = parseFloat(document.getElementById('paramDuchaMean').value);
+      const showerSD = parseFloat(document.getElementById('paramDuchaSD').value);
+      const wcMean = parseFloat(document.getElementById('paramWCMean').value);
+      const wcSD = parseFloat(document.getElementById('paramWCSD').value);
+
+      let habitsHtml = "Se generan hábitos diarios aleatorios para cada uno de los miembros utilizando distribuciones normales (campana de Gauss):<br><ul style='margin-left: 20px; margin-top: 6px; list-style-type: disc;'>";
+      let totalHabitsDaily = 0;
+
+      for (let i = 1; i <= p; i++) {
+        const sh = sampleNormal(showerMean, showerSD);
+        const toilet = sampleNormal(wcMean, wcSD);
+        const teeth = sampleNormal(3.0, 0.8);
+        
+        const daily_shower_liters = sh * beta_shower;
+        const daily_toilet_liters = toilet * beta_toilet;
+        const daily_teeth_liters = teeth * beta_teeth;
+        
+        totalHabitsDaily += daily_shower_liters + daily_toilet_liters + daily_teeth_liters;
+
+        habitsHtml += `
+          <li><strong>Persona ${i}:</strong> 
+            Ducha: <code>${sh.toFixed(1)} min</code> (${daily_shower_liters.toFixed(0)} L) | 
+            WC: <code>${toilet.toFixed(1)} flushes</code> (${daily_toilet_liters.toFixed(0)} L) | 
+            Cepillado: <code>${teeth.toFixed(1)} veces</code> (${daily_teeth_liters.toFixed(0)} L)
+          </li>
+        `;
+      }
+
+      // Add collective habits
+      const dishes = sampleNormal(2.2, 0.7) * beta_dishes;
+      const laundry = (sampleNormal(4.0, 1.5) * beta_laundry) / 7.0;
+      const cook = sampleNormal(8.0, 2.0) * beta_cook;
+      const garden = (sampleNormal(2.5, 1.2) * beta_garden) / 7.0;
+
+      totalHabitsDaily += dishes + laundry + cook + garden;
+      const monthlyHabitsM3 = (totalHabitsDaily * 30.0) / 1000.0;
+
+      habitsHtml += `</ul><br>
+        <strong>Hábitos comunes del hogar:</strong><br>
+        • Lavar platos: ${dishes.toFixed(0)} L/día | • Lavadora: ${laundry.toFixed(0)} L/día (prorrateado) | • Cocina: ${cook.toFixed(0)} L/día | • Riego: ${garden.toFixed(0)} L/día.<br>
+        <strong>Suma de Hábitos del Hogar:</strong> ${totalHabitsDaily.toFixed(0)} L/día, lo que equivale a <strong>${monthlyHabitsM3.toFixed(2)} m³/mes</strong>.
+      `;
+      document.getElementById('wtStep2').innerHTML = habitsHtml;
+
+      // Step 3: Leaks
+      const leakMean = parseFloat(document.getElementById('paramLeakMean').value);
+      const leakage = sampleExponential(leakMean);
+
+      document.getElementById('wtStep3').innerHTML = `
+        Para modelar la ineficiencia física real del medidor y las microfugas hogareñas, se arroja una variable exponencial con promedio de ${leakMean} m³/mes.<br>
+        Para este hogar se simuló una pérdida interna de: <strong style="color: var(--red);">+${leakage.toFixed(2)} m³/mes</strong>.
+      `;
+
+      // Step 4: Final calculation
+      const totalM3 = monthlyHabitsM3 + leakage;
+      document.getElementById('wtStep4').innerHTML = `
+        <strong>Cálculo:</strong> Consumo Hábitos (${monthlyHabitsM3.toFixed(2)} m³) + Pérdida Fugas (${leakage.toFixed(2)} m³)<br>
+        <div style="margin-top: 10px; font-size: 15px; font-weight: 800; color: var(--pri-dark);">
+          Consumo Final Registrado por Medidor (Boleta): ${totalM3.toFixed(2)} m³
+        </div>
+      `;
+
+      document.getElementById('walkthroughOutput').style.display = 'block';
+    }
+
+    // Run a default simulation on page load
+    window.onload = () => {
+      runSimulation();
+    };
+  </script>
+</body>
+</html>

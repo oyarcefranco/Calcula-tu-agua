@@ -426,7 +426,7 @@
             El cobro total mensual de agua potable y alcantarillado se estructura a partir de la siguiente ecuación:
           </p>
           <div class="formula-box">
-            Total Boleta = (Cargo Fijo + Consumo Agua Potable + Alcantarillado) &times; (1 + IVA)
+            Total Boleta = Cargo Fijo (con IVA incluido) + (Consumo Agua Potable + Alcantarillado) &times; (1 + IVA)
           </div>
           <p>
             A continuación, desglosamos cada uno de estos cinco términos para que sepas qué significan y cómo se calculan.
@@ -582,7 +582,7 @@
 
           <h2>5. IVA (Impuesto al Valor Agregado)</h2>
           <p>
-            Como casi todos los servicios de consumo básico en el país, el agua potable está sujeta al pago del <strong>19% de IVA</strong>. Este impuesto se calcula directamente sobre la suma neta acumulada de todos tus cobros (Cargo fijo + Agua potable + Alcantarillado + Recargos).
+            Como casi todos los servicios de consumo básico en el país, el agua potable está sujeta al pago del <strong>19% de IVA</strong>. Este impuesto se calcula directamente sobre la suma neta de tus cobros variables (Agua potable + Alcantarillado + Recargos de verano), ya que el Cargo Fijo mensual ya tiene el IVA incluido en su valor de tarifa oficial.
           </p>
 
           <div style="background: var(--pri-50); border: 1.5px solid var(--border); padding: 1.2rem; border-radius: var(--r); margin-top: 2rem;">
@@ -845,7 +845,8 @@
       const subtotal = fixedCharge + baseVariableCharge + summerSurcharge + sewerageCharge;
       let iva = 0;
       if (includeIva) {
-        iva = subtotal * 0.19;
+        // El IVA no se aplica sobre el cargo fijo (f), ya que las boletas oficiales lo incluyen en el cargo fijo.
+        iva = (baseVariableCharge + summerSurcharge + sewerageCharge) * 0.19;
         document.getElementById('receiptIvaRow').style.display = 'flex';
       } else {
         document.getElementById('receiptIvaRow').style.display = 'none';
