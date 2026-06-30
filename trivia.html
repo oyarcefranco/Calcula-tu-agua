@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trivia Millonaria — Calcula Tu Agua</title>
+  <meta name="description" content="Trivia interactiva sobre el cuidado y consumo del agua en Chile en formato de Quién Quiere Ser Millonario.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos_branding.css">
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <style>
+    /* Estilos específicos para la Trivia Millonaria */
+    body {
+      background: radial-gradient(circle at center, #0F356B 0%, #061B37 100%) !important;
+      color: #FFFFFF !important;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .home-header {
+      background: rgba(6, 27, 55, 0.8) !important;
+      backdrop-filter: blur(10px);
+      border-bottom: 1.5px solid rgba(30, 164, 245, 0.2) !important;
+    }
+
+    .header-nav a {
+      color: #C2EDFF !important;
+    }
+
+    .header-nav a:hover {
+      color: var(--pri-light) !important;
+    }
+
+    .trivia-container {
+      max-width: 850px;
+      margin: 80px auto 40px;
+      padding: 0 1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .trivia-card {
+      background: rgba(10, 35, 66, 0.85);
+      border: 2px solid var(--pri-light);
+      border-radius: var(--r-lg);
+      padding: 2.5rem 2rem;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 30px rgba(30, 164, 245, 0.15);
+      backdrop-filter: blur(8px);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .trivia-screen {
+      display: none;
+      animation: zoomIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    .trivia-screen.active {
+      display: block;
+    }
+
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* ESCALERA DE NIVELES (LADDER) */
+    .ladder {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      background: rgba(6, 22, 44, 0.6);
+      border: 1.5px solid rgba(30, 164, 245, 0.3);
+      border-radius: 12px;
+      padding: 8px 12px;
+      overflow-x: auto;
+      gap: 10px;
+    }
+
+    .ladder-step {
+      flex: 1;
+      text-align: center;
+      padding: 8px 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      border: 1px solid transparent;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .ladder-step.completed {
+      color: var(--green);
+      background: rgba(54, 195, 176, 0.1);
+      border-color: rgba(54, 195, 176, 0.3);
+    }
+
+    .ladder-step.active {
+      color: #FFFFFF;
+      background: var(--pri);
+      border-color: var(--pri-light);
+      box-shadow: 0 0 12px rgba(30, 164, 245, 0.4);
+      transform: scale(1.05);
+    }
+
+    .ladder-step.prize {
+      border-color: var(--accent);
+    }
+
+    .ladder-step.prize.active {
+      background: var(--accent);
+      border-color: #FBBF24;
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+      animation: pulseGlow 1.5s infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      from { box-shadow: 0 0 8px rgba(245, 158, 11, 0.4); }
+      to { box-shadow: 0 0 20px rgba(245, 158, 11, 0.7); }
+    }
+
+    /* PREGUNTA */
+    .question-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 4px 10px;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+    }
+
+    .badge-easy { background: rgba(54, 195, 176, 0.2); color: var(--green-light); border: 1px solid rgba(54, 195, 176, 0.4); }
+    .badge-medium { background: rgba(245, 158, 11, 0.2); color: #FBBF24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .badge-hard { background: rgba(220, 38, 38, 0.2); color: #F87171; border: 1px solid rgba(220, 38, 38, 0.4); }
+
+    .question-text {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.5;
+      margin-bottom: 2rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    /* ALTERNATIVAS */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 600px) {
+      .options-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+    }
+
+    .option-btn {
+      background: linear-gradient(135deg, rgba(30, 58, 138, 0.5) 0%, rgba(17, 24, 39, 0.5) 100%);
+      border: 1.5px solid rgba(30, 164, 245, 0.4);
+      border-radius: 14px;
+      padding: 18px 24px;
+      color: #FFFFFF;
+      font-size: 14.5px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .option-letter {
+      background: rgba(30, 164, 245, 0.15);
+      border: 1px solid rgba(30, 164, 245, 0.4);
+      color: var(--pri-light);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 12px;
+      flex-shrink: 0;
+      transition: all 0.25s ease;
+    }
+
+    .option-btn:hover:not(.locked) {
+      border-color: var(--accent);
+      background: rgba(30, 58, 138, 0.8);
+      box-shadow: 0 0 15px rgba(30, 164, 245, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .option-btn:hover:not(.locked) .option-letter {
+      background: var(--accent);
+      border-color: #FBBF24;
+      color: #FFFFFF;
+    }
+
+    /* Estados de la validación */
+    .option-btn.selected {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.6) 0%, rgba(217, 119, 6, 0.6) 100%) !important;
+      border-color: #FBBF24 !important;
+      animation: selectPulse 0.4s ease infinite alternate;
+    }
+
+    .option-btn.selected .option-letter {
+      background: #FFFFFF !important;
+      color: var(--accent-dark) !important;
+      border-color: #FFFFFF !important;
+    }
+
+    @keyframes selectPulse {
+      from { box-shadow: 0 0 8px rgba(245, 158, 11, 0.3); }
+      to { box-shadow: 0 0 18px rgba(245, 158, 11, 0.6); }
+    }
+
+    .option-btn.correct {
+      background: linear-gradient(135deg, rgba(54, 195, 176, 0.7) 0%, rgba(13, 148, 136, 0.7) 100%) !important;
+      border-color: #2DD4BF !important;
+      box-shadow: 0 0 20px rgba(54, 195, 176, 0.4) !important;
+    }
+
+    .option-btn.correct .option-letter {
+      background: #FFFFFF !important;
+      color: var(--green) !important;
+      border-color: #FFFFFF !important;
+    }
+
+    .option-btn.incorrect {
+      background: linear-gradient(135deg, rgba(220, 38, 38, 0.7) 0%, rgba(185, 28, 28, 0.7) 100%) !important;
+      border-color: #F87171 !important;
+      box-shadow: 0 0 20px rgba(220, 38, 38, 0.4) !important;
+    }
+
+    .option-btn.incorrect .option-letter {
+      background: #FFFFFF !important;
+      color: var(--red) !important;
+      border-color: #FFFFFF !important;
+    }
+
+    /* EXPLICACIÓN EDUCATIVA */
+    .explanation-panel {
+      background: rgba(30, 164, 245, 0.08);
+      border: 1.5px solid rgba(30, 164, 245, 0.3);
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 2rem;
+      display: none;
+      animation: slideDown 0.3s ease forwards;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .explanation-title {
+      font-weight: 800;
+      color: var(--pri-light);
+      font-size: 13.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .explanation-text {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: #E2E8F0;
+    }
+
+    /* PANTALLAS DE INTRO, GANAR Y PERDER */
+    .screen-content {
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    .screen-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
+      display: block;
+      animation: bounce 2s infinite alternate;
+    }
+
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-8px); }
+    }
+
+    .screen-title {
+      font-size: 24px;
+      font-weight: 900;
+      color: #FFFFFF;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+
+    .screen-desc {
+      font-size: 14.5px;
+      color: #CBD5E1;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+      max-width: 580px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .trivia-btn {
+      padding: 14px 32px;
+      font-size: 15px;
+      font-weight: 800;
+      border-radius: var(--r);
+      background: var(--pri);
+      color: #FFFFFF;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(22, 119, 200, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .trivia-btn:hover {
+      background: var(--pri-light);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(30, 164, 245, 0.5);
+    }
+
+    .trivia-btn.accent-btn {
+      background: var(--accent);
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+    }
+
+    .trivia-btn.accent-btn:hover {
+      background: #FBBF24;
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+    }
+
+    .trivia-btn.secondary-btn {
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.2);
+      color: #FFFFFF;
+      box-shadow: none;
+    }
+
+    .trivia-btn.secondary-btn:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.4);
+    }
+
+    /* RENDER PREMIO LLAVERO NFC */
+    .keychain-prize-display {
+      margin: 1.5rem auto 2rem;
+      width: 140px;
+      height: 140px;
+      position: relative;
+      perspective: 1000px;
+    }
+
+    .keychain-prize-display .keychain-tag {
+      transform: rotateY(0deg) rotateZ(10deg);
+      animation: spinKeychain 8s infinite linear;
+      margin: 0 auto;
+    }
+
+    @keyframes spinKeychain {
+      0% { transform: rotateY(0deg) rotateZ(10deg) translateY(0); }
+      50% { transform: rotateY(180deg) rotateZ(10deg) translateY(-10px); }
+      100% { transform: rotateY(360deg) rotateZ(10deg) translateY(0); }
+    }
+
+    /* CONFETI */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      opacity: 0.85;
+      border-radius: 50%;
+      z-index: 1000;
+      pointer-events: none;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(105vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER PRINCIPAL -->
+  <header class="home-header">
+    <a href="index.html" class="header-brand">
+      <img src="logo.png" alt="Logo" class="header-logo-icon">
+      <img src="logo_letras.png" alt="Calcula Tu Agua" class="header-logo-text">
+    </a>
+    <nav class="header-nav">
+      <a href="index.html">Volver a la Calculadora</a>
+      <a href="blog.html">Blog Educativo</a>
+      <a href="subsidio-sap.html">Guía Subsidio SAP</a>
+    </nav>
+  </header>
+
+  <!-- CONTENEDOR PRINCIPAL DE TRIVIA -->
+  <div class="trivia-container">
+    <div class="trivia-card">
+
+      <!-- ════ PANTALLA 1: INTRODUCCIÓN ════ -->
+      <div id="screenIntro" class="trivia-screen active">
+        <div class="screen-content">
+          <span class="screen-icon">🎮</span>
+          <h1 class="screen-title">Trivia Millonaria Calcula Tu Agua</h1>
+          <p class="screen-desc">
+            ¡Pon a prueba tus conocimientos sobre hábitos de ahorro, huella hídrica y datos curiosos sobre el agua! <br><br>
+            El juego sigue el formato de <strong>"Quién Quiere Ser Millonario"</strong>: debes responder correctamente una secuencia de <strong>4 preguntas</strong> de dificultad progresiva. <br><br>
+            <strong>🏆 El premio:</strong> ¡Si respondes las 4 preguntas bien consecutivas, te llevarás un <strong>Llavero Inteligente NFC</strong> de Calcula Tu Agua para tu hogar!
+          </p>
+          <button class="trivia-btn accent-btn" onclick="initGame()">
+            ¡Comenzar a Jugar! ⚡
+          </button>
+        </div>
+      </div>
+
+      <!-- ════ PANTALLA 2: JUEGO ACTIVO ════ -->
+      <div id="screenGame" class="trivia-screen">
+        <!-- ESCALERA DE NIVELES (LADDER) -->
+        <div class="ladder" id="triviaLadder">
+          <div class="ladder-step prize" data-level="4" id="ladder-4">
+            <span>NIVEL 4</span>
+            <strong>🏆 Llavero NFC</strong>
+          </div>
+          <div class="ladder-step" data-level="3" id="ladder-3">
+            <span>NIVEL 3</span>
+            <strong>💧 Ahorrador Avanzado</strong>
+          </div>
+          <div class="ladder-step" data-level="2" id="ladder-2">
+            <span>NIVEL 2</span>
+            <strong>🌱 Eco-Consciente</strong>
+          </div>
+          <div class="ladder-step" data-level="1" id="ladder-1">
+            <span>NIVEL 1</span>
+            <strong>🚿 Iniciador</strong>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 0.5rem;">
+          <span id="questionDifficulty" class="question-badge badge-easy">Fácil</span>
+        </div>
+
+        <div class="question-text" id="questionText">
+          Cargando pregunta...
+        </div>
+
+        <div class="options-grid" id="optionsGrid">
+          <!-- Opciones inyectadas dinámicamente -->
+        </div>
+
+        <!-- Panel educativo post-respuesta -->
+        <div class="explanation-panel" id="explanationPanel">
+          <div class="explanation-title" id="explanationTitle">
+            <!-- Icono y título dinámico -->
+          </div>
+          <div class="explanation-text" id="explanationText">
+            <!-- Texto dinámico -->
+          </div>
+        </div>
+
+        <div style="text-align: right;">
+          <button class="trivia-btn" id="nextBtn" style="display: none;">
+            Siguiente Pregunta →
+          </button>
+        </div>
+      </div>
+
+      <!-- ════ PANTALLA 3: GANADOR (4/4 CORRECTAS) ════ -->
+      <div id="screenWin" class="trivia-screen">
+        <div class="screen-content">
+          <span class="screen-icon">🎉🏆🎉</span>
+          <h1 class="screen-title" style="color: #FBBF24;">¡Felicitaciones! ¡Eres un Millonario del Ahorro!</h1>
+          <p class="screen-desc" style="font-size: 15.5px;">
+            Has respondido las 4 preguntas correctamente y demostrado un conocimiento sobresaliente sobre el uso eficiente del agua. <br><br>
+            ¡Te has ganado el <strong>Llavero Inteligente NFC</strong> de Calcula Tu Agua! Avísale al encargado del stand para recibir tu premio.
+          </p>
+
+          <!-- Render del llavero en 3D/CSS -->
+          <div class="keychain-prize-display">
+            <div class="keychain-tag" style="background: var(--pri-deep); border: 2.5px solid var(--pri-light); border-radius: 16px; width: 85px; height: 115px; padding: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(30,164,245,0.4);">
+              <div style="width: 14px; height: 14px; border-radius: 50%; background: #061B37; border: 2px solid var(--pri-light); margin-bottom: 8px;"></div>
+              <img src="logo.png" alt="Calcula Tu Agua" style="width: 44px; height: auto; object-fit: contain; margin-bottom: 6px;">
+              <span style="font-size: 10px; font-weight: 800; color: var(--pri-light); letter-spacing: 0.05em;">NFC READY</span>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <button class="trivia-btn accent-btn" onclick="initGame()">
+              Jugar de Nuevo 🔄
+            </button>
+            <a href="index.html" class="trivia-btn secondary-btn">
+              Volver a la Calculadora
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ PANTALLA 4: PERDEDOR (TRY AGAIN) ════ -->
+      <div id="screenLose" class="trivia-screen">
+        <div class="screen-content">
+          <span class="screen-icon">🌱💧</span>
+          <h1 class="screen-title">¡Buen intento! Cada gota cuenta</h1>
+          <p class="screen-desc" id="loseDesc">
+            Respondiste X de 4 preguntas correctas. El cuidado del agua es un aprendizaje diario. ¡No te rindas!
+          </p>
+          <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <button class="trivia-btn accent-btn" onclick="initGame()">
+              Intentarlo de Nuevo 🔄
+            </button>
+            <a href="index.html" class="trivia-btn secondary-btn">
+              Volver a la Calculadora
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer" style="text-align: center; margin-top: auto; padding: 2rem 0; border-top: 1px solid rgba(255,255,255,0.05); background: rgba(6, 27, 55, 0.4);">
+    <strong style="display: inline-flex; align-items: center; gap: 6px; vertical-align: middle;">
+      <img src="logo.png" alt="Logo" style="height: 24px; width: auto; object-fit: contain;">
+      <img src="logo_letras.png" alt="Calcula Tu Agua" style="height: 18px; width: auto; object-fit: contain;">
+    </strong> — Stand de Feria 2026<br>
+    Trivia para promover el consumo eficiente de agua potable en el hogar chilenos.
+  </div>
+
+  <!-- ════ JS MOTOR DE LA TRIVIA ════ -->
+  <script>
+    // BASE DE PREGUNTAS (55 preguntas: 20 Fácil, 20 Medio, 15 Difícil)
+    const QUESTIONS = {
+      facil: [
+        {
+          q: "¿Cuánto agua se ahorra aproximadamente al cerrar la llave mientras te cepillas los dientes?",
+          options: [
+            { text: "Hasta 5 litros por minuto", correct: true },
+            { text: "0 litros, no influye en absoluto", correct: false },
+            { text: "Aproximadamente 100 litros", correct: false },
+            { text: "Solo una taza de agua", correct: false }
+          ],
+          explicacion: "Cerrar la llave mientras te lavas los dientes evita el desperdicio continuo de agua corriente. ¡Puedes ahorrar alrededor de 5 a 6 litros de agua por minuto!"
+        },
+        {
+          q: "¿Cuál es el electrodoméstico que más agua consume por ciclo en un hogar promedio?",
+          options: [
+            { text: "La lavadora de ropa", correct: true },
+            { text: "La licuadora", correct: false },
+            { text: "El microondas", correct: false },
+            { text: "El refrigerador", correct: false }
+          ],
+          explicacion: "Una lavadora tradicional puede consumir entre 60 y 90 litros de agua por carga. Por eso se aconseja usarla siempre con carga completa y en modos eficientes."
+        },
+        {
+          q: "¿Cuál es el mejor horario para regar las plantas y el jardín de forma eficiente?",
+          options: [
+            { text: "Temprano en la mañana o al atardecer", correct: true },
+            { text: "A las 12 del día bajo el sol intenso", correct: false },
+            { text: "A las 3 de la tarde", correct: false },
+            { text: "Cualquier hora da el mismo rendimiento", correct: false }
+          ],
+          explicacion: "Regar temprano en la mañana o en el atardecer reduce la evaporación del agua provocada por el sol y el viento, permitiendo que la tierra absorba toda la humedad."
+        },
+        {
+          q: "¿Qué dispositivo se coloca en la boquilla de las llaves para reducir el consumo hasta un 50%?",
+          options: [
+            { text: "Aireador o atomizador de agua", correct: true },
+            { text: "Filtro de carbón activo", correct: false },
+            { text: "Tapón hermético de goma", correct: false },
+            { text: "Abrazadera metálica", correct: false }
+          ],
+          explicacion: "Los aireadores mezclan el chorro de agua con aire. Esto disminuye el volumen de agua utilizado sin reducir la sensación de presión en la salida."
+        },
+        {
+          q: "¿Cuántos litros de agua gasta aproximadamente una ducha promedio de 5 minutos?",
+          options: [
+            { text: "Entre 50 y 80 litros", correct: true },
+            { text: "Alrededor de 300 litros", correct: false },
+            { text: "Menos de 5 litros", correct: false },
+            { text: "Exactamente 1.000 litros", correct: false }
+          ],
+          explicacion: "Una ducha de 5 minutos gasta entre 50 y 80 litros de agua limpia. Reducir la ducha diaria de 8 a 5 minutos ahorra hasta 30 litros por persona."
+        },
+        {
+          q: "Para lavar la loza de forma eficiente y no gastar de más, se recomienda:",
+          options: [
+            { text: "Llenar un recipiente o el lavaplatos para enjabonar y enjuagar", correct: true },
+            { text: "Dejar la llave corriendo a máxima presión todo el tiempo", correct: false },
+            { text: "Usar agua hirviendo continuamente bajo el chorro", correct: false },
+            { text: "Lavar cada plato con una manguera en el jardín", correct: false }
+          ],
+          explicacion: "Juntar la loza y lavarla usando un lavaplatos tapado o un bowl reduce el consumo de agua de 15 litros por minuto a solo 5 litros en total."
+        },
+        {
+          q: "¿Qué objeto simple y hogareño se puede colocar dentro del estanque de un inodoro antiguo para ahorrar?",
+          options: [
+            { text: "Una botella plástica llena de agua o arena", correct: true },
+            { text: "Piedras pequeñas sueltas", correct: false },
+            { text: "Pastillas de jabón en barra", correct: false },
+            { text: "Nada, debe dejarse completamente vacío", correct: false }
+          ],
+          explicacion: "Colocar una botella llena de agua (de 1.5L) en el estanque ocupa volumen físico, lo que significa que el estanque se llena y descarga con menos agua en cada uso."
+        },
+        {
+          q: "¿Qué porcentaje del agua total de la Tierra está disponible directamente para consumo humano?",
+          options: [
+            { text: "Menos del 1%", correct: true },
+            { text: "Aproximadamente el 50%", correct: false },
+            { text: "El 25%", correct: false },
+            { text: "Casi el 97%", correct: false }
+          ],
+          explicacion: "Aunque la Tierra es 70% agua, el 97% es salada y de la dulce, la mayoría está congelada en glaciares. Solo el 0.007% es agua dulce líquida de fácil acceso."
+        },
+        {
+          q: "¿Cómo podemos detectar fugas invisibles en el estanque del inodoro?",
+          options: [
+            { text: "Poniendo colorante en el estanque y ver si tiñe la taza sin tirar la cadena", correct: true },
+            { text: "Golpeando la taza con un martillo suavemente", correct: false },
+            { text: "Midiendo la temperatura del agua del baño", correct: false },
+            { text: "Esperando a que el baño comience a inundarse", correct: false }
+          ],
+          explicacion: "Si colocas colorante (o té) en el estanque y el agua de la taza se tiñe sola pasados unos minutos, significa que la válvula de salida tiene una filtración."
+        },
+        {
+          q: "Mientras esperas que salga el agua caliente de la ducha, ¿qué es lo más eficiente?",
+          options: [
+            { text: "Recoger el agua fría en un balde para regar o limpiar", correct: true },
+            { text: "Dejar que corra por el desagüe libremente", correct: false },
+            { text: "Cerrar los ojos y no hacer nada", correct: false },
+            { text: "Lavar ropa blanca en ese chorro helado", correct: false }
+          ],
+          explicacion: "Esa agua está completamente limpia y potable. Recogerla en un balde te permite usarla para regar plantas, trapear el piso o descargar el inodoro."
+        },
+        {
+          q: "¿Cuál de estos hábitos con la lavadora genera un gran desperdicio de agua?",
+          options: [
+            { text: "Hacer múltiples lavados cortos con pocas prendas de ropa", correct: true },
+            { text: "Usar siempre la capacidad máxima recomendada", correct: false },
+            { text: "Limpiar periódicamente el filtro de pelusas", correct: false },
+            { text: "Aprovechar las tarifas eléctricas nocturnas", correct: false }
+          ],
+          explicacion: "La lavadora consume una gran cantidad de agua en cada ciclo. Juntar suficiente ropa y hacer cargas completas reduce considerablemente la cantidad de lavados al mes."
+        },
+        {
+          q: "¿Qué tipo de inodoro (WC) es el más amigable con el ahorro doméstico de agua?",
+          options: [
+            { text: "Uno con sistema de doble descarga (3 y 6 litros)", correct: true },
+            { text: "Uno antiguo con descarga única de 12 litros", correct: false },
+            { text: "Uno con fluxómetro industrial de alta presión", correct: false },
+            { text: "Un inodoro sin estanque de descarga directa", correct: false }
+          ],
+          explicacion: "Los inodoros de doble botón permiten elegir una descarga de 3 litros (líquidos) o 6 litros (sólidos), ahorrando miles de litros al año por persona."
+        },
+        {
+          q: "¿Qué porcentaje aproximado del cuerpo humano adulto está compuesto por agua?",
+          options: [
+            { text: "Alrededor del 60%", correct: true },
+            { text: "Apenas el 15%", correct: false },
+            { text: "El 95%", correct: false },
+            { text: "Cerca del 30%", correct: false }
+          ],
+          explicacion: "El agua constituye aproximadamente el 60% del peso corporal de un adulto. Es esencial para transportar nutrientes, regular la temperatura y el funcionamiento de los órganos."
+        },
+        {
+          q: "¿Cuál de las siguientes acciones en el baño genera un desperdicio de agua innecesario?",
+          options: [
+            { text: "Dejar la llave abierta mientras te afeitas", correct: true },
+            { text: "Usar un vaso con agua para el enjuague bucal", correct: false },
+            { text: "Tomar una ducha eficiente de 3 minutos", correct: false },
+            { text: "Limpiar el espejo usando un rociador manual y paño", correct: false }
+          ],
+          explicacion: "Mantener la llave abierta al afeitarse gasta aproximadamente 6 litros de agua limpia por minuto. Es mejor llenar un poco el lavamanos para limpiar la afeitadora."
+        },
+        {
+          q: "Si decidimos lavar el automóvil en casa, ¿qué método es el más eficiente?",
+          options: [
+            { text: "Usar un balde con agua y una esponja", correct: true },
+            { text: "Mantener la manguera abierta y corriendo todo el rato", correct: false },
+            { text: "Usar manguera de alta presión industrial sin gatillo", correct: false },
+            { text: "Esperar a que llueva para que se limpie solo", correct: false }
+          ],
+          explicacion: "Lavar el auto con manguera abierta gasta unos 120 litros en 10 minutos. Usar un balde con agua permite limpiar el auto utilizando menos de 30 litros."
+        },
+        {
+          q: "¿Qué debemos hacer de inmediato si detectamos una llave goteando en casa?",
+          options: [
+            { text: "Repararla de inmediato cambiando la goma o válvula defectuosa", correct: true },
+            { text: "Dejarla gotear ya que es un gasto insignificante", correct: false },
+            { text: "Colocar un balde debajo y dejar que se llene permanentemente", correct: false },
+            { text: "Cerrar la llave de paso principal de la casa para siempre", correct: false }
+          ],
+          explicacion: "Una llave que gotea puede llegar a desperdiciar más de 30 litros de agua al día. Su reparación suele ser económica y evita el desperdicio silencioso."
+        },
+        {
+          q: "¿Por qué es importante cuidar el agua potable si pagamos por ella mensualmente?",
+          options: [
+            { text: "Porque la potabilización consume energía y es un recurso natural limitado", correct: true },
+            { text: "Para evitar que la empresa sanitaria se quede sin oficinas", correct: false },
+            { text: "Para que el agua no se evapore dentro de las tuberías", correct: false },
+            { text: "No es importante, al pagarla podemos gastar lo que queramos", correct: false }
+          ],
+          explicacion: "El agua potable requiere procesos complejos de captación, filtrado y desinfección química, además de bombeo eléctrico. Cuidarla protege el medio ambiente y tu bolsillo."
+        },
+        {
+          q: "¿Qué uso alternativo se le puede dar al agua con la que herviste verduras?",
+          options: [
+            { text: "Dejarla enfriar y regar las plantas del hogar", correct: true },
+            { text: "Botarla de inmediato porque tiene nutrientes malos", correct: false },
+            { text: "Usarla para limpiar el televisor de la casa", correct: false },
+            { text: "Guardarla en botellas para beber fría directamente", correct: false }
+          ],
+          explicacion: "Una vez fría, el agua de cocción de vegetales es excelente para regar plantas, ya que contiene minerales disueltos que actúan como abono natural."
+        },
+        {
+          q: "¿Cuál de estos lugares de la casa concentra el mayor consumo de agua potable?",
+          options: [
+            { text: "El cuarto de baño (ducha e inodoro)", correct: true },
+            { text: "El living o sala de estar", correct: false },
+            { text: "El dormitorio principal", correct: false },
+            { text: "La bodega o garaje", correct: false }
+          ],
+          explicacion: "Aproximadamente el 60% del consumo de agua potable dentro de una casa se genera en el baño, repartido principalmente entre la ducha y las descargas del inodoro."
+        },
+        {
+          q: "Si tienes un jardín pequeño, ¿qué tipo de plantas ayudan a gastar menos agua?",
+          options: [
+            { text: "Plantas nativas de la región o de climas áridos", correct: true },
+            { text: "Helechos gigantes selváticos", correct: false },
+            { text: "Pasto de alta densidad que requiera riego diario", correct: false },
+            { text: "Cactus artificiales de plástico", correct: false }
+          ],
+          explicacion: "Las plantas nativas están adaptadas al clima local. En zonas con sequía, consumen significativamente menos agua y sobreviven con lluvias naturales o riegos esporádicos."
+        }
+      ],
+      medio: [
+        {
+          q: "¿Cuántos litros de agua se necesitan aproximadamente para producir una taza de café (125 ml)?",
+          options: [
+            { text: "Alrededor de 140 litros", correct: true },
+            { text: "Apenas 125 mililitros", correct: false },
+            { text: "Aproximadamente 5 litros", correct: false },
+            { text: "Cerca de 1.000 litros", correct: false }
+          ],
+          explicacion: "Esta es la huella hídrica indirecta del café. Incluye el agua para regar los cafetos, procesar los granos, transportarlos y prepararlo. ¡140 litros por taza!"
+        },
+        {
+          q: "¿Cuántos litros de agua consume en promedio un habitante en Chile al día?",
+          options: [
+            { text: "Entre 125 y 170 litros", correct: true },
+            { text: "Alrededor de 500 litros", correct: false },
+            { text: "Menos de 20 litros", correct: false },
+            { text: "Cerca de 1.000 litros", correct: false }
+          ],
+          explicacion: "El consumo promedio nacional ronda los 125-170 litros per cápita diarios, aunque en comunas con grandes áreas verdes de Santiago oriente supera los 600 litros."
+        },
+        {
+          q: "¿Qué porcentaje aproximado del uso total del agua en Chile corresponde al consumo humano de agua potable?",
+          options: [
+            { text: "Entre el 11% y el 12%", correct: true },
+            { text: "Cerca del 80%", correct: false },
+            { text: "Aproximadamente el 50%", correct: false },
+            { text: "Menos del 1%", correct: false }
+          ],
+          explicacion: "El agua potable de redes urbanas y rurales representa un 11-12% del consumo del país. El mayor consumidor es la agricultura (72%), seguido de minería e industria."
+        },
+        {
+          q: "¿Qué es conceptualmente la 'huella hídrica verde'?",
+          options: [
+            { text: "El agua de lluvia almacenada en el suelo utilizada por cultivos forestales o agrícolas", correct: true },
+            { text: "El agua clorada apta para regar áreas verdes", correct: false },
+            { text: "El agua contaminada que se logra purificar ecológicamente", correct: false },
+            { text: "El agua líquida extraída de pozos profundos", correct: false }
+          ],
+          explicacion: "La huella hídrica verde mide el volumen de agua de lluvia incorporada en los productos agrícolas o forestales sin pasar por fuentes superficiales o subterráneas."
+        },
+        {
+          q: "¿Cuántos litros de agua requiere aproximadamente la fabricación de una polera de algodón?",
+          options: [
+            { text: "Cerca de 2.700 litros", correct: true },
+            { text: "Alrededor de 100 litros", correct: false },
+            { text: "Menos de 10 litros", correct: false },
+            { text: "Más de 50.000 litros", correct: false }
+          ],
+          explicacion: "El algodón es un cultivo altamente demandante de agua. Fabricar una sola polera requiere unos 2.700 litros, el equivalente a lo que bebe una persona en 3 años."
+        },
+        {
+          q: "¿Qué representa la 'huella hídrica gris'?",
+          options: [
+            { text: "El agua dulce necesaria para diluir contaminantes y cumplir con normas de calidad", correct: true },
+            { text: "El agua recolectada de la lluvia en techos grises", correct: false },
+            { text: "Las pérdidas por roturas en las tuberías urbanas", correct: false },
+            { text: "El agua estancada en embalses artificiales", correct: false }
+          ],
+          explicacion: "La huella hídrica gris es un indicador del nivel de contaminación, calculando el volumen de agua pura necesario para asimilar la carga de contaminantes vertidos."
+        },
+        {
+          q: "¿Cuántos litros de agua consume aproximadamente un ciclo de lavadora tradicional ineficiente?",
+          options: [
+            { text: "Entre 80 y 100 litros", correct: true },
+            { text: "Menos de 10 litros", correct: false },
+            { text: "Alrededor de 300 litros", correct: false },
+            { text: "Más de 500 litros", correct: false }
+          ],
+          explicacion: "Las lavadoras antiguas o ineficientes consumen cerca de 80 a 100 litros por carga. Modelos modernos certificados con sello de eficiencia bajan ese número a la mitad."
+        },
+        {
+          q: "En la Región Metropolitana de Santiago, ¿cuál es el promedio estimado de consumo diario por persona?",
+          options: [
+            { text: "Aproximadamente 160-180 litros", correct: true },
+            { text: "Cerca de 50 litros", correct: false },
+            { text: "Alrededor de 450 litros", correct: false },
+            { text: "Menos de 10 litros", correct: false }
+          ],
+          explicacion: "El promedio en Santiago ronda los 160 a 180 litros diarios por persona, impulsado por el clima semiárido y el riego de jardines ornamentales."
+        },
+        {
+          q: "¿Qué porcentaje del agua dulce total del planeta se encuentra congelada en glaciares y polos?",
+          options: [
+            { text: "Aproximadamente el 69%", correct: true },
+            { text: "Cerca del 10%", correct: false },
+            { text: "Alrededor del 95%", correct: false },
+            { text: "Casi el 30%", correct: false }
+          ],
+          explicacion: "Cerca del 69% del agua dulce de la Tierra está inmovilizada en glaciares, la Antártica y Groenlandia, lo que limita enormemente el agua dulce líquida superficial disponible."
+        },
+        {
+          q: "¿Cuál de los siguientes productos alimenticios tiene la mayor huella hídrica por kilo?",
+          options: [
+            { text: "Carne de vacuno", correct: true },
+            { text: "Papas", correct: false },
+            { text: "Lechuga", correct: false },
+            { text: "Pan de trigo", correct: false }
+          ],
+          explicacion: "La carne de vacuno requiere unos 15.400 litros de agua por kilo, principalmente para regar las praderas y cultivar el grano que come el ganado durante su vida."
+        },
+        {
+          q: "¿Cuántos litros de agua se necesitan aproximadamente para producir un vaso de cerveza (300 ml)?",
+          options: [
+            { text: "Alrededor de 74 litros", correct: true },
+            { text: "Exactamente 300 ml", correct: false },
+            { text: "Cerca de 5 litros", correct: false },
+            { text: "Más de 500 litros", correct: false }
+          ],
+          explicacion: "La huella de la cerveza incluye el cultivo de cebada y lúpulo, la manufactura industrial y el envasado. Se calculan unos 74 litros de agua por cada vaso de 300 ml."
+        },
+        {
+          q: "En el diseño de jardines sostenibles (xerojardinería) en la zona central de Chile, se aconseja:",
+          options: [
+            { text: "Usar cubresuelos nativos y plantas de bajo consumo hídrico", correct: true },
+            { text: "Instalar césped inglés en todo el terreno", correct: false },
+            { text: "Plantar helechos gigantes y palmeras tropicales", correct: false },
+            { text: "Utilizar riego por inundación al mediodía", correct: false }
+          ],
+          explicacion: "La xerojardinería utiliza especies adaptadas a la escasez hídrica (como cactus, suculentas o quillayes), logrando reducir las necesidades de riego en más del 70%."
+        },
+        {
+          q: "En promedio, ¿qué porcentaje del consumo doméstico total de agua se pierde debido a fugas ocultas?",
+          options: [
+            { text: "Entre el 10% y el 15%", correct: true },
+            { text: "Menos del 1%", correct: false },
+            { text: "Cerca del 50%", correct: false },
+            { text: "Exactamente el 0%", correct: false }
+          ],
+          explicacion: "Las fugas invisibles (principalmente en inodoros y griferías desgastadas) representan del 10% al 15% del consumo mensual en una vivienda familiar promedio."
+        },
+        {
+          q: "¿Qué define conceptualmente a la 'huella hídrica azul'?",
+          options: [
+            { text: "El consumo de agua dulce de fuentes superficiales o subterráneas (ríos, lagos y acuíferos)", correct: true },
+            { text: "El agua desalinizada proveniente de los océanos", correct: false },
+            { text: "El vapor de agua condensado en la atmósfera", correct: false },
+            { text: "El agua mezclada con detergente azul para el lavado", correct: false }
+          ],
+          explicacion: "La huella hídrica azul es la medida del agua extraída de recursos hídricos naturales (ríos, lagos, pozos) que se evapora o se incorpora a un producto."
+        },
+        {
+          q: "¿Cuántos litros de agua se necesitan aproximadamente para producir un kilo de queso?",
+          options: [
+            { text: "Cerca de 5.000 litros", correct: true },
+            { text: "Alrededor de 10 litros", correct: false },
+            { text: "Casi 100 litros", correct: false },
+            { text: "Más de 20.000 litros", correct: false }
+          ],
+          explicacion: "Un kilo de queso requiere alrededor de 5.000 litros de agua, debido a la gran cantidad de leche necesaria (10 litros de leche para 1 kg de queso) y la huella hídrica del ganado."
+        },
+        {
+          q: "¿Cuál es el rango de consumo mensual promedio para un hogar típico chileno (de 3 a 4 personas)?",
+          options: [
+            { text: "Entre 15 y 22 metros cúbicos (m³)", correct: true },
+            { text: "Menos de 2 metros cúbicos (m³)", correct: false },
+            { text: "Alrededor de 80 metros cúbicos (m³)", correct: false },
+            { text: "Más de 100 metros cúbicos (m³)", correct: false }
+          ],
+          explicacion: "Un hogar chileno promedio de 4 personas consume mensualmente entre 15 y 22 m³ (equivalente a 15.000 - 22.000 litros de agua al mes)."
+        },
+        {
+          q: "Si una llave gotea de forma constante unas 10 gotas por minuto, ¿cuánto agua pierde en un año?",
+          options: [
+            { text: "Aproximadamente 2.000 litros", correct: true },
+            { text: "Cerca de 5 litros", correct: false },
+            { text: "Alrededor de 100 litros", correct: false },
+            { text: "Menos de 50 litros", correct: false }
+          ],
+          explicacion: "Un goteo lento pero incesante (10 gotas por minuto) acumula pérdidas anuales de casi 2.000 litros de agua potable. ¡Es el equivalente a unas 25 duchas eficientes!"
+        },
+        {
+          q: "¿Qué porcentaje del agua dulce líquida del planeta se encuentra acumulada bajo tierra en acuíferos?",
+          options: [
+            { text: "Alrededor del 30%", correct: true },
+            { text: "Menos del 2%", correct: false },
+            { text: "Cerca del 80%", correct: false },
+            { text: "Casi el 99%", correct: false }
+          ],
+          explicacion: "Excluyendo el agua congelada en glaciares, los acuíferos subterráneos concentran aproximadamente el 30% del agua dulce líquida mundial. Es un recurso clave ante sequías."
+        },
+        {
+          q: "¿Qué ahorro estimado de agua ofrece un lavavajillas eficiente moderno frente al lavado a mano tradicional?",
+          options: [
+            { text: "Ahorra hasta un 80% de agua (usa 10L frente a 50L a mano)", correct: true },
+            { text: "No ahorra nada, el lavado a mano gasta menos", correct: false },
+            { text: "Consume el doble de agua limpia", correct: false },
+            { text: "El ahorro es de exactamente 1 litro por ciclo", correct: false }
+          ],
+          explicacion: "Un lavavajillas de alta eficiencia usa unos 10-12 litros de agua por ciclo completo. Lavar la misma cantidad de loza a mano con la llave corriendo gasta entre 40 y 60 litros."
+        },
+        {
+          q: "¿Cuál es la huella hídrica aproximada de una sola hoja de papel de tamaño A4?",
+          options: [
+            { text: "Alrededor de 10 litros", correct: true },
+            { text: "Menos de 100 mililitros", correct: false },
+            { text: "Cerca de 50 litros", correct: false },
+            { text: "Aproximadamente 1.000 litros", correct: false }
+          ],
+          explicacion: "La industria papelera es altamente demandante de agua. Fabricar una sola hoja de papel bond tamaño carta o A4 requiere aproximadamente 10 litros de agua dulce."
+        }
+      ],
+      dificil: [
+        {
+          q: "¿Cuál es el límite máximo de consumo mensual (en m³) que cubre el Subsidio al Agua Potable (SAP) en Chile?",
+          options: [
+            { text: "Hasta 13 metros cúbicos (13.000 litros)", correct: true },
+            { text: "Hasta 40 metros cúbicos (40.000 litros)", correct: false },
+            { text: "Hasta 5 metros cúbicos (5.000 litros)", correct: false },
+            { text: "No hay límites, cubre el total de la boleta", correct: false }
+          ],
+          explicacion: "El subsidio estatal SAP cubre únicamente los primeros 13 metros cúbicos (m³) de consumo mensual. Cualquier m³ por encima de ese límite se factura a tarifa normal."
+        },
+        {
+          q: "¿Qué beneficio especial tienen las familias del programa Chile Seguridades y Oportunidades respecto al subsidio SAP?",
+          options: [
+            { text: "Pueden recibir un subsidio del 100% de los primeros 15 m³", correct: true },
+            { text: "Están exentas de pagar el cargo fijo de forma vitalicia", correct: false },
+            { text: "Tienen un descuento automático del 50% en toda la boleta", correct: false },
+            { text: "Se les regala un kit tecnológico de griferías premium", correct: false }
+          ],
+          explicacion: "Para los participantes de Chile Seguridades y Oportunidades, la cobertura del subsidio SAP se eleva al 100% de la boleta hasta un tope ampliado de 15 m³."
+        },
+        {
+          q: "Según la taxonomía conductual del Proyecto WHY (Horizon 2020), ¿qué perfil está motivado puramente por el retorno financiero ($)?",
+          options: [
+            { text: "El Calculador (Homo Economicus)", correct: true },
+            { text: "El Asustadizo (Fearful)", correct: false },
+            { text: "El Austero (Stubborn)", correct: false },
+            { text: "El Pionero (Early Adopter)", correct: false }
+          ],
+          explicacion: "El Homo Economicus decide optimizar sus recursos solo si ve un retorno de inversión claro en pesos chilenos ($ CLP), restándole prioridad a los argumentos ecológicos puros."
+        },
+        {
+          q: "¿En qué consiste el 'Recargo de Verano' o tarifa de sobreconsumo aplicada por las sanitarias en Chile?",
+          options: [
+            { text: "Un cobro adicional sobre el excedente cuando se superan los 40 m³ mensuales en periodo punta", correct: true },
+            { text: "Un cobro extra para mantener piscinas públicas municipales", correct: false },
+            { text: "Un impuesto por el calor estacional que calienta las tuberías", correct: false },
+            { text: "Un descuento que se aplica a todos los hogares en enero y febrero", correct: false }
+          ],
+          explicacion: "En verano (periodo punta), si un hogar supera los 40 m³ mensuales (o su promedio histórico de invierno si es mayor), los m³ adicionales se cobran a una tarifa mucho mayor (t3)."
+        },
+        {
+          q: "En la metodología del Proyecto WHY en Chile, ¿cuál es el perfil conductual que busca la precisión técnica y entender el desglose detallado de las fórmulas?",
+          options: [
+            { text: "El Cauteloso (Careful)", correct: true },
+            { text: "El Desinteresado (Uninterested)", correct: false },
+            { text: "El Líder Social (Influencer)", correct: false },
+            { text: "El Austero (Stubborn)", correct: false }
+          ],
+          explicacion: "El perfil Careful tiene alta necesidad de precisión cognitiva. Exige conocer las variables matemáticas del cálculo y las normativas detrás del cobro de la sanitaria."
+        },
+        {
+          q: "¿Cómo se financia y administra el beneficio del Subsidio de Agua Potable (SAP) en Chile?",
+          options: [
+            { text: "Se financia fiscalmente (Estado) y es administrado por cada Municipalidad", correct: true },
+            { text: "Es pagado por las empresas sanitarias privadas como labor social", correct: false },
+            { text: "Proviene de un recargo a las cuentas de los hogares industriales", correct: false },
+            { text: "Se costea mediante donaciones voluntarias en las boletas", correct: false }
+          ],
+          explicacion: "El SAP es un subsidio estatal financiado a través del presupuesto de la nación. El Ministerio de Desarrollo Social asigna los cupos y los municipios los otorgan a nivel local."
+        },
+        {
+          q: "¿Qué institución estatal fiscaliza a las sanitarias y regula el cumplimiento de la calidad y tarifas del agua potable en Chile?",
+          options: [
+            { text: "La Superintendencia de Servicios Sanitarios (SISS)", correct: true },
+            { text: "La Dirección General de Aguas (DGA)", correct: false },
+            { text: "El Ministerio del Medio Ambiente (MMA)", correct: false },
+            { text: "El Servicio Nacional del Consumidor (SERNAC)", correct: false }
+          ],
+          explicacion: "La SISS es el organismo regulador chileno encargado de fiscalizar la calidad del servicio de las empresas de agua potable y alcantarillado, además de fijar las estructuras tarifarias."
+        },
+        {
+          q: "El subsidio SAP tradicional (no Chile Seguridades) financia un porcentaje de la cuenta que varía entre:",
+          options: [
+            { text: "El 25% y el 85% de la factura neta hasta 13 m³", correct: true },
+            { text: "El 10% y el 50% de la factura total", correct: false },
+            { text: "El 50% y el 100% de los cargos fijos", correct: false },
+            { text: "El 90% y el 100% sin importar la cantidad consumida", correct: false }
+          ],
+          explicacion: "El subsidio SAP tradicional cubre entre un 25% y un 85% del cobro por agua potable y alcantarillado correspondientes a los primeros 13 metros cúbicos, según la vulnerabilidad familiar."
+        },
+        {
+          q: "Según el Proyecto WHY, ¿qué perfil se caracteriza por preferir la simplicidad extrema, respuestas rápidas y mínimo esfuerzo cognitivo?",
+          options: [
+            { text: "El Desinteresado (Uninterested)", correct: true },
+            { text: "El Asustadizo (Fearful)", correct: false },
+            { text: "El Pionero (Early Adopter)", correct: false },
+            { text: "El Líder Social (Influencer)", correct: false }
+          ],
+          explicacion: "El perfil Uninterested rechaza la sobrecarga de datos. Prefiere interfaces limpias que muestren el ahorro final en un solo paso, omitiendo desglose de fórmulas o gráficos detallados."
+        },
+        {
+          q: "¿Cuál de las siguientes tarifas en la boleta de agua potable en Chile es fija e independiente del volumen de agua consumido?",
+          options: [
+            { text: "El Cargo Fijo mensual", correct: true },
+            { text: "El Cargo por Consumo de Agua", correct: false },
+            { text: "El Cargo por Servicio de Alcantarillado", correct: false },
+            { text: "El Cargo por Tratamiento de Aguas Servidas", correct: false }
+          ],
+          explicacion: "El Cargo Fijo representa el costo de lectura, emisión de boleta y mantención del medidor. Su valor está regulado por zona tarifaria y no varía con tu consumo."
+        },
+        {
+          q: "¿En qué meses del año se aplica tradicionalmente el periodo de facturación punta (con posible recargo por sobreconsumo) en Chile?",
+          options: [
+            { text: "Del 1 de diciembre al 31 de marzo del año siguiente", correct: true },
+            { text: "Durante todo el invierno (junio a agosto)", correct: false },
+            { text: "Solo en el mes de enero", correct: false },
+            { text: "Varía libremente según decida la empresa cada mes", correct: false }
+          ],
+          explicacion: "El periodo punta oficial está estipulado del 1 de diciembre al 31 de marzo. Durante este lapso se penaliza el consumo excesivo para mitigar el estrés hídrico veraniego."
+        },
+        {
+          q: "En el panel de expertos chilenos (Group-CL) que adaptó la taxonomía del Proyecto WHY en Chile, ¿cuántos expertos participaron?",
+          options: [
+            { text: "Participaron 9 expertos chilenos de distintas instituciones", correct: true },
+            { text: "Participaron 50 expertos nacionales", correct: false },
+            { text: "Un panel conformado por 2 asesores del ministerio", correct: false },
+            { text: "No hubo expertos, se importó el modelo europeo directamente", correct: false }
+          ],
+          explicacion: "Un panel interdisciplinar de 9 expertos nacionales mapeó y adaptó los 32 determinantes conductuales europeos para adaptarlos al contexto social y cultural de Chile."
+        },
+        {
+          q: "Si un hogar en Chile consume 10 m³ de agua en un mes y tiene subsidio SAP al 85%, ¿sobre qué cantidad se calcula el descuento?",
+          options: [
+            { text: "Sobre los 10 m³ completos consumidos (ya que es menor al tope de 13 m³)", correct: true },
+            { text: "Solo sobre los primeros 5 m³", correct: false },
+            { text: "Sobre los 13 m³ teóricos (le devuelven dinero extra)", correct: false },
+            { text: "El subsidio solo se calcula sobre el cargo fijo", correct: false }
+          ],
+          explicacion: "Si el consumo real del mes es menor al tope de 13 m³, el subsidio se aplica directamente sobre el consumo real neta obtenido (en este caso, los 10 m³ y sus cargos variables asociados)."
+        },
+        {
+          q: "Según el Proyecto WHY, ¿qué perfil conductual valora la adopción de nuevas tecnologías y es propenso a participar en pruebas piloto de medidores digitales?",
+          options: [
+            { text: "El Pionero (Early Adopter)", correct: true },
+            { text: "El Austero (Stubborn)", correct: false },
+            { text: "El Cauteloso (Careful)", correct: false },
+            { text: "El Asustadizo (Fearful)", correct: false }
+          ],
+          explicacion: "El Early Adopter está motivado por la innovación y la curiosidad. Se entusiasma con gadgets modernos, digitalización y tendencias tecnológicas para controlar su consumo doméstico."
+        },
+        {
+          q: "¿Cuál es el nombre del proyecto financiado por la Unión Europea que sirve de marco científico para los perfiles de Calcula Tu Agua?",
+          options: [
+            { text: "Proyecto WHY", correct: true },
+            { text: "Proyecto WATER-SAVE", correct: false },
+            { text: "Proyecto EU-ECO", correct: false },
+            { text: "Proyecto CHILE-transition", correct: false }
+          ],
+          explicacion: "El Proyecto WHY (Climbing the ladder of energy transition: modeling investment decisions) es una iniciativa científica financiada por el programa Horizon 2020 de la UE."
+        }
+      ]
+    };
+
+    // VARIABLES DE ESTADO DEL JUEGO
+    let currentQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let isOptionSelected = false;
+
+    // INICIAR JUEGO (SELECCIÓN ALEATORIA DE PREGUNTAS)
+    function initGame() {
+      // Ocultar pantallas secundarias, mostrar pantalla de juego
+      document.getElementById('screenIntro').classList.remove('active');
+      document.getElementById('screenWin').classList.remove('active');
+      document.getElementById('screenLose').classList.remove('active');
+      document.getElementById('screenGame').classList.add('active');
+
+      // Seleccionar 4 preguntas aleatorias según dificultad
+      // Nivel 1: Fácil
+      const easyPool = QUESTIONS.facil;
+      const q1 = easyPool[Math.floor(Math.random() * easyPool.length)];
+
+      // Nivel 2 y 3: Medio (sin repetir la misma pregunta en la ronda)
+      const medPool = [...QUESTIONS.medio];
+      shuffleArray(medPool);
+      const q2 = medPool[0];
+      const q3 = medPool[1];
+
+      // Nivel 4: Difícil
+      const hardPool = QUESTIONS.dificil;
+      const q4 = hardPool[Math.floor(Math.random() * hardPool.length)];
+
+      currentQuestions = [
+        { ...q1, level: 1, difficulty: 'facil', difficultyName: 'Fácil' },
+        { ...q2, level: 2, difficulty: 'medio', difficultyName: 'Medio' },
+        { ...q3, level: 3, difficulty: 'medio', difficultyName: 'Medio' },
+        { ...q4, level: 4, difficulty: 'dificil', difficultyName: 'Difícil' }
+      ];
+
+      currentQuestionIndex = 0;
+      score = 0;
+
+      // Renderizar el primer nivel
+      updateLadderUI();
+      renderQuestion();
+    }
+
+    // MEZCLAR ARRAY (ALGORITMO FISHER-YATES)
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    // ACTUALIZAR ESCALERA DE NIVELES (LADDER)
+    function updateLadderUI() {
+      const activeLevel = currentQuestionIndex + 1;
+      for (let i = 1; i <= 4; i++) {
+        const step = document.getElementById(`ladder-${i}`);
+        step.classList.remove('active', 'completed');
+        if (i < activeLevel) {
+          step.classList.add('completed');
+        } else if (i === activeLevel) {
+          step.classList.add('active');
+        }
+      }
+    }
+
+    // RENDERIZAR PREGUNTA ACTUAL
+    function renderQuestion() {
+      isOptionSelected = false;
+      const qData = currentQuestions[currentQuestionIndex];
+
+      // Ocultar botón de siguiente y explicación
+      document.getElementById('nextBtn').style.display = 'none';
+      document.getElementById('explanationPanel').style.display = 'none';
+
+      // Badge de dificultad
+      const diffBadge = document.getElementById('questionDifficulty');
+      diffBadge.textContent = qData.difficultyName;
+      diffBadge.className = 'question-badge'; // Reset
+      if (qData.difficulty === 'facil') diffBadge.classList.add('badge-easy');
+      else if (qData.difficulty === 'medio') diffBadge.classList.add('badge-medium');
+      else if (qData.difficulty === 'dificil') diffBadge.classList.add('badge-hard');
+
+      // Texto de la pregunta
+      document.getElementById('questionText').textContent = qData.q;
+
+      // Render de alternativas
+      const optionsGrid = document.getElementById('optionsGrid');
+      optionsGrid.innerHTML = '';
+
+      const letters = ['A', 'B', 'C', 'D'];
+      qData.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `
+          <span class="option-letter">${letters[idx]}</span>
+          <span>${opt.text}</span>
+        `;
+        btn.onclick = () => selectOption(idx);
+        optionsGrid.appendChild(btn);
+      });
+    }
+
+    // SELECCIONAR OPCIÓN (SUSPENSO Y VALIDACIÓN)
+    function selectOption(selectedIdx) {
+      if (isOptionSelected) return; // Bloquear doble click
+      isOptionSelected = true;
+
+      const qData = currentQuestions[currentQuestionIndex];
+      const optionButtons = document.querySelectorAll('.option-btn');
+
+      // Bloquear todas las opciones visualmente
+      optionButtons.forEach(btn => btn.classList.add('locked'));
+
+      // Marcar opción seleccionada en estado de suspenso (Naranja)
+      const selectedBtn = optionButtons[selectedIdx];
+      selectedBtn.classList.add('selected');
+
+      // Delay de suspenso (1.2 segundos) para emular el show de TV
+      setTimeout(() => {
+        // Quitar estado de selección activa
+        selectedBtn.classList.remove('selected');
+
+        const isCorrect = qData.options[selectedIdx].correct;
+
+        if (isCorrect) {
+          // CORRECTO: Se pinta verde
+          selectedBtn.classList.add('correct');
+          score++;
+          showExplanation(true, qData.explicacion);
+
+          // Cambiar texto de botón siguiente según nivel
+          const nextBtn = document.getElementById('nextBtn');
+          if (currentQuestionIndex === 3) {
+            nextBtn.textContent = 'Ver Resultados Finales 🏆';
+          } else {
+            nextBtn.textContent = 'Siguiente Pregunta →';
+          }
+          nextBtn.style.display = 'inline-flex';
+          nextBtn.onclick = handleNext;
+        } else {
+          // INCORRECTO: Se pinta rojo
+          selectedBtn.classList.add('incorrect');
+
+          // Revelar la respuesta correcta en verde
+          qData.options.forEach((opt, idx) => {
+            if (opt.correct) {
+              optionButtons[idx].classList.add('correct');
+            }
+          });
+
+          showExplanation(false, qData.explicacion);
+
+          // Ir a pantalla de perdedor
+          const nextBtn = document.getElementById('nextBtn');
+          nextBtn.textContent = 'Ver Resultados 📊';
+          nextBtn.style.display = 'inline-flex';
+          nextBtn.onclick = () => showLoseScreen();
+        }
+      }, 1200);
+    }
+
+    // MOSTRAR EXPLICACIÓN EDUCATIVA
+    function showExplanation(isCorrect, text) {
+      const panel = document.getElementById('explanationPanel');
+      const title = document.getElementById('explanationTitle');
+      const desc = document.getElementById('explanationText');
+
+      if (isCorrect) {
+        title.innerHTML = `<span>✅ ¡Correcto!</span>`;
+        title.style.color = 'var(--green-light)';
+        panel.style.borderColor = 'rgba(54, 195, 176, 0.4)';
+        panel.style.background = 'rgba(54, 195, 176, 0.08)';
+      } else {
+        title.innerHTML = `<span>❌ Respuesta Incorrecta</span>`;
+        title.style.color = '#F87171';
+        panel.style.borderColor = 'rgba(220, 38, 38, 0.4)';
+        panel.style.background = 'rgba(220, 38, 38, 0.08)';
+      }
+
+      desc.innerHTML = `<strong>Dato curioso:</strong> ${text}`;
+      panel.style.display = 'block';
+    }
+
+    // MANEJAR SIGUIENTE PREGUNTA
+    function handleNext() {
+      if (currentQuestionIndex < 3) {
+        currentQuestionIndex++;
+        updateLadderUI();
+        renderQuestion();
+      } else {
+        showWinScreen();
+      }
+    }
+
+    // PANTALLA GANADOR
+    function showWinScreen() {
+      document.getElementById('screenGame').classList.remove('active');
+      const winScreen = document.getElementById('screenWin');
+      winScreen.classList.add('active');
+
+      // Lanzar confeti de celebración
+      spawnConfetti();
+    }
+
+    // PANTALLA PERDEDOR
+    function showLoseScreen() {
+      document.getElementById('screenGame').classList.remove('active');
+      const loseScreen = document.getElementById('screenLose');
+      loseScreen.classList.add('active');
+
+      const desc = document.getElementById('loseDesc');
+      if (score === 3) {
+        desc.innerHTML = `
+          ¡Estuviste extremadamente cerca! 😮<br><br>
+          Respondiste correctamente <strong>3 de 4 preguntas</strong>. Fallaste en la última pregunta de nivel difícil. <br><br>
+          ¡El agua es un recurso valioso, sigue aprendiendo y vuelve a intentarlo para ganar el llavero NFC!
+        `;
+      } else if (score > 0) {
+        desc.innerHTML = `
+          Respondiste correctamente <strong>${score} de 4 preguntas</strong>. <br><br>
+          ¡Buen esfuerzo! Sigue mejorando tus conocimientos sobre el consumo doméstico y vuelve a intentarlo para llevarte tu premio.
+        `;
+      } else {
+        desc.innerHTML = `
+          No lograste responder preguntas correctas en esta ronda. 💧<br><br>
+          ¡No te preocupes! La trivia es para aprender. Revisa nuestros consejos domésticos y vuelve a intentarlo.
+        `;
+      }
+    }
+
+    // GENERADOR DE CONFETI VIRTUAL (100% CSS/JS)
+    function spawnConfetti() {
+      const colors = ['#F59E0B', '#1EA4F5', '#36C3B0', '#EC4899', '#8B5CF6', '#10B981'];
+
+      for (let i = 0; i < 100; i++) {
+        const confeto = document.createElement('div');
+        confeto.className = 'confetti';
+        confeto.style.left = Math.random() * 100 + 'vw';
+        confeto.style.top = -20 + 'px';
+        confeto.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confeto.style.width = Math.random() * 8 + 6 + 'px';
+        confeto.style.height = Math.random() * 14 + 6 + 'px';
+        confeto.style.borderRadius = Math.random() > 0.5 ? '50%' : '3px';
+
+        // Animación aleatoria
+        const duration = Math.random() * 3 + 2; // 2 a 5 segundos
+        const delay = Math.random() * 1.5; // Esparcir inicio de caída
+        confeto.style.animation = `fall ${duration}s ${delay}s linear forwards`;
+
+        document.body.appendChild(confeto);
+
+        // Limpiar elemento tras finalizar animación
+        setTimeout(() => confeto.remove(), (duration + delay) * 1000);
+      }
+    }
+  </script>
+</body>
+
+</html>
