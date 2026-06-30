@@ -1544,20 +1544,28 @@
     let selectedRoundDifficulty = 'prog';
 
     function toggleAdminMode() {
+      const indicator = document.getElementById('adminIndicator');
       if (isAdminMode) {
-        isAdminMode = false;
-        selectedRoundDifficulty = 'prog';
-        if (document.getElementById('adminDifficultySelect')) {
-          document.getElementById('adminDifficultySelect').value = 'prog';
+        // Si el indicador estaba ocultado pero el modo admin sigue activo, volver a mostrar el indicador
+        if (indicator.style.display === 'none') {
+          indicator.style.display = 'flex';
+          showToast('🔧 Consola de Administrador Revelada');
+        } else {
+          // Si el indicador ya era visible, apagar el modo admin por completo
+          isAdminMode = false;
+          selectedRoundDifficulty = 'prog';
+          if (document.getElementById('adminDifficultySelect')) {
+            document.getElementById('adminDifficultySelect').value = 'prog';
+          }
+          indicator.style.display = 'none';
+          renderQuestion();
+          showToast('🔧 Modo Administrador Desactivado');
         }
-        document.getElementById('adminIndicator').style.display = 'none';
-        renderQuestion();
-        showToast('🔧 Modo Administrador Desactivado');
       } else {
         const pass = prompt('Ingrese la contraseña de administrador para revelar las respuestas:');
         if (pass === 'calcula123') {
           isAdminMode = true;
-          document.getElementById('adminIndicator').style.display = 'flex';
+          indicator.style.display = 'flex';
           renderQuestion();
           showToast('🔧 Modo Administrador Activado');
         } else if (pass !== null) {
@@ -1650,6 +1658,7 @@
       <option value="dificil">🔴 Todo Difícil</option>
     </select>
     <button onclick="openAdminDbModal()">Ver Banco</button>
+    <button onclick="document.getElementById('adminIndicator').style.display = 'none'; showToast('👁️ Consola oculta (Modo Admin activo)');" style="background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.2); font-size: 11px; padding: 4px 8px; border-radius: 6px;" title="Ocultar consola de administrador">👁️ Ocultar</button>
   </div>
 
   <!-- MODAL CON EL BANCO DE PREGUNTAS (RESPUESTAS) -->
