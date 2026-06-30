@@ -412,6 +412,135 @@
         opacity: 0;
       }
     }
+
+    /* ADMIN INDICATOR & MODAL */
+    .admin-indicator {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(10, 35, 66, 0.95);
+      border: 1.5px solid var(--accent);
+      border-radius: var(--r);
+      padding: 10px 16px;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+      z-index: 999;
+      font-size: 12px;
+      font-weight: 700;
+      color: #FFFFFF;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .admin-indicator button {
+      background: var(--accent);
+      color: #061B37;
+      border: none;
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .admin-indicator button:hover {
+      background: #FBBF24;
+    }
+
+    .admin-db-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(6, 27, 55, 0.85);
+      backdrop-filter: blur(5px);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .admin-db-modal-content {
+      background: #0A2342;
+      border: 2px solid var(--accent);
+      border-radius: var(--r-lg);
+      max-width: 700px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+      position: relative;
+    }
+
+    .admin-db-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-size: 24px;
+      color: rgba(255,255,255,0.4);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      transition: color 0.2s;
+    }
+
+    .admin-db-close:hover {
+      color: #FFFFFF;
+    }
+
+    .admin-q-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+      text-align: left;
+    }
+
+    .admin-q-text {
+      font-weight: 700;
+      font-size: 13.5px;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+    }
+
+    .admin-opt-list {
+      list-style-type: none;
+      padding-left: 0;
+      font-size: 12.5px;
+      margin-bottom: 6px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    @media (max-width: 600px) {
+      .admin-opt-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .admin-opt-item {
+      color: rgba(255,255,255,0.6);
+    }
+
+    .admin-opt-item.correct {
+      color: var(--green-light);
+      font-weight: 800;
+    }
+
+    .admin-q-explanation {
+      font-size: 11.5px;
+      color: #94A3B8;
+      border-top: 1px dashed rgba(255,255,255,0.08);
+      padding-top: 6px;
+      margin-top: 4px;
+    }
   </style>
 </head>
 
@@ -1137,27 +1266,53 @@
       document.getElementById('screenLose').classList.remove('active');
       document.getElementById('screenGame').classList.add('active');
 
-      // Seleccionar 4 preguntas aleatorias según dificultad
-      // Nivel 1: Fácil
-      const easyPool = QUESTIONS.facil;
-      const q1 = easyPool[Math.floor(Math.random() * easyPool.length)];
+      if (selectedRoundDifficulty === 'facil') {
+        const pool = [...QUESTIONS.facil];
+        shuffleArray(pool);
+        currentQuestions = [
+          { ...pool[0], level: 1, difficulty: 'facil', difficultyName: 'Fácil' },
+          { ...pool[1], level: 2, difficulty: 'facil', difficultyName: 'Fácil' },
+          { ...pool[2], level: 3, difficulty: 'facil', difficultyName: 'Fácil' },
+          { ...pool[3], level: 4, difficulty: 'facil', difficultyName: 'Fácil' }
+        ];
+      } else if (selectedRoundDifficulty === 'medio') {
+        const pool = [...QUESTIONS.medio];
+        shuffleArray(pool);
+        currentQuestions = [
+          { ...pool[0], level: 1, difficulty: 'medio', difficultyName: 'Medio' },
+          { ...pool[1], level: 2, difficulty: 'medio', difficultyName: 'Medio' },
+          { ...pool[2], level: 3, difficulty: 'medio', difficultyName: 'Medio' },
+          { ...pool[3], level: 4, difficulty: 'medio', difficultyName: 'Medio' }
+        ];
+      } else if (selectedRoundDifficulty === 'dificil') {
+        const pool = [...QUESTIONS.dificil];
+        shuffleArray(pool);
+        currentQuestions = [
+          { ...pool[0], level: 1, difficulty: 'dificil', difficultyName: 'Difícil' },
+          { ...pool[1], level: 2, difficulty: 'dificil', difficultyName: 'Difícil' },
+          { ...pool[2], level: 3, difficulty: 'dificil', difficultyName: 'Difícil' },
+          { ...pool[3], level: 4, difficulty: 'dificil', difficultyName: 'Difícil' }
+        ];
+      } else {
+        // Progresivo (Normal)
+        const easyPool = QUESTIONS.facil;
+        const q1 = easyPool[Math.floor(Math.random() * easyPool.length)];
 
-      // Nivel 2 y 3: Medio (sin repetir la misma pregunta en la ronda)
-      const medPool = [...QUESTIONS.medio];
-      shuffleArray(medPool);
-      const q2 = medPool[0];
-      const q3 = medPool[1];
+        const medPool = [...QUESTIONS.medio];
+        shuffleArray(medPool);
+        const q2 = medPool[0];
+        const q3 = medPool[1];
 
-      // Nivel 4: Difícil
-      const hardPool = QUESTIONS.dificil;
-      const q4 = hardPool[Math.floor(Math.random() * hardPool.length)];
+        const hardPool = QUESTIONS.dificil;
+        const q4 = hardPool[Math.floor(Math.random() * hardPool.length)];
 
-      currentQuestions = [
-        { ...q1, level: 1, difficulty: 'facil', difficultyName: 'Fácil' },
-        { ...q2, level: 2, difficulty: 'medio', difficultyName: 'Medio' },
-        { ...q3, level: 3, difficulty: 'medio', difficultyName: 'Medio' },
-        { ...q4, level: 4, difficulty: 'dificil', difficultyName: 'Difícil' }
-      ];
+        currentQuestions = [
+          { ...q1, level: 1, difficulty: 'facil', difficultyName: 'Fácil' },
+          { ...q2, level: 2, difficulty: 'medio', difficultyName: 'Medio' },
+          { ...q3, level: 3, difficulty: 'medio', difficultyName: 'Medio' },
+          { ...q4, level: 4, difficulty: 'dificil', difficultyName: 'Difícil' }
+        ];
+      }
 
       currentQuestionIndex = 0;
       score = 0;
@@ -1217,8 +1372,12 @@
       qData.options.forEach((opt, idx) => {
         const btn = document.createElement('button');
         btn.className = 'option-btn';
+        
+        // Indicador sutil para el administrador si está activo el modo admin
+        const adminHint = (isAdminMode && opt.correct) ? ' <span style="color: rgba(30, 164, 245, 0.45); font-size: 12px; margin-left: 2px;">•</span>' : '';
+        
         btn.innerHTML = `
-          <span class="option-letter">${letters[idx]}</span>
+          <span class="option-letter">${letters[idx]}${adminHint}</span>
           <span>${opt.text}</span>
         `;
         btn.onclick = () => selectOption(idx);
@@ -1379,7 +1538,135 @@
         setTimeout(() => confeto.remove(), (duration + delay) * 1000);
       }
     }
+
+    // ACTIVACIÓN DE MODO ADMINISTRADOR (PASSWORD: calcula123)
+    let isAdminMode = false;
+    let selectedRoundDifficulty = 'prog';
+
+    function toggleAdminMode() {
+      if (isAdminMode) {
+        isAdminMode = false;
+        selectedRoundDifficulty = 'prog';
+        if (document.getElementById('adminDifficultySelect')) {
+          document.getElementById('adminDifficultySelect').value = 'prog';
+        }
+        document.getElementById('adminIndicator').style.display = 'none';
+        renderQuestion();
+        showToast('🔧 Modo Administrador Desactivado');
+      } else {
+        const pass = prompt('Ingrese la contraseña de administrador para revelar las respuestas:');
+        if (pass === 'calcula123') {
+          isAdminMode = true;
+          document.getElementById('adminIndicator').style.display = 'flex';
+          renderQuestion();
+          showToast('🔧 Modo Administrador Activado');
+        } else if (pass !== null) {
+          showToast('❌ Contraseña Incorrecta');
+        }
+      }
+    }
+
+    // Registrar doble click en el logo de la cabecera
+    document.querySelector('.header-brand').addEventListener('dblclick', (e) => {
+      e.preventDefault();
+      toggleAdminMode();
+    });
+
+    // Registrar combinación de teclas Shift + A como método alternativo rápido
+    document.addEventListener('keydown', (e) => {
+      if (e.shiftKey && e.key.toLowerCase() === 'a') {
+        e.preventDefault();
+        toggleAdminMode();
+      }
+    });
+
+    // MOSTRAR BANCO DE PREGUNTAS (RESPUESTAS)
+    function openAdminDbModal() {
+      const listContainer = document.getElementById('adminDbList');
+      listContainer.innerHTML = '';
+
+      const difficulties = ['facil', 'medio', 'dificil'];
+      const diffTitles = { facil: '🟢 Nivel Fácil', medio: '🟡 Nivel Medio', dificil: '🔴 Nivel Difícil' };
+
+      difficulties.forEach(diff => {
+        const title = document.createElement('h3');
+        title.style.fontSize = '14px';
+        title.style.fontWeight = '900';
+        title.style.color = '#FFFFFF';
+        title.style.marginTop = '1rem';
+        title.style.marginBottom = '0.5rem';
+        title.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+        title.style.paddingBottom = '4px';
+        title.style.textAlign = 'left';
+        title.textContent = diffTitles[diff];
+        listContainer.appendChild(title);
+
+        QUESTIONS[diff].forEach((q, idx) => {
+          const item = document.createElement('div');
+          item.className = 'admin-q-item';
+          
+          let optsHtml = '';
+          const letters = ['A', 'B', 'C', 'D'];
+          q.options.forEach((opt, oIdx) => {
+            const isCorrect = opt.correct ? 'correct' : '';
+            optsHtml += `<li class="admin-opt-item ${isCorrect}">${letters[oIdx]}) ${opt.text}</li>`;
+          });
+
+          item.innerHTML = `
+            <div class="admin-q-text">${idx + 1}. ${q.q}</div>
+            <ul class="admin-opt-list">
+              ${optsHtml}
+            </ul>
+            <div class="admin-q-explanation">
+              <strong>Explicación:</strong> ${q.explicacion}
+            </div>
+          `;
+          listContainer.appendChild(item);
+        });
+      });
+
+      document.getElementById('adminDbModal').style.display = 'flex';
+    }
+
+    function closeAdminDbModal() {
+      document.getElementById('adminDbModal').style.display = 'none';
+    }
+
+    function showToast(m) {
+      const t = document.getElementById('triviaToast');
+      t.textContent = m;
+      t.style.display = 'block';
+      setTimeout(() => t.style.display = 'none', 2500);
+    }
   </script>
+
+  <!-- BADGE DE MODO ADMINISTRADOR -->
+  <div id="adminIndicator" class="admin-indicator" style="display: none;">
+    <span>🔧 Modo Admin</span>
+    <select id="adminDifficultySelect" onchange="selectedRoundDifficulty = this.value; showToast('🎯 Ronda configurada en dificultad: ' + this.options[this.selectedIndex].text);" style="background: #061b37; color: white; border: 1.5px solid var(--accent); border-radius: 6px; padding: 4px 8px; font-size: 11px; font-weight: 700; cursor: pointer; outline: none;">
+      <option value="prog">🔵 Progresivo (Normal)</option>
+      <option value="facil">🟢 Todo Fácil</option>
+      <option value="medio">🟡 Todo Medio</option>
+      <option value="dificil">🔴 Todo Difícil</option>
+    </select>
+    <button onclick="openAdminDbModal()">Ver Banco</button>
+  </div>
+
+  <!-- MODAL CON EL BANCO DE PREGUNTAS (RESPUESTAS) -->
+  <div id="adminDbModal" class="admin-db-modal">
+    <div class="admin-db-modal-content">
+      <button class="admin-db-close" onclick="closeAdminDbModal()">×</button>
+      <h2 style="font-size: 18px; font-weight: 900; color: var(--accent); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 8px;">
+        <span>🔧</span> Banco de Preguntas de Calcula Tu Agua
+      </h2>
+      <div id="adminDbList" style="display: flex; flex-direction: column; gap: 10px;">
+        <!-- Inyectado dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST DE TRIVIA -->
+  <div id="triviaToast" style="display: none; position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: rgba(10,35,66,0.95); border: 1.5px solid var(--pri-light); color: white; padding: 12px 24px; border-radius: 12px; z-index: 3000; font-weight: 700; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; font-size: 13.5px;"></div>
 </body>
 
 </html>
