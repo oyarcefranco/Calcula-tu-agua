@@ -1290,28 +1290,28 @@
         const pool = [...QUESTIONS.facil];
         shuffleArray(pool);
         currentQuestions = [
-          { ...pool[0], level: 1, difficulty: 'facil', difficultyName: 'Fácil' },
-          { ...pool[1], level: 2, difficulty: 'facil', difficultyName: 'Fácil' },
-          { ...pool[2], level: 3, difficulty: 'facil', difficultyName: 'Fácil' },
-          { ...pool[3], level: 4, difficulty: 'facil', difficultyName: 'Fácil' }
+          prepareQuestion(pool[0], 1, 'facil', 'Fácil'),
+          prepareQuestion(pool[1], 2, 'facil', 'Fácil'),
+          prepareQuestion(pool[2], 3, 'facil', 'Fácil'),
+          prepareQuestion(pool[3], 4, 'facil', 'Fácil')
         ];
       } else if (selectedRoundDifficulty === 'medio') {
         const pool = [...QUESTIONS.medio];
         shuffleArray(pool);
         currentQuestions = [
-          { ...pool[0], level: 1, difficulty: 'medio', difficultyName: 'Medio' },
-          { ...pool[1], level: 2, difficulty: 'medio', difficultyName: 'Medio' },
-          { ...pool[2], level: 3, difficulty: 'medio', difficultyName: 'Medio' },
-          { ...pool[3], level: 4, difficulty: 'medio', difficultyName: 'Medio' }
+          prepareQuestion(pool[0], 1, 'medio', 'Medio'),
+          prepareQuestion(pool[1], 2, 'medio', 'Medio'),
+          prepareQuestion(pool[2], 3, 'medio', 'Medio'),
+          prepareQuestion(pool[3], 4, 'medio', 'Medio')
         ];
       } else if (selectedRoundDifficulty === 'dificil') {
         const pool = [...QUESTIONS.dificil];
         shuffleArray(pool);
         currentQuestions = [
-          { ...pool[0], level: 1, difficulty: 'dificil', difficultyName: 'Difícil' },
-          { ...pool[1], level: 2, difficulty: 'dificil', difficultyName: 'Difícil' },
-          { ...pool[2], level: 3, difficulty: 'dificil', difficultyName: 'Difícil' },
-          { ...pool[3], level: 4, difficulty: 'dificil', difficultyName: 'Difícil' }
+          prepareQuestion(pool[0], 1, 'dificil', 'Difícil'),
+          prepareQuestion(pool[1], 2, 'dificil', 'Difícil'),
+          prepareQuestion(pool[2], 3, 'dificil', 'Difícil'),
+          prepareQuestion(pool[3], 4, 'dificil', 'Difícil')
         ];
       } else {
         // Progresivo (Normal)
@@ -1327,10 +1327,10 @@
         const q4 = hardPool[Math.floor(Math.random() * hardPool.length)];
 
         currentQuestions = [
-          { ...q1, level: 1, difficulty: 'facil', difficultyName: 'Fácil' },
-          { ...q2, level: 2, difficulty: 'medio', difficultyName: 'Medio' },
-          { ...q3, level: 3, difficulty: 'medio', difficultyName: 'Medio' },
-          { ...q4, level: 4, difficulty: 'dificil', difficultyName: 'Difícil' }
+          prepareQuestion(q1, 1, 'facil', 'Fácil'),
+          prepareQuestion(q2, 2, 'medio', 'Medio'),
+          prepareQuestion(q3, 3, 'medio', 'Medio'),
+          prepareQuestion(q4, 4, 'dificil', 'Difícil')
         ];
       }
 
@@ -1348,6 +1348,20 @@
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
       }
+    }
+
+    // PREPARAR PREGUNTA (COPIA PROFUNDA Y MEZCLA DE OPCIONES)
+    function prepareQuestion(q, level, diff, diffName) {
+      const optionsCopy = q.options.map(opt => ({ ...opt }));
+      shuffleArray(optionsCopy);
+      return {
+        q: q.q,
+        explicacion: q.explicacion,
+        options: optionsCopy,
+        level: level,
+        difficulty: diff,
+        difficultyName: diffName
+      };
     }
 
     // ACTUALIZAR ESCALERA DE NIVELES (LADDER)
